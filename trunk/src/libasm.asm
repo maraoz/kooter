@@ -68,8 +68,9 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         iret
 	
 _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
+	push	ebp
+	mov	ebp,esp
 	push	ecx
-	push	ebx
         push    ds
         push    es                      ; Se salvan los registros
         pusha
@@ -89,6 +90,8 @@ sys_write:
 	popa                            
         pop     es
         pop     ds
+	mov	esp,ebp
+	pop ebp
         iret
 
 sys_read:

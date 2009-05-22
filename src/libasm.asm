@@ -80,39 +80,55 @@ _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
 	jnz	int_80_end
 	
 sys_write:
-					; Carga de DS y ES con el valor del selector
-	mov     ax, 10h			; a utilizar.
-        mov     ds, ax
-        mov     es, ax                  
-        call    int_08                 
-        mov	al,20h			; Envio de EOI generico al PIC
-	out	20h,al
+
+	call	switch         
+        mov	[ds:bx],ecx			; Copio en la posicion de memoria el char a escribir
+        jmp	int_80_end
+
+sys_read:
+	
+      
+int_80_end:
 	popa                            
         pop     es
         pop     ds
 	mov	esp,ebp
 	pop ebp
-        iret
-
-sys_read:
-      					; Carga de DS y ES con el valor del selector
-	mov     ax, 08h			; a utilizar.
-        mov     ds, ax
-        mov     es, ax                  
-        call    int_08                 
-        mov	al,20h			; Envio de EOI generico al PIC
-	out	20h,al
-	popa                            
-        pop     es
-        pop     ds
-      
-int_80_end:
-	
 	iret
+
+;Switch para convertir el file descriptor en una posición de memoria lógica.
+; Se recibe en bx el file descritpor
+; Se carga en ds el segment y en bx el offset
+; Toca solo los registros ds y bx
+
+switch:
+	push	ax
+	cmp	bx,0
+	jz	pantalla
+	cmp	bx,1
+	jz	mouse
+	cmp	bx,2
+	jz	teclado
+	jmp	switch_end
+
+pantalla:
+	mov	ax,10h
+	mov	ds,ax
+	mov	bx,0B800h
+
+mouse:
+	mov	bx,1
+
+teclado:
+	mov	bx,2
+	
+
+	
+switch_end:
+	ret
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
-
 
 _debug:
         push    bp

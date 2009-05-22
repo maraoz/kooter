@@ -1,16 +1,16 @@
-echo "Borrando binarios viejos..."
+echo -e "\tBorrando binarios viejos..."
 cd ./bin
 rm -rf *
 
-echo "Generando codigos objeto de fuentes assembler..."
+echo -e "\tGenerando codigos objeto de fuentes assembler..."
 nasm -f aout ../src/libasm.asm -o libasm.o
 nasm -f aout ../src/kstart.asm -o kstart.o
 nasm -f aout ../src/loader.asm -o kstart.o
 
-echo "Generando codigos objeto de fuentes en C..."
+echo -e "\tGenerando codigos objeto de fuentes en C..."
 gcc -c ../src/kernel.c -o kernel.o -fno-builtin
 gcc -c ../src/libc.c  -o libc.o -fno-builtin
 
 
-echo "Linkeditando y creando el ejecutable..." 
+echo -e "\tLinkeditando y creando el ejecutable..." 
 ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o

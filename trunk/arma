@@ -1,8 +1,12 @@
 echo "*** Empezando a compilar ***"
 ./compila
-cd ./bin
 
 
 echo "*** Copiando el kernel a la imagen ***"
+cd ./bin
+mcd A:/
 mcopy kernel.bin a:boot/ -o
 
+echo "*** Cargando el menu de grub ***"
+cd ../grub
+mcopy MENU.LST a:boot/grub/MENU.LST -o

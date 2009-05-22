@@ -1,14 +1,16 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
+#include "../include/kc.h"
 
-DESCR_INT idt[0x80];			/* IDT de 128 entradas*/
+DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
 
 int tickpos=640;
 
 void int_08() {
 
-	_int_80_caller(1, 0, 0x30);
+// 	_debug();
+	_int_80_caller(1, 0, (byte)'a');
 }
 
 
@@ -35,7 +37,7 @@ kmain()
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA INT80h   */
 
-        setup_IDT_entry (&idt[0x80], 0x10, (dword)&_int_80_hand, ACS_INT, 0);
+        setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
 
 
 

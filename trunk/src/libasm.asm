@@ -75,9 +75,12 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
 _int_80_caller:
 	push	ebp
 	mov	ebp,esp
+
+	
 	mov	ah,[ebp+8]
 	mov	bh,[ebp+12]
-	mov	ecx,[ebp+16]
+	mov	ch,[ebp+16]
+	
 	int	80h
 	mov	esp,ebp
 	pop	ebp
@@ -98,18 +101,24 @@ _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
         push    ds
         pusha
 	cmp	ah,0
-	jz	sys_read
+	jz	sys_write
 	cmp	ah,1
-	jnz	int_80_end
+	jz	sys_read
+					; si llega aca AH no es valido
+	jmp 	int_80_end
 	
 sys_write:
 
-	cmp	bx,0
-	jnz	int_80_end
-	mov	ax,10h
+	cmp	bh,0			; si el file descriptor no es 0 (pantalla)
+	jnz	int_80_end		; me voy de la funcion (es el unico dispositivo
+					; que se puede escribir).
+
+	;mov 	cl,  07h
+
+	mov	ax,08h			
 	mov	ds,ax
-	mov	bx,0B800h
-        mov	[ds:bx],ecx			; Copio en la posicion de memoria el char a escribir
+	mov	bx,0B860h
+        mov	[ds:bx],ch		; Copio en la posicion de memoria el char a escribir
         jmp	int_80_end
 
 sys_read:
@@ -120,7 +129,7 @@ int_80_end:
         pop     ds
 	pop	eax
 	mov	esp,ebp
-	pop ebp
+	pop 	ebp
 	iret
 
 

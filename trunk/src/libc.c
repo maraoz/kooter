@@ -1,4 +1,5 @@
 #include "../include/kc.h"
+#include "../include/kernel.h"
 
 
 /***************************************************************
@@ -13,9 +14,9 @@ void k_clear_screen()
 	unsigned int i=0;
 	while(i < (80*25*2))
 	{
-		vidmem[i]=' ';
+		vidmem[i]='_';
 		i++;
-		vidmem[i]=INVISIBLE_TXT;
+		vidmem[i]=WHITE_TXT;
 		i++;
 	};
 }
@@ -38,4 +39,18 @@ void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
   item->offset_h = offset >> 16;
   item->access = access;
   item->cero = cero;
+}
+
+byte video_buffer[4000] = {0};
+void put_char_at( byte c, int pos) {
+	video_buffer[pos] = c;
+	write(0, video_buffer, 4000);
+}
+
+size_t write(int fd, const void* buffer, size_t count) {
+	int i;
+	for ( i=0; i<count; i++) {
+		_int_80_caller(WRITE, 0, *(((char *)buffer)+i));
+	}
+	return 0;
 }

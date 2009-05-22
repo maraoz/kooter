@@ -52,6 +52,7 @@ _lidt:				; Carga el IDTR
         retn
 
 
+
 _int_08_hand:				; Handler de INT 8 ( Timer tick)
         push    ds
         push    es                      ; Se salvan los registros
@@ -66,13 +67,21 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         pop     es
         pop     ds
         iret
+
+
+
+
+
+; Manejador de rutinas de atencion para la interrupcion 80h
+; Se recibe en ah 0 si se quiere llamar a sys_read y 1 si se quiere llamar a sys_write
+; Se recibe en bx el file descritpor
+; Se carga en ds el segment y en bx el offset
 	
 _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
 	push	ebp
 	mov	ebp,esp
-	push	ecx
+	push	eax			; Se salvan los registros
         push    ds
-        push    es                      ; Se salvan los registros
         pusha
 	cmp	ah,0
 	jz	sys_read
@@ -81,7 +90,11 @@ _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
 	
 sys_write:
 
-	call	switch         
+	cmp	bx,0
+	jnz	int_80_end
+	mov	ax,10h
+	mov	ds,ax
+	mov	bx,0B800h
         mov	[ds:bx],ecx			; Copio en la posicion de memoria el char a escribir
         jmp	int_80_end
 
@@ -89,43 +102,13 @@ sys_read:
 	
       
 int_80_end:
-	popa                            
-        pop     es
+	popa
         pop     ds
+	pop	eax
 	mov	esp,ebp
 	pop ebp
 	iret
 
-;Switch para convertir el file descriptor en una posición de memoria lógica.
-; Se recibe en bx el file descritpor
-; Se carga en ds el segment y en bx el offset
-; Toca solo los registros ds y bx
-
-switch:
-	push	ax
-	cmp	bx,0
-	jz	pantalla
-	cmp	bx,1
-	jz	mouse
-	cmp	bx,2
-	jz	teclado
-	jmp	switch_end
-
-pantalla:
-	mov	ax,10h
-	mov	ds,ax
-	mov	bx,0B800h
-
-mouse:
-	mov	bx,1
-
-teclado:
-	mov	bx,2
-	
-
-	
-switch_end:
-	ret
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;

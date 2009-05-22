@@ -18,7 +18,9 @@ void		_Sti(void);	 /* Habilita interrupciones  */
 
 void		_int_08_hand();      /* Timer tick */
 
-void		_int_80_hand();      /* sys_read y sys_write */
+void		_int_80_hand();      /* Subrutina de atención de Interrupcion 80h*/
+
+void 		_int_80_caller(byte write_or_read, byte file_descriptor, word dato);
 
 
 void		_debug (void);

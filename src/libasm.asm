@@ -119,7 +119,7 @@ sys_write:
 	mov	ds,ax
 	mov	ebx,0B8000h
 	mov	[ds:ebx],cx			; Copio en la posicion de memoria el char a escribir
-        jmp	int_80_end
+    jmp	int_80_end
 
 sys_read:
 	

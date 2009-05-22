@@ -79,7 +79,7 @@ _int_80_caller:
 	
 	mov	ah,[ebp+8]
 	mov	bh,[ebp+12]
-	mov	ch,[ebp+16]
+	mov	cl,[ebp+16]
 	
 	int	80h
 	mov	esp,ebp
@@ -113,12 +113,12 @@ sys_write:
 	jnz	int_80_end		; me voy de la funcion (es el unico dispositivo
 					; que se puede escribir).
 
-	;mov 	cl,  07h
+	mov 	ch,  07h
 
 	mov	ax,10h			
 	mov	ds,ax
-	mov	bx,0B860h
-        mov	[ds:bx],ch		; Copio en la posicion de memoria el char a escribir
+	mov	ebx,0B8000h
+	mov	[ds:ebx],cx			; Copio en la posicion de memoria el char a escribir
         jmp	int_80_end
 
 sys_read:

@@ -41,16 +41,19 @@ void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
   item->cero = cero;
 }
 
-byte video_buffer[4000] = {0};
+
+
+
+byte video_buffer[2000] = {0};
 void put_char_at( byte c, int pos) {
 	video_buffer[pos] = c;
-	write(0, video_buffer, 4000);
+	write(WRITE, video_buffer, 2000);
 }
 
 size_t write(int fd, const void* buffer, size_t count) {
 	int i;
 	for ( i=0; i<count; i++) {
-		_int_80_caller(WRITE, 0, *(((char *)buffer)+i));
+		_int_80_caller(WRITE, fd, i, *(((byte *)buffer)+i));
 	}
 	return 0;
 }

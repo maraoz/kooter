@@ -21,7 +21,7 @@ void		_int_08_hand();      /* Timer tick */
 
 void		_int_80_hand();      /* Subrutina de atención de Interrupcion 80h*/
 
-void 		_int_80_caller(tINT_80 write_or_read, byte file_descriptor, word dato);
+void 		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byte dato);
 
 
 void		_debug (void);

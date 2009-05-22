@@ -115,7 +115,7 @@ sys_write:
 
 	;mov 	cl,  07h
 
-	mov	ax,08h			
+	mov	ax,10h			
 	mov	ds,ax
 	mov	bx,0B860h
         mov	[ds:bx],ch		; Copio en la posicion de memoria el char a escribir

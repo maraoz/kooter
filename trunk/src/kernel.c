@@ -11,7 +11,7 @@ IDTR idtr;				/* IDTR */
 
 void int_08() {
 
-	_int_80_caller(WRITE, 0, (byte)'a');
+	_int_80_caller(WRITE, 0, 0,(byte)'a');
 	
 	
 }

@@ -1,6 +1,8 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
 #include "../include/kc.h"
+#include "../include/kernel.h"
+
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
@@ -10,7 +12,7 @@ int tickpos=640;
 void int_08() {
 
 // 	_debug();
-	_int_80_caller(1, 0, (byte)'a');
+	_int_80_caller(WRITE, 0, (byte)'a');
 }
 
 

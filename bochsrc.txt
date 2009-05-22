@@ -28,4 +28,3 @@ keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-us.map
 #keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-fr.map
 #keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-de.map
 #keyboard_mapping: enabled=1, map=$BXSHARE/keymaps/x11-pc-es.map
-

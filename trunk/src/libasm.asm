@@ -3,8 +3,10 @@ GLOBAL  _int_08_hand
 GLOBAL  _int_80_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
+GLOBAL  _int_80_caller
 
 EXTERN  int_08
+
 
 
 SECTION .text
@@ -73,9 +75,9 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
 _int_80_caller:
 	push	ebp
 	mov	ebp,esp
-	movb	ah,ebp+8
-	movb	bh,ebp+12
-	mov	ecx,ebp+16
+	mov	ah,[ebp+8]
+	mov	bh,[ebp+12]
+	mov	ecx,[ebp+16]
 	int	80h
 	mov	esp,ebp
 	pop	ebp

@@ -15,7 +15,7 @@ void k_clear_screen()
 	{
 		vidmem[i]=' ';
 		i++;
-		vidmem[i]=WHITE_TXT;
+		vidmem[i]=INVISIBLE_TXT;
 		i++;
 	};
 }

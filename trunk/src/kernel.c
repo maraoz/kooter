@@ -8,10 +8,10 @@ int tickpos=640;
 
 void int_08() {
 
-    char *video = (char *) 0xb8000;
-    video[tickpos+=2]='a';
-
+	_int_80_caller(1, 0, 0x30);
 }
+
+
 
 /**********************************************
 kmain() 
@@ -32,14 +32,11 @@ kmain()
 
         setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 	
-/* ver cual de las dos va: depende del selector de descriptor */
-/* CARGA DE IDT CON LA RUTINA DE ATENCION DE write()    */
+
+/* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA INT80h   */
 
         setup_IDT_entry (&idt[0x80], 0x10, (dword)&_int_80_hand, ACS_INT, 0);
 
-/* CARGA DE IDT CON LA RUTINA DE ATENCION DE read()    */
-
-        setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
 
 
 /* Carga de IDTR    */

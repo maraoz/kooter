@@ -145,13 +145,11 @@ wmemoria:
 
 pantalla:
 
-	mov 	dh,  07h			; cargo el formato (letras blancas) en que se escribe cada byte en pantalla
-
 	mov	ax,10h			
 	mov	ds,ax
 	mov	ebx,0B8000h
 	add	ebx,ecx
-	mov	[ds:ebx],dx			; Copio en la posicion de memoria el char a escribir
+	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
         ret
 
 sys_read:

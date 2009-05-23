@@ -2,24 +2,7 @@
 #include "../include/kernel.h"
 
 
-/***************************************************************
-*k_clear_screen
-*
-* Borra la pantalla en modo texto color.
-****************************************************************/
 
-void k_clear_screen() 
-{
-	char *vidmem = (char *) 0xb8000;
-	unsigned int i=0;
-	while(i < (80*25*2))
-	{
-		vidmem[i]='_';
-		i++;
-		vidmem[i]=WHITE_TXT;
-		i++;
-	};
-}
 
 /***************************************************************
 *setup_IDT_entry
@@ -42,18 +25,3 @@ void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
 }
 
 
-
-
-byte video_buffer[2000] = {0};
-void put_char_at( byte c, int pos) {
-	video_buffer[pos] = c;
-	write(WRITE, video_buffer, 2000);
-}
-
-size_t write(int fd, const void* buffer, size_t count) {
-	int i;
-	for ( i=0; i<count; i++) {
-		_int_80_caller(WRITE, fd, i, *(((byte *)buffer)+i));
-	}
-	return 0;
-}

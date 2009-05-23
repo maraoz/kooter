@@ -18,6 +18,13 @@ void int_08() {
 	
 }
 
+int leoteclado (){
+    int a;
+    a=_int_80_caller(READ, 2, 0, 0);
+//     put_char(a);
+    return a;
+}
+
 
 
 /**********************************************
@@ -41,6 +48,9 @@ kmain()
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA INT80h   */
         setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
+	
+/* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ9   */
+        setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
 
 
 
@@ -52,9 +62,9 @@ kmain()
 	_lidt (&idtr);	
 
 	_Cli();
-/* Habilito interrupcion de timer tick*/
+/* Habilito interrupcion de timer tick y del teclado*/
 
-        _mascaraPIC1(0xFE);
+        _mascaraPIC1(0xFC);
         _mascaraPIC2(0xFF);
         
 	_Sti();

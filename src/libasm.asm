@@ -1,12 +1,14 @@
 GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
 GLOBAL  _int_80_hand
+GLOBAL	_int_09_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
 
-EXTERN  int_08
 
+EXTERN  int_08
+EXTERN	leoteclado
 
 
 SECTION .text
@@ -69,6 +71,23 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         pop     es
         pop     ds
         iret
+
+
+_int_09_hand:
+      push	ebp
+      mov	ebp,esp
+      pusha
+      
+      call	leoteclado
+      
+      mov	al,20h			; Envio de EOI generico al PIC
+      out	20h,al
+      
+      popa
+      mov	esp,ebp
+      pop	ebp
+      iret
+
 
 
 ; Llama a la interrupcion 80h

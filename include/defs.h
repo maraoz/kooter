@@ -53,7 +53,12 @@ typedef struct {
   dword base;
 } IDTR;
 
-     
+
+typedef int size_t;
+typedef short int ssize_t;
+typedef enum eINT_80 {WRITE=0, READ} tINT_80;
+
+
 
 #endif
 

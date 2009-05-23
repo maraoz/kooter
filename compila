@@ -10,7 +10,10 @@ nasm -f aout ../src/loader.asm -o kstart.o
 echo -e "\tGenerando codigos objeto de fuentes en C..."
 gcc -c ../src/kernel.c -o kernel.o -fno-builtin
 gcc -c ../src/libc.c  -o libc.o -fno-builtin
+#gcc -c ../src/shell.c  -o shell.o -fno-builtin
+gcc -c ../src/stdio.c  -o stdio.o -fno-builtin
+
 
 
 echo -e "\tLinkeditando y creando el ejecutable..." 
-ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o
+ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o stdio.o #shell.o

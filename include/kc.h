@@ -6,8 +6,7 @@
 #ifndef _kc_
 #define _kc_
 
-#define WHITE_TXT 0x07 // Atributo de video. Letras blancas, fondo negro
-#define INVISIBLE_TXT 0x00 // Atributo de video. Letras blancas, fondo negro
+
 
 /* Muestra la imagen de inicio */
 void showSplashScreen();
@@ -15,8 +14,6 @@ void showSplashScreen();
 /* Tiempo de espera */
 void wait(int time);
 
-/* Limpia la pantalla */
-void k_clear_screen();
 
 /* Inicializa la entrada del IDT */
 void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,

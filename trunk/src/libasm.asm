@@ -164,8 +164,11 @@ sys_read:
 	ret
 	
 mouse:
+	in	eax,60h			; leo del puerto 60h
 	ret
+
 teclado:
+	in	eax,60h			; leo del puerto 60h
 	ret
 
 rmemoria:

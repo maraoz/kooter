@@ -1,0 +1,5 @@
+rm *~
+rm src/*~
+rm include/*~
+rm grub/*~
+

@@ -167,6 +167,10 @@ pantalla:
 	mov	ax,10h			
 	mov	ds,ax
 	mov	ebx,0B8000h
+
+	mov	dh,07h
+	mov	[ds:ebx+1],dh			; Copio en la posicion de memoria el char a escribir
+
 	add	ebx,ecx
 	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
         ret
@@ -185,7 +189,12 @@ mouse:
 	ret
 
 teclado:
-	in	eax,60h			; leo del puerto 60h
+	mov	eax,0
+; 	in	eax,60h			; leo del puerto 60h
+; 	mov	dl,al
+	add	dl,'0'
+	mov	ecx,0
+	call	pantalla
 	ret
 
 rmemoria:

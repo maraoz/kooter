@@ -23,7 +23,7 @@ void		_int_80_hand();      /* Subrutina de atencion de Interrupcion 80h*/
 
 void		_int_09_hand();      /* Subrutina de atencion de Interrupcion 09h, teclado*/
 
-int 		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byte dato);
+dword		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byte dato);
 
 
 void		_debug (void);

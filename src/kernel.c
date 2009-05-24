@@ -13,16 +13,19 @@ byte c='a';
 void int_08() {
 
 	
-	put_char(c++);
+//  	put_char(c);
 	
 	
 }
 
-int leoteclado (){
-    int a;
-    a=_int_80_caller(READ, 2, 0, 0);
-//     put_char(a);
-    return a;
+dword leoteclado (){
+      dword a;
+      byte b;
+      a=_int_80_caller(READ, 2, 0, 0);
+      put_char(a);
+      b=(byte)a>>24;
+      put_char(b);
+      return b;
 }
 
 

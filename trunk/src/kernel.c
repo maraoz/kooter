@@ -13,9 +13,7 @@ byte c='a';
 void int_08() {
 
 	
-//  	put_char(c);
-	
-	
+	puts("Hola!");	
 }
 
 dword leoteclado (){

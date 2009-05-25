@@ -78,13 +78,14 @@ size_t write(int fd, const void* buffer, size_t count) {
 * - Buffer a donde escribir
 * - Cantidad
 ****************************************************************/
-size_t read(int fd, void* buffer, size_t count) {
-    int i;
-    for ( i = cursor ; i<limit; i++) {
-        buffer[i] = _int_80_caller(READ, fd, i, *(((byte
-                        *)buffer)+(i-cursor)));
-    }
-}
+// size_t read(int fd, void* buffer, size_t count) {
+//    int i;
+//     int limit=10;
+//     for ( i = cursor ; i<limit; i++) {
+//         buffer[i] = _int_80_caller(READ, fd, i, *(((byte*)buffer)
+// 			  +(i-cursor)));
+//     }
+// }
 
 /***************************************************************
 *k_clear_screen

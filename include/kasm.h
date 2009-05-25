@@ -4,7 +4,6 @@ kasm.h
 ************************************************/
 
 #include "defs.h"
-#include "kernel.h"
 
 
 unsigned int    _read_msw();
@@ -23,7 +22,7 @@ void		_int_80_hand();      /* Subrutina de atencion de Interrupcion 80h*/
 
 void		_int_09_hand();      /* Subrutina de atencion de Interrupcion 09h, teclado*/
 
-dword		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byte dato);
+byte		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byte dato);
 
 
 void		_debug (void);

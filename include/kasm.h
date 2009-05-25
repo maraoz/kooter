@@ -5,7 +5,6 @@ kasm.h
 
 #include "defs.h"
 
-
 unsigned int    _read_msw();
 
 void            _lidt (IDTR *idtr);

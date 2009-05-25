@@ -11,8 +11,8 @@ IDTR idtr;				/* IDTR */
 byte c='a';
 void int_08() {
 
-	
-	//puts("Hola!");	
+	return;
+
 }
 
 byte leoteclado (){
@@ -63,11 +63,6 @@ Punto de entrada de cóo C.
 kmain() 
 {
 
-	int i,num;
-
-/* Borra la pantalla. */ 
-
-	k_clear_screen();
 
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
@@ -96,10 +91,26 @@ kmain()
 	_mascaraPIC2(0xFF);
 	
 	_Sti();
+    
+/* Borra la pantalla. */ 
+    
+//      k_clear_screen();
+     
+/* Para probar la splashscreen comentar arriba y descomentar esta. */ 
+//         showSplashScreen();
 
-	while(1)
-	{
-	}
+
+
+/*     Ejemplo de uso de flush()     */
+    int i;
+    for (i=0; i<23; i++)
+        put_char('c');
+    flush();
+    
+    while(1) {
+        
+    }
+
 	
 }
 

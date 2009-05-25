@@ -2,8 +2,6 @@
 
 
 
-
-
 /***************************************************************
 *setup_IDT_entry
 * Inicializa un descriptor de la IDT

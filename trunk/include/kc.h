@@ -8,8 +8,7 @@
 
 
 
-/* Muestra la imagen de inicio */
-void showSplashScreen();
+
 
 /* Tiempo de espera */
 void wait(int time);

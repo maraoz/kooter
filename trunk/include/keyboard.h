@@ -1,0 +1,1 @@
+int ktoa(int c);

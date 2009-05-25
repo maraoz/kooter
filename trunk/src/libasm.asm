@@ -79,7 +79,7 @@ _int_09_hand:
       pusha
       
       call	leoteclado
-      
+  
       mov	al,20h			; Envio de EOI generico al PIC
       out	20h,al
       
@@ -168,33 +168,25 @@ pantalla:
 	mov	ds,ax
 	mov	ebx,0B8000h
 
-	mov	dh,07h
-	mov	[ds:ebx+1],dh			; Copio en la posicion de memoria el char a escribir
-
 	add	ebx,ecx
 	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
         ret
 
-sys_read:
+sys_read: 
 	cmp	bh,1
 	jz	mouse		; si el file descriptor es 1 -> leo del mouse
-	cmp	bh,2		
-	jz	teclado		; si el file descriptor es 2 -> leo del teclado
+	cmp	bh,2				
+	jz	teclado		; si el file descriptor es 2 -> leo del teclado		
 	cmp	bh,3
 	jz	rmemoria		; si el file descriptor es 3 -> leo de la memoria
 	ret
 	
 mouse:
-	in	eax,60h			; leo del puerto 60h
+	in	al,60h			; leo del puerto 60h
 	ret
 
 teclado:
-	mov	eax,0
-; 	in	eax,60h			; leo del puerto 60h
-; 	mov	dl,al
-	add	dl,'0'
-	mov	ecx,0
-	call	pantalla
+ 	in	al,60h			; leo del puerto 60h
 	ret
 
 rmemoria:

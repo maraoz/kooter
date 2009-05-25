@@ -2,6 +2,8 @@
 #include "../include/defs.h"
 #include "../include/kc.h"
 #include "../include/stdio.h"
+#include "../include/util.h"
+#include "../include/keyboard.h"
 
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
@@ -19,37 +21,12 @@ byte leoteclado (){
       byte a;
       put_char(a);
       a=_int_80_caller(READ, 2, 0, 0);
-      switch(a) {
-      case 0x10: a='q';break;
-      case 0x11: a='w';break;
-      case 0x12: a='e';break;
-      case 0x13: a='r';break;
-      case 0x14: a='t';break;
-      case 0x15: a='y';break;
-      case 0x16: a='u';break;
-      case 0x17: a='i';break;
-      case 0x18: a='o';break;
-      case 0x19: a='p';break;
-      case 0x1E: a='a';break;
-      case 0x1F: a='s';break;
-      case 0x20: a='d';break;
-      case 0x21: a='f';break;
-      case 0x22: a='g';break;
-      case 0x23: a='h';break;
-      case 0x24: a='j';break;
-      case 0x25: a='k';break;
-      case 0x26: a='l';break;
-      case 0x2C: a='z';break;
-      case 0x2D: a='x';break;
-      case 0x2E: a='c';break;
-      case 0x2F: a='v';break;
-      case 0x30: a='b';break;
-      case 0x31: a='n';break;
-      case 0x32: a='m';break;
-      default: a='0';
-      }
-      if(a!='0')
+      a=ktoa(a);
+
+      if(isalpha(a) && a >= 0x21) {
 	put_char(a);
+	flush();
+      }
       return a;
 }
 

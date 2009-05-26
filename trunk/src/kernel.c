@@ -19,11 +19,10 @@ void int_08() {
 
 byte leoteclado (){
       byte a;
-      put_char(a);
       a=_int_80_caller(READ, 2, 0, 0);
       a=ktoa(a);
 
-      if(isalpha(a) && a >= 0x21) {
+      if(a >= 0x20) {
 	put_char(a);
 	flush();
       }
@@ -90,4 +89,3 @@ kmain()
 
 	
 }
-

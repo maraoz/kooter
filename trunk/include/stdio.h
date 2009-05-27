@@ -7,7 +7,7 @@
 #define BLUE_TXT 0x09       // Atributo de video. Letras azules, fondo negro
 #define INVISIBLE_TXT 0x00 	// Atributo de video. Letras negras, fondo negro
 
-void puts( char * str );
+void puts( const char * str );
 
 void put_char( byte c);
 

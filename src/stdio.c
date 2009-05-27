@@ -12,11 +12,21 @@
 * Escribe el string str en pantalla. Agrega un enter al final.
 * 
 ****************************************************************/
-void puts( char * str ) {
+void puts( const char * str ) {
     while (*str) {
         put_char(*str++);
     }
     put_char('\n');
+}
+
+/***************************************************************
+* gets
+*
+* Lee un string del teclado
+* 
+****************************************************************/
+void gets( char * str ) {
+
 }
 
 
@@ -37,7 +47,7 @@ void put_char( byte c) {
 		write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
 	}
-    
+
     video_buffer[vb_counter] = c;
     video_buffer[vb_counter+1] = BLUE_TXT ;
     vb_counter += 2 ;

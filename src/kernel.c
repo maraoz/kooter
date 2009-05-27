@@ -102,7 +102,7 @@ kmain()
 //      k_clear_screen();
      
 /* Para probar la splashscreen comentar arriba y descomentar esta. */ 
-//         showSplashScreen();
+         showSplashScreen();
 
 
 

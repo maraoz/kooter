@@ -25,6 +25,5 @@ void		_int_12_hand();      /* Subrutina de atencion de Interrupcion 12h, mouse*/
 
 byte		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byte dato);
 
-
 void		_debug (void);
 

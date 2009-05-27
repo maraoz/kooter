@@ -6,9 +6,18 @@
 #include "../include/keyboard.h"
 
 
+#define TCIRC_SIZE	80*25
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
+typedef struct {
+	int	next_write;
+	int	next_read;
+	byte 	tcircular[TCIRC_SIZE];
+
+} tcirc;
+tcirc teclator={0,0};
+
 
 byte c='a';
 void int_08() {
@@ -17,16 +26,14 @@ void int_08() {
 
 }
 
-byte leoteclado (){
-      byte a;
-      a = _int_80_caller(READ, 2, 0, 0);
-      a = ktoa(a);
+byte leoteclado (byte k){
+      	
+	k = ktoa(k);
       
-      if(a >= 0x20) {
-	put_char(a);
-	flush();
-      }
-      return a;
+      	teclator.tcircular[teclator.next_write]=k;
+	teclator.next_write++;
+	
+      	return k;
 }
 
 byte leomouse (){
@@ -42,6 +49,12 @@ byte leomouse (){
       return a;
 }
 
+byte next_char (){
+	byte a;
+	a=teclator.tcircular[teclator.next_read];
+	teclator.next_read++;
+	return a;
+}
 
 
 /**********************************************
@@ -105,3 +118,4 @@ kmain()
 
 	
 }
+

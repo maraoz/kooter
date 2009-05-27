@@ -12,6 +12,7 @@ GLOBAL  _int_80_caller
 EXTERN  int_08
 EXTERN	leoteclado
 EXTERN 	leomouse
+EXTERN	next_char
 
 
 SECTION .text
@@ -77,21 +78,24 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
 
 
 _int_09_hand:
-      push	ebp
-      mov	ebp,esp
-      pusha
-      
-      call	leoteclado
-  
-      mov	al,20h			; Envio de EOI generico al PIC
-      out	20h,al
-      
-      popa
-      mov	esp,ebp
-      pop	ebp
-      iret
-      
-      
+	push	ebp
+	mov	ebp,esp
+	pusha
+
+	in	al,60h			; leo del puerto 60h
+	
+	push	al
+	call	leoteclado
+
+	mov	al,20h			; Envio de EOI generico al PIC
+	out	20h,al
+
+	popa
+	mov	esp,ebp
+	pop	ebp
+	iret
+
+
 
 _int_12_hand:
       push	ebp
@@ -206,7 +210,7 @@ mouse:
 	ret
 
 teclado:
- 	in	al,60h			; leo del puerto 60h
+	call	next_char
 	ret
 
 rmemoria:

@@ -2,13 +2,16 @@ GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
 GLOBAL  _int_80_hand
 GLOBAL	_int_09_hand
+GLOBAL  _int_12_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
 
 
+
 EXTERN  int_08
 EXTERN	leoteclado
+EXTERN 	leomouse
 
 
 SECTION .text
@@ -80,6 +83,23 @@ _int_09_hand:
       
       call	leoteclado
   
+      mov	al,20h			; Envio de EOI generico al PIC
+      out	20h,al
+      
+      popa
+      mov	esp,ebp
+      pop	ebp
+      iret
+      
+      
+
+_int_12_hand:
+      push	ebp
+      mov	ebp,esp
+      pusha
+      
+      call	leomouse
+
       mov	al,20h			; Envio de EOI generico al PIC
       out	20h,al
       
@@ -182,7 +202,7 @@ sys_read:
 	ret
 	
 mouse:
-	in	al,60h			; leo del puerto 60h
+	in	eax,60h			; leo del puerto 60h
 	ret
 
 teclado:

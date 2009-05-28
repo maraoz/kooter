@@ -11,6 +11,8 @@ void puts( const char * str );
 
 void put_char( byte c);
 
+byte get_char();
+
 size_t write(int fd, const void* buffer, size_t count);
 
 /* Limpia la pantalla */

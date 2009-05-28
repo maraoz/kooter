@@ -5,6 +5,15 @@
 
 
 
+/***************************************************************
+* page_roll
+*
+* Escribe el string str en pantalla. Agrega un enter al final.
+* 
+****************************************************************/
+void page_roll() {
+    
+}
 
 /***************************************************************
 * puts
@@ -22,11 +31,17 @@ void puts( const char * str ) {
 /***************************************************************
 * gets
 *
-* Lee un string del teclado
+* Lee un string del teclado hasta el \n
 * 
 ****************************************************************/
-void gets( char * str ) {
-
+void gets( char str[] ) {
+    byte c;
+    int i=0;
+    while ( (c = get_char()) != '\n') {
+        str[i++] = c;
+    }
+    str[i] = '\0';
+    return;
 }
 
 
@@ -37,22 +52,56 @@ void gets( char * str ) {
 * Escribe el caracter c en pantalla
 * 
 ****************************************************************/
-#define BUFFER_LENGTH 160
+#define V_BUFFER_LENGTH 160
 
-byte video_buffer[BUFFER_LENGTH] = {0};
+byte video_buffer[V_BUFFER_LENGTH] = {0};
 static int vb_counter = 0;
 
 void put_char( byte c) {
-	if (! (vb_counter < BUFFER_LENGTH && c!='\n')) {
-		write(PANTALLA_FD, video_buffer, vb_counter);
+    if (! (vb_counter < V_BUFFER_LENGTH && c!='\n')) {
+        write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
-	}
+    }
+
 
     video_buffer[vb_counter] = c;
     video_buffer[vb_counter+1] = BLUE_TXT ;
     vb_counter += 2 ;
 
-	
+    
+}
+
+
+/***************************************************************
+* get_char
+*
+* Lee un caracter en pantalla y lo devuelve
+* 
+****************************************************************/
+#define K_BUFFER_LENGTH 5
+
+byte keyboard_buffer[K_BUFFER_LENGTH] = {0};
+int kb_counter = K_BUFFER_LENGTH;
+int n_read = K_BUFFER_LENGTH;
+
+byte get_char() {
+
+    if ( kb_counter == n_read ) {
+        n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
+        while (n_read == 0) {
+            put_char('o');
+            n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
+        }
+        kb_counter = 0;
+    }
+    
+   
+    
+    kb_counter +=1;
+    return keyboard_buffer[kb_counter-1];
+    
+
+    
 }
 /***************************************************************
 * flush
@@ -107,7 +156,11 @@ size_t read(int fd, void* buffer, size_t count) {
     byte * b = (byte *)buffer;
     for ( i = 0 ; i<count; i++) {
         b[i] = _int_80_caller(READ, fd, i, 0);
+        if (b[i] == 0) {
+            break;
+        }
     }
+    return i;
 }
 
 
@@ -125,10 +178,12 @@ void k_clear_screen()
 	}
 }
 
-/* Muestra la imagen de inicio */
 
-
-
+/***************************************************************
+* showSplashScreen
+*
+* Muestra la imagen de inicio
+****************************************************************/
 char * splash_screen[25] = {
 "                                                                                ",
 "                                -===ccc,.                                       ",

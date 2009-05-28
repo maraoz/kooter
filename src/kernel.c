@@ -20,7 +20,8 @@ typedef struct {
 tcirc teclator={0,0,0};
 
 
-byte c='a';
+
+
 void int_08() {
 
 	return;
@@ -118,7 +119,9 @@ kmain()
 	_Cli();
 /* Habilito interrupcion de timer tick y del teclado y del mouse*/
 	_mascaraPIC1(0xF8);
+    /*          1111 1000   */
 	_mascaraPIC2(0xEF);
+    /*          1110 1111   */
 	
 	_Sti();
     
@@ -132,10 +135,15 @@ kmain()
 
 
 /*     Ejemplo de uso de flush()     */
-    int i;
-    for (i=0; i<23; i++)
-        put_char('c');
-    flush();
+    
+    puts("hola");
+    char buf[100];
+    gets(buf);
+    puts(buf);
+    puts("chau");
+    
+    
+    
     
     while(1) {
         

@@ -2,7 +2,7 @@ GLOBAL  _read_msw,_lidt
 GLOBAL  _int_08_hand
 GLOBAL  _int_80_hand
 GLOBAL	_int_09_hand
-GLOBAL  _int_12_hand
+GLOBAL  _int_74_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
@@ -100,20 +100,27 @@ _int_09_hand:
 
 
 
-_int_12_hand:
-      push	ebp
-      mov	ebp,esp
-      pusha
+_int_74_hand:
+	jmp $
+	push	ebp
+	mov	ebp,esp
+	pusha
       
-      call	leomouse
+	in	al,60h			; leo del puerto 60h
+	mov	ah,00h
+      
+	call	pantalla
+	call	leomouse
 
-      mov	al,20h			; Envio de EOI generico al PIC
-      out	20h,al
+	mov	al,20h			
+	out	0A0h,al			; Envio de EOI generico al PIC2
+	
+	out	20h,al			; Envio de EOI generico al PIC1
       
-      popa
-      mov	esp,ebp
-      pop	ebp
-      iret
+	popa
+	mov	esp,ebp
+	pop	ebp
+	iret
 
 
 

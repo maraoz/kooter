@@ -44,17 +44,30 @@ void leoteclado (int k){
 	}
 }
 
-byte leomouse (){
-      byte a;
-      a = _int_80_caller(READ, 1, 0, 0);
-      a = a&0x01;
-      if(a==1)
-	put_char('1');
-      else
-	put_char('0');
-      //a = mtoa(a);
+byte leomouse (int b){
+	static int qty_int;
+	
+	byte first, second, third;
+
+	switch(qty_int){
+		case 0:	first = (byte)b;break;
+		case 1:	second = (byte)b;break;
+		case 2:	third = (byte)b;qty_int=-1;break;
+		default: first = (byte)b;
+	}
+	qty_int++;
+	
+	put_char(first);
+	flush();
+	
+	put_char(second);
+	flush();
+	
+	put_char(second);
+	flush();
+	//a = mtoa(a);
       
-      return a;
+	return first;
 }
 
 byte next_char (){
@@ -81,17 +94,17 @@ kmain()
 
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
+	
 	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 	
-
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA INT80h   */
 	setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
 	
-/* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ9   */
+/* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ1   */
 	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
 	
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ12   */
-	setup_IDT_entry (&idt[0x0C], 0x08, (dword)&_int_12_hand, ACS_INT, 0);
+	setup_IDT_entry (&idt[0x74], 0x08, (dword)&_int_74_hand, ACS_INT, 0);
 
 
 
@@ -103,10 +116,9 @@ kmain()
 	_lidt (&idtr);	
 
 	_Cli();
-/* Habilito interrupcion de timer tick y del teclado*/
-
-	_mascaraPIC1(0xFC);
-	_mascaraPIC2(0xFF);
+/* Habilito interrupcion de timer tick y del teclado y del mouse*/
+	_mascaraPIC1(0xF8);
+	_mascaraPIC2(0xEF);
 	
 	_Sti();
     

@@ -13,10 +13,11 @@ IDTR idtr;				/* IDTR */
 typedef struct {
 	int	next_write;
 	int	next_read;
+	int	qty_used;
 	byte 	tcircular[TCIRC_SIZE];
 
 } tcirc;
-tcirc teclator={0,0};
+tcirc teclator={0,0,0};
 
 
 byte c='a';
@@ -26,14 +27,21 @@ void int_08() {
 
 }
 
-byte leoteclado (byte k){
+void leoteclado (int k){
       	
-	k = ktoa(k);
-      
-      	teclator.tcircular[teclator.next_write]=k;
-	teclator.next_write++;
+	if(!(teclator.qty_used == TCIRC_SIZE)){
+		k = ktoa(k);
+		if(teclator.next_write == TCIRC_SIZE)
+			teclator.next_write = 0;
+		teclator.tcircular[teclator.next_write] = k;
+		teclator.next_write++;
+		teclator.qty_used++;
 	
-      	return k;
+		if(k>=0x20) {
+			put_char(k);
+			flush();
+		}
+	}
 }
 
 byte leomouse (){
@@ -51,8 +59,13 @@ byte leomouse (){
 
 byte next_char (){
 	byte a;
-	a=teclator.tcircular[teclator.next_read];
-	teclator.next_read++;
+	if(teclator.qty_used != 0) {
+		a=teclator.tcircular[teclator.next_read];
+		teclator.next_read++;
+		teclator.qty_used--;
+	}
+	else
+		a = 0;
 	return a;
 }
 
@@ -102,7 +115,7 @@ kmain()
 //      k_clear_screen();
      
 /* Para probar la splashscreen comentar arriba y descomentar esta. */ 
-         showSplashScreen();
+//         showSplashScreen();
 
 
 

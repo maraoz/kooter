@@ -83,10 +83,13 @@ _int_09_hand:
 	pusha
 
 	in	al,60h			; leo del puerto 60h
+	mov	ah,00h
 	
-	push	al
+	push	eax
 	call	leoteclado
 
+	add	esp,4
+	
 	mov	al,20h			; Envio de EOI generico al PIC
 	out	20h,al
 

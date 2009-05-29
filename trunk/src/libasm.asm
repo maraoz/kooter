@@ -82,6 +82,7 @@ _int_09_hand:
 	mov	ebp,esp
 	pusha
 
+	mov	eax,00h
 	in	al,60h			; leo del puerto 60h
 	mov	ah,00h
 	

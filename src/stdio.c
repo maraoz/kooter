@@ -85,20 +85,14 @@ int kb_counter = K_BUFFER_LENGTH;
 int n_read = K_BUFFER_LENGTH;
 
 byte get_char() {
-
     if ( kb_counter == n_read ) {
-        n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
-        while (n_read == 0) {
-            put_char('o');
-            n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
-        }
+        do {
+	    n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
+	}
+        while (n_read == 0);
         kb_counter = 0;
     }
-    
-   
-    
-    kb_counter +=1;
-    return keyboard_buffer[kb_counter-1];
+    return keyboard_buffer[kb_counter++];
     
 
     
@@ -156,7 +150,7 @@ size_t read(int fd, void* buffer, size_t count) {
     byte * b = (byte *)buffer;
     for ( i = 0 ; i<count; i++) {
         b[i] = _int_80_caller(READ, fd, i, 0);
-        if (b[i] == 0) {
+        if (b[i] == 0) { 
             break;
         }
     }

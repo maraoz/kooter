@@ -29,17 +29,16 @@ void int_08() {
 }
 
 void leoteclado (int k){
-      	
+	byte c;
 	if(!(teclator.qty_used == TCIRC_SIZE)){
-		k = ktoa(k);
+		c = ktoa(k);
 		if(teclator.next_write == TCIRC_SIZE)
 			teclator.next_write = 0;
 		teclator.tcircular[teclator.next_write] = k;
 		teclator.next_write++;
 		teclator.qty_used++;
-	
-		if(k>=0x20) {
-			put_char(k);
+		if(c>=0x20) {
+			put_char(c);
 			flush();
 		}
 	}
@@ -124,7 +123,7 @@ kmain()
     /*          1110 1111   */
 	
 	_Sti();
-    
+	int a = 0;
 /* Borra la pantalla. */ 
     
 //      k_clear_screen();
@@ -135,20 +134,23 @@ kmain()
 
 
 /*     Ejemplo de uso de flush()     */
+
+//      puts("hola");
+//     char buf[100];
+//     gets(buf);
+//     get_char();
+//     puts(buf);
+//     puts("chau");
     
-    puts("hola");
-    char buf[100];
-    gets(buf);
-    puts(buf);
-    puts("chau");
     
     
-    
-    
+//     put_char('a');
     while(1) {
-        
+
     }
 
-	
+    puts("allalalalalalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2");
+    flush();
+
 }
 

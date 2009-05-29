@@ -8,7 +8,7 @@
 /***************************************************************
 * page_roll
 *
-* Escribe el string str en pantalla. Agrega un enter al final.
+* 
 * 
 ****************************************************************/
 void page_roll() {

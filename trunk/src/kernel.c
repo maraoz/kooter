@@ -17,7 +17,7 @@ typedef struct {
 	byte 	tcircular[TCIRC_SIZE];
 
 } tcirc;
-tcirc teclator={0,0,0};
+tcirc teclator={0,0,0,{0}};
 
 
 
@@ -32,15 +32,18 @@ void leoteclado (int k){
 	byte c;
 	if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
+		if(c != 0x00) {
 		if(teclator.next_write == TCIRC_SIZE)
 			teclator.next_write = 0;
-		teclator.tcircular[teclator.next_write] = k;
+		
+		teclator.tcircular[teclator.next_write] = c;
 		teclator.next_write++;
 		teclator.qty_used++;
-		if(c>=0x20) {
-			put_char(c);
-			flush();
-		}
+// 		if(c>=0x20) {
+// 			put_char(c);
+// 			flush();
+// 		}
+	    }
 	}
 }
 
@@ -133,14 +136,15 @@ kmain()
 
 
 
-/*     Ejemplo de uso de flush()     */
 
-//      puts("hola");
-//     char buf[100];
-//     gets(buf);
-//     get_char();
-//     puts(buf);
-//     puts("chau");
+
+    puts("hola");
+    char buf[100];
+    gets(buf);
+    puts("//mucha magia//");
+    puts(buf);
+    puts("chau");
+    flush();
     
     
     

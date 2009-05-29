@@ -29,7 +29,7 @@
 /*   File Descriptors   */
 #define PANTALLA_FD 0
 #define MOUSE_FD 1
-#define TECLADO_FD 1
+#define TECLADO_FD 2
 
 
 #pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */

@@ -27,3 +27,7 @@ byte		_int_80_caller(byte write_or_read, byte file_descriptor, dword offset, byt
 
 void		_debug (void);
 
+void		enable_mouse(void);
+
+void 		updateMouse(byte first, byte second, byte third);
+

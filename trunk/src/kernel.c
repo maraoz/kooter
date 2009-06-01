@@ -21,7 +21,7 @@ void int_08() {
 
 /**********************************************
 kmain() 
-Punto de entrada de cóo C.
+Punto de entrada de código C.
 *************************************************/
 
 kmain() 
@@ -59,7 +59,7 @@ kmain()
     /*          1110 1111   */
 	
 	_Sti();
-	int a = 0;
+
 /* Borra la pantalla. */ 
     
 //      k_clear_screen();
@@ -71,13 +71,12 @@ kmain()
 
 
     enable_mouse();
-/*    puts("hola");
-    char buf[100];
-    gets(buf);
-    puts("//mucha magia//");
-    puts(buf);
-    puts("chau");
-    flush();*/
+  
+  
+    
+    puts("hola mundo");
+    puts("iupiiiiii");
+    puts("chau mundo");
     
     
     
@@ -85,9 +84,6 @@ kmain()
     while(1) {
 
     }
-
-    puts("allalalalalalaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2");
-    flush();
 
 }
 

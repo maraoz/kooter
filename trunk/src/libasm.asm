@@ -6,6 +6,7 @@ GLOBAL  _int_74_hand
 GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
+GLOBAL	enable_mouse
 
 
 
@@ -102,17 +103,21 @@ _int_09_hand:
 
 
 _int_74_hand:
-	jmp $
+
 	push	ebp
 	mov	ebp,esp
 	pusha
       
+	mov	eax,0
 	in	al,60h			; leo del puerto 60h
 	mov	ah,00h
+	
+	push	eax
       
-	call	pantalla
 	call	leomouse
 
+	add	esp,4
+	
 	mov	al,20h			
 	out	0A0h,al			; Envio de EOI generico al PIC2
 	
@@ -217,7 +222,7 @@ sys_read:
 	ret
 	
 mouse:
-	in	eax,60h			; leo del puerto 60h
+	call	mouse_now			; leo del puerto 60h
 	ret
 
 teclado:
@@ -230,6 +235,57 @@ rmemoria:
 	mov	eax,[ds:ecx]			; Copio de la posicion de memoria que hay en ecx a eax
 	ret
 
+
+; Habilita al mouse  para empezar a recibir sus interrupciones
+enable_mouse:
+	mov	al,0A8h
+	out	64h,al
+	call	wait
+	
+	mov	al,20h
+	out	64h,al
+	call	wait
+	
+	in	al,60h
+	mov	ah,al
+	or	ah,2
+	call	wait
+	
+	mov	al,60h
+	out	64h,al
+	call	wait
+	
+	mov	al,ah
+	out     60h,al
+	call	wait
+	
+	mov	al,0D4h
+	out	64h,al
+	call	wait
+	mov	al,0F6h
+	out	60h,al
+	in	al,60h
+	call	wait
+	
+	mov	al,0D4h
+	out	64h,al
+	call	wait
+	mov	al,0F4h
+	out	60h,al
+	in	al,60h
+	call	wait
+	
+	ret
+	
+	
+wait:
+	push	ax
+	mov	ax,10000
+	
+ciclo:	dec	ax
+	jnz	ciclo
+	pop	ax
+	ret
 
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0

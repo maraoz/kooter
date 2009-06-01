@@ -2,8 +2,30 @@
 #include "../include/defs.h"
 #include "../include/kasm.h"
 #include "../include/stdio.h"
+#include "../include/keyboard.h"
 
-unsigned char ktoa(int c){
+tcirc teclator={0,0,0,{0}};
+
+void leoteclado (int k){
+	byte c;
+	if(!(teclator.qty_used == TCIRC_SIZE)){
+		c = ktoa(k);
+		if(c != 0x00) {
+		if(teclator.next_write == TCIRC_SIZE)
+			teclator.next_write = 0;
+		
+		teclator.tcircular[teclator.next_write] = c;
+		teclator.next_write++;
+		teclator.qty_used++;
+ 		if(c>=0x20) {
+ 			put_char(c);
+ 			flush();
+ 		}
+	    }
+	}
+}
+
+byte ktoa(int c){
 	static int shift = 0;
 	int const keystroke[2][83]={{0x1B,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
 	,0x30,0x2D,0x3D,0x08,0x09,0x71,0x77,0x65,0x72
@@ -35,6 +57,18 @@ unsigned char ktoa(int c){
 	shift = 0;
    
     if(c<0x81)
-      return (unsigned char)0x00;
-    return (unsigned char)keystroke[shift][c-1-0x80];
+      return (byte)0x00;
+    return (byte)keystroke[shift][c-1-0x80];
+}
+
+byte next_char (){
+	byte a;
+	if(teclator.qty_used != 0) {
+		a=teclator.tcircular[teclator.next_read];
+		teclator.next_read++;
+		teclator.qty_used--;
+	}
+	else
+		a = 0;
+	return a;
 }

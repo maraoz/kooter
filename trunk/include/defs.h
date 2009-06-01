@@ -30,7 +30,7 @@
 #define PANTALLA_FD 0
 #define MOUSE_FD 1
 #define TECLADO_FD 2
-
+#define TCIRC_SIZE	80*25
 
 #pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */
 
@@ -64,6 +64,27 @@ typedef struct {
 typedef int size_t;
 typedef short int ssize_t;
 typedef enum eINT_80 {WRITE=0, READ} tINT_80;
+
+typedef struct {
+	int	next_write;
+	int	next_read;
+	int	qty_used;
+	byte 	tcircular[TCIRC_SIZE];
+
+} tcirc;
+
+
+typedef struct {
+	int	x;
+	int	y;
+} point;
+
+typedef struct {
+	byte	izq;
+	byte	der;
+	point	pos;
+} mouseSt;
+
 
 
 

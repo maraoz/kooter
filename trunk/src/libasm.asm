@@ -14,6 +14,7 @@ EXTERN  int_08
 EXTERN	leoteclado
 EXTERN 	leomouse
 EXTERN	next_char
+EXTERN	mouse_now
 
 
 SECTION .text

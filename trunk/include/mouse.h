@@ -1,5 +1,10 @@
+#ifndef _mouse_h_
+#define _mouse_h_
+
 void leomouse (int b);
 
-void updateMouse(byte first, byte second, byte third);
+void updateMouse(void);
 
 mouseSt mouse_now(void);
+
+#endif

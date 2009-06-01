@@ -55,14 +55,21 @@ void gets( char str[] ) {
 #define V_BUFFER_LENGTH 160
 
 byte video_buffer[V_BUFFER_LENGTH] = {0};
+byte clean_buffer[V_BUFFER_LENGTH] = {0};
 static int vb_counter = 0;
 
 void put_char( byte c) {
-    if (! (vb_counter < V_BUFFER_LENGTH && c!='\n')) {
+    if (c == '\n') {
+        write(PANTALLA_FD, video_buffer, vb_counter);
+        write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-vb_counter);
+        vb_counter = 0;
+        return;
+    }
+    
+    if (! (vb_counter < V_BUFFER_LENGTH)) {
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
     }
-
 
     video_buffer[vb_counter] = c;
     video_buffer[vb_counter+1] = BLUE_TXT ;
@@ -78,7 +85,7 @@ void put_char( byte c) {
 * Lee un caracter en pantalla y lo devuelve
 * 
 ****************************************************************/
-#define K_BUFFER_LENGTH 5
+#define K_BUFFER_LENGTH 10
 
 byte keyboard_buffer[K_BUFFER_LENGTH] = {0};
 int kb_counter = K_BUFFER_LENGTH;

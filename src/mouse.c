@@ -5,12 +5,12 @@
 #include "../include/mouse.h"
 
 mouseSt mouse = {0,0,{0,0}};
+byte first, second, third;
 
 void 
 leomouse (int b){
 	static int qty_int=0;
-	
-	static byte first, second, third;
+
 	switch(qty_int){
 		case 0:	first = (byte)b;break;
 		case 1:	second = (byte)b;break;
@@ -19,12 +19,12 @@ leomouse (int b){
 	}
 	qty_int++;
 	if(!(qty_int))
-	    updateMouse(first, second, third);
+	    updateMouse();
 	return;
 }
 
 void 
-updateMouse(byte first, byte second, byte third){
+updateMouse(void){
 	if(first & 0x80 || first & 0x40){
 	    puts("Overflow de mouse");
 	}

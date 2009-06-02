@@ -70,13 +70,21 @@ kmain()
 
 
 
-     enable_mouse();
-  
-  
+    enable_mouse();
     
-    puts("hola mundo");
+    char b[100];
+    puts("*** hace un gets ***");
+    gets(b);
+    puts("*** ahora hago puts de lo que lei con gets ***");
+    puts(b);
+    puts("*** soporta borrar todo lo que quieras perfecto ***");
+    puts("");
+    puts("Hola mundo");
     puts("iupiiiiii");
     puts("chau mundo");
+    int i;
+    for (i=0;i<10;i++)
+        puts("a");
     
     
     

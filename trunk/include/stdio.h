@@ -13,7 +13,7 @@
     #define DEFAULT_TXT BLUE_TXT // Atributo para el video por default.
     
     
-
+    void flush();
 
     void puts( const char * str );
 

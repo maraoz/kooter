@@ -20,16 +20,28 @@ void memcpy(byte * a, byte * b, size_t size) {
 * 
 * 
 ****************************************************************/
-byte screen_buffer[4000] = {0x07,0x07,0x07,0x07,0x07,0x07,0x07,0x07,0x07};
+byte screen_buffer[4160] = {};
 
 void page_roll() {
     read(PANTALLA_FD, screen_buffer, 4000);
     cursor = 0;
-//     int i;
-//     for (i=160; i<4000; i+=2) {
-//         put_char(screen_buffer[i]);
-//     }
-    write(PANTALLA_FD, screen_buffer+160,3840);
+
+    write(PANTALLA_FD, screen_buffer+160,4000);
+    cursor -= 80;
+    return;
+}
+
+/***************************************************************
+* check_screen_scroll
+*
+* 
+* 
+****************************************************************/
+void check_screen_scroll() {
+    if (cursor >= 2000) {
+        page_roll();
+    }
+    return;
 }
 
 /***************************************************************
@@ -55,7 +67,10 @@ void gets( char str[] ) {
     byte c;
     int i=0;
     while ( (c = get_char()) != '\n') {
-        str[i++] = c;
+        if (c != '\x08')
+            str[i++] = c;
+        else
+            --i<0? i=0 : i;
     }
     str[i] = '\0';
     return;
@@ -76,14 +91,18 @@ byte clean_buffer[V_BUFFER_LENGTH] = {0};
 static int vb_counter = 0;
 
 void put_char( byte c) {
+    check_screen_scroll();
+    
     /* ENTER */
     if (c == '\n') {
         write(PANTALLA_FD, video_buffer, vb_counter);
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(cursor%80)*2 );
         vb_counter = 0;
+        check_screen_scroll();
         return;
     }
-    
+
+
     /* BACKSPACE */
     if (c == '\x08') {
         if (cursor % 80) {
@@ -95,10 +114,7 @@ void put_char( byte c) {
     }
     
     /* OTHER CHARACTERS */
-    if (cursor >= 2000) {
-        page_roll();
-    }
-    
+        
     if (! (vb_counter < V_BUFFER_LENGTH)) {
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
@@ -107,6 +123,7 @@ void put_char( byte c) {
     video_buffer[vb_counter] = c;
     video_buffer[vb_counter+1] = DEFAULT_TXT ;
     vb_counter += 2 ;
+    
 
     
 }
@@ -128,8 +145,9 @@ byte get_char() {
     if ( kb_counter == n_read ) {
         do {
 	    n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
-	}
+        }
         while (n_read == 0);
+        
         kb_counter = 0;
     }
     return keyboard_buffer[kb_counter++];
@@ -188,7 +206,7 @@ size_t read(int fd, void* buffer, size_t count) {
     byte * b = (byte *)buffer;
     for ( i = 0 ; i<count; i++) {
         b[i] = _int_80_caller(READ, fd, i, 0);
-        if (b[i] == 0) { 
+        if (b[i] == 0xFF) { 
             break;
         }
     }

@@ -18,7 +18,7 @@ void leoteclado (int k){
             teclator.next_write++;
             teclator.qty_used++;
 //             if(c>=0x20) {
-                put_char(c);
+                 put_char(c);
                 flush();
 //             }
 	    }

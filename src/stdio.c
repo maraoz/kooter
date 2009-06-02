@@ -47,13 +47,23 @@ void check_screen_scroll() {
 /***************************************************************
 * puts
 *
-* Escribe el string str en pantalla. Agrega un enter al final.
+* Escribe el string str en pantalla.
 * 
 ****************************************************************/
 void puts( const char * str ) {
     while (*str) {
         put_char(*str++);
     }
+}
+
+/***************************************************************
+* putln
+*
+* Escribe el string str en pantalla. Agrega un enter al final.
+* 
+****************************************************************/
+void putln( const char * str ) {
+    puts(str);
     put_char('\n');
 }
 

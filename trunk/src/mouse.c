@@ -4,7 +4,7 @@
 #include "../include/stdio.h"
 #include "../include/mouse.h"
 
-mouseSt mouse = {0,0,{0,0}};
+mouseSt mouse = {0,0,{40,13}};
 byte first, second, third;
 
 void 
@@ -18,13 +18,18 @@ leomouse (int b){
 		default: first = (byte)b;
 	}
 	qty_int++;
-	if(!(qty_int))
+	if(!(qty_int)) {
+	    _int_80_caller(WRITE, PANTALLA_FD, (mouse.pos.x + mouse.pos.y*80) /*ptov(mouse.pos)*/, 0x07);
 	    updateMouse();
+	    _int_80_caller(WRITE, PANTALLA_FD, (mouse.pos.x + mouse.pos.y*80) /*ptov(mouse.pos)*/, 0x70);
+	}
 	return;
 }
 
 void 
 updateMouse(void){
+	int	possibleDX;
+	int	possibleDY;
 	if(first & 0x80 || first & 0x40){
 	    puts("Overflow de mouse");
 	}
@@ -44,12 +49,32 @@ updateMouse(void){
 	    else if(!(first & 0x01)) {
 		mouse.izq = 0;
 	    }
-	    mouse.pos.x += (first & 0x01)*second;
-	    mouse.pos.y += (first & 0x02)*third;
+	    
+	    mouse.pos.x += ((first & 0x10)? -1: 1)*second;
+	    mouse.pos.y += ((first & 0x20)? 1: -1)*third;
+	   
+	    
+	    if(mouse.pos.x > 80){
+		mouse.pos.x = 80;
+	    }
+	    else if(mouse.pos.x < 0){
+		mouse.pos.x = 0;
+	    }
+	    if(mouse.pos.y > 25){
+		mouse.pos.y = 25;
+	    }
+	    else if(mouse.pos.y < 0){
+		mouse.pos.y = 0;
+	    }
+
 	}
 	return;
 }     
 
+int
+ptov(point pto) {
+	return (((pto.x/100) + (pto.y/200)*80));
+}
 
 mouseSt 
 mouse_now(void) {

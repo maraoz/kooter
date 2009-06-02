@@ -11,16 +11,17 @@ void leoteclado (int k){
 	if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 		if(c != 0x00) {
-		if(teclator.next_write == TCIRC_SIZE)
-			teclator.next_write = 0;
-		
-		teclator.tcircular[teclator.next_write] = c;
-		teclator.next_write++;
-		teclator.qty_used++;
- 		if(c>=0x20) {
- 			put_char(c);
- 			flush();
- 		}
+            if(teclator.next_write == TCIRC_SIZE)
+                teclator.next_write = 0;
+            
+            put_char('a');
+            teclator.tcircular[teclator.next_write] = c;
+            teclator.next_write++;
+            teclator.qty_used++;
+            if(c>=0x20) {
+                put_char(c);
+                flush();
+            }
 	    }
 	}
 }

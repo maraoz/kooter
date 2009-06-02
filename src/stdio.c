@@ -21,6 +21,10 @@ byte screen_buffer[4000] = {0};
 void page_roll() {
     read(PANTALLA_FD, screen_buffer, 4000);
     cursor = 0;
+    int i;
+    for (i=0; i<4000;i+=2) {
+        screen_buffer[i] += '0';
+    }
     write(PANTALLA_FD, screen_buffer,4000);
 //     write(PANTALLA_FD, screen_buffer+160,3840);
 }
@@ -98,7 +102,7 @@ void put_char( byte c) {
     }
 
     video_buffer[vb_counter] = c;
-    video_buffer[vb_counter+1] = BLUE_TXT ;
+    video_buffer[vb_counter+1] = DEFAULT_TXT ;
     vb_counter += 2 ;
 
     

@@ -72,6 +72,6 @@ byte next_char (){
 		teclator.qty_used--;
 	}
 	else
-		a = 0;
+		a = 0xFF;
 	return a;
 }

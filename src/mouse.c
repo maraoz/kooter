@@ -30,6 +30,8 @@ void
 updateMouse(void){
 	int	possibleDX;
 	int	possibleDY;
+    int dx, dy;
+    
 	if(first & 0x80 || first & 0x40){
 	    puts("Overflow de mouse");
 	}
@@ -50,8 +52,26 @@ updateMouse(void){
 		mouse.izq = 0;
 	    }
 	    
-	    mouse.pos.x += ((first & 0x10)? -1: 1)*second;
-	    mouse.pos.y += ((first & 0x20)? 1: -1)*third;
+        possibleDX = ((first & 0x10)? -1: 1)*second;
+        possibleDY = ((first & 0x20)? 1: -1)*third;
+        if (possibleDX < 0 ) {
+            dx = -1;
+        } else if (possibleDX > 0 ){
+            dx = 1;
+        } else {
+            dx = 0;
+        }
+        
+        if (possibleDY < 0 ) {
+            dy = -1;
+        } else if (possibleDX > 0 ){
+            dy = 1;
+        } else {
+            dy = 0;
+        }
+        
+	    mouse.pos.x += dx;
+	    mouse.pos.y += dy;
 	   
 	    
 	    if(mouse.pos.x > 80){

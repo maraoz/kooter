@@ -7,7 +7,11 @@
 int cursor = 0;
 
 
-
+void memcpy(byte * a, byte * b, size_t size) {
+    while (size--) {
+        a[size] = b[size];
+    }
+}
 
 
 /***************************************************************
@@ -16,17 +20,16 @@ int cursor = 0;
 * 
 * 
 ****************************************************************/
-byte screen_buffer[4000] = {0};
+byte screen_buffer[4000] = {0x07,0x07,0x07,0x07,0x07,0x07,0x07,0x07,0x07};
 
 void page_roll() {
     read(PANTALLA_FD, screen_buffer, 4000);
     cursor = 0;
-    int i;
-    for (i=0; i<4000;i+=2) {
-        screen_buffer[i] += '0';
-    }
-    write(PANTALLA_FD, screen_buffer,4000);
-//     write(PANTALLA_FD, screen_buffer+160,3840);
+//     int i;
+//     for (i=160; i<4000; i+=2) {
+//         put_char(screen_buffer[i]);
+//     }
+    write(PANTALLA_FD, screen_buffer+160,3840);
 }
 
 /***************************************************************
@@ -83,17 +86,17 @@ void put_char( byte c) {
     
     /* BACKSPACE */
     if (c == '\x08') {
+        if (cursor % 80) {
         cursor -= 1;
         write(PANTALLA_FD, clean_buffer, 2);
         cursor -= 1;
+        }
         return;
-        
     }
     
     /* OTHER CHARACTERS */
     if (cursor >= 2000) {
         page_roll();
-//         cursor -=80;
     }
     
     if (! (vb_counter < V_BUFFER_LENGTH)) {

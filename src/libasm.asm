@@ -181,6 +181,7 @@ nswrite:
 	jnz	int80end
 	call	sys_read
 
+int80end:
         pop     ds
 	pop	edx
 	pop	ecx

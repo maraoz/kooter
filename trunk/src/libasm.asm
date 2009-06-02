@@ -174,11 +174,14 @@ _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
 	push    ds
 
 	cmp	ah,0
+	jnz	nswrite
 	call	sys_write
+nswrite:
 	cmp	ah,1
+	jnz	int80end
 	call	sys_read
 
-    pop ds
+        pop     ds
 	pop	edx
 	pop	ecx
 	pop	ebx
@@ -223,11 +226,9 @@ sys_read:
 	jz	teclado		; si el file descriptor es 2 -> leo del teclado		
 	cmp	bh,3
 	jz	rmemoria		; si el file descriptor es 3 -> leo de la memoria
-    jmp $
 	ret
 
 rpantalla:
-    jmp $
 	mov	ax,10h			
 	mov	ds,ax
     
@@ -241,17 +242,14 @@ rpantalla:
 
 
 mouse:
-    jmp $
 	call	mouse_now			; leo del puerto 60h
 	ret
 
 teclado:
-    jmp $
 	call	next_char
 	ret
 
 rmemoria:
-    jmp $
 	mov	ax,10h			
 	mov	ds,ax
 	mov	eax,[ds:ecx]			; Copio de la posicion de memoria que hay en ecx a eax

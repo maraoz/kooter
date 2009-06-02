@@ -4,7 +4,7 @@
 #include "../include/stdio.h"
 #include "../include/mouse.h"
 
-mouseSt mouse = {0,0,{40,13}};
+mouseSt mouse = {0,0,{0,0}};
 byte first, second, third;
 
 void 
@@ -19,18 +19,17 @@ leomouse (int b){
 	}
 	qty_int++;
 	if(!(qty_int)) {
-	    _int_80_caller(WRITE, PANTALLA_FD, (mouse.pos.x + mouse.pos.y*80) /*ptov(mouse.pos)*/, 0x07);
+	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), DEFAULT_TXT);
 	    updateMouse();
-	    _int_80_caller(WRITE, PANTALLA_FD, (mouse.pos.x + mouse.pos.y*80) /*ptov(mouse.pos)*/, 0x70);
+	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), 0x09);
 	}
 	return;
 }
 
 void 
 updateMouse(void){
-	int	possibleDX;
-	int	possibleDY;
-    int dx, dy;
+
+    int dx, dy, possibleDX, possibleDY;
     
 	if(first & 0x80 || first & 0x40){
 	    puts("Overflow de mouse");
@@ -93,7 +92,7 @@ updateMouse(void){
 
 int
 ptov(point pto) {
-	return (((pto.x/100) + (pto.y/200)*80));
+	return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160)+1 : ((pto.x)*2 + (pto.y)*160));
 }
 
 mouseSt 

@@ -104,10 +104,7 @@ void
 llamaFunc(char s[2][LONG_STR])
 {
 	if(str_cmp(s[0], "echo"))
-	{
-		print_nline();
 		puts(s[1]);
-	}	
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
 		/* llamo a la funcion que setea en que 

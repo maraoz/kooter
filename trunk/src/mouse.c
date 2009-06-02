@@ -73,14 +73,14 @@ updateMouse(void){
 	    mouse.pos.y += dy;
 	   
 	    
-	    if(mouse.pos.x > 80){
-		mouse.pos.x = 80;
+	    if(mouse.pos.x > 79){
+		mouse.pos.x = 79;
 	    }
 	    else if(mouse.pos.x < 0){
 		mouse.pos.x = 0;
 	    }
-	    if(mouse.pos.y > 25){
-		mouse.pos.y = 25;
+	    if(mouse.pos.y > 24){
+		mouse.pos.y = 24;
 	    }
 	    else if(mouse.pos.y < 0){
 		mouse.pos.y = 0;

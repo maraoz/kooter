@@ -232,7 +232,7 @@ rpantalla:
 
 	add	ebx,ecx
 	mov	eax,0
-	mov	al,[ds:ebx]			; Copio el char de  ds:ebx en al
+	mov	ah,[ds:ebx]			; Copio el char de  ds:ebx en al
         ret
 
 

@@ -13,15 +13,14 @@ void leoteclado (int k){
 		if(c != 0x00) {
             if(teclator.next_write == TCIRC_SIZE)
                 teclator.next_write = 0;
-            
-            put_char('a');
+
             teclator.tcircular[teclator.next_write] = c;
             teclator.next_write++;
             teclator.qty_used++;
-            if(c>=0x20) {
+//             if(c>=0x20) {
                 put_char(c);
                 flush();
-            }
+//             }
 	    }
 	}
 }

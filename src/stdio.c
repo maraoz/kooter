@@ -70,7 +70,7 @@ void put_char( byte c) {
     /* ENTER */
     if (c == '\n') {
         write(PANTALLA_FD, video_buffer, vb_counter);
-        write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-vb_counter);
+        write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(cursor%80)*2 );
         vb_counter = 0;
         return;
     }
@@ -78,7 +78,7 @@ void put_char( byte c) {
     /* BACKSPACE */
     if (c == '\x08') {
         cursor -= 1;
-        write(PANTALLA_FD, clean_buffer, 1);
+        write(PANTALLA_FD, clean_buffer, 2);
         cursor -= 1;
         return;
         
@@ -87,7 +87,7 @@ void put_char( byte c) {
     /* OTHER CHARACTERS */
     if (cursor >= 2000) {
         page_roll();
-        cursor -=80;
+        cursor -=160;
     }
     
     if (! (vb_counter < V_BUFFER_LENGTH)) {

@@ -4,7 +4,7 @@
 #include "../include/stdio.h"
 #include "../include/util.h"
 #include "../include/keyboard.h"
-
+#include "../include/shell.h"
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
@@ -86,7 +86,7 @@ kmain()
     for (i=0;i<10;i++)
         puts("a");
     
-    
+	shell();
     
 //     put_char('a');
     while(1) {

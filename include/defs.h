@@ -39,6 +39,12 @@
 
 #pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */
 
+/*  defines para la longitud de los strings de ingreso de datos */
+
+#define LONG_STR 50
+#define DIM_STR 100
+
+
 /* Descriptor de segmento */
 typedef struct {
   word limit,

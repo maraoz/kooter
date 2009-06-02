@@ -1,7 +1,12 @@
 
-
 #include "../include/defs.h"
 #include "../include/stdio.h"
+
+
+
+extern int cursor = 0;
+
+
 
 
 
@@ -59,6 +64,7 @@ byte clean_buffer[V_BUFFER_LENGTH] = {0};
 static int vb_counter = 0;
 
 void put_char( byte c) {
+    /* ENTER */
     if (c == '\n') {
         write(PANTALLA_FD, video_buffer, vb_counter);
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-vb_counter);
@@ -66,6 +72,16 @@ void put_char( byte c) {
         return;
     }
     
+    /* BACKSPACE */
+    if (c == '\x08') {
+        cursor -= 1;
+        write(PANTALLA_FD, clean_buffer, 1);
+        cursor -= 1;
+        return;
+        
+    }
+    
+    /* OTHER CHARACTERS */
     if (! (vb_counter < V_BUFFER_LENGTH)) {
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
@@ -127,8 +143,6 @@ void flush() {
 * - Buffer del source
 * - Cantidad
 ****************************************************************/
-
-int cursor = 0;
 
 size_t write(int fd, const void* buffer, size_t count) {
 	int i;

@@ -70,7 +70,7 @@ kmain()
 
 
 
-//     enable_mouse();
+     enable_mouse();
   
   
     

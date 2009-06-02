@@ -188,7 +188,7 @@ _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
 	
 sys_write:
 	cmp	bh,0
-	jz	pantalla		; si el file descriptor es 0 (pantalla) voy a escribir a a B8000h
+	jz	wpantalla		; si el file descriptor es 0 (pantalla) voy a escribir a a B8000h
 	cmp	bh,3
 	jz	wmemoria			; si el file descriptor es 3 (memoria) voy a escribir a a 0CAFEh
 	ret
@@ -203,7 +203,7 @@ wmemoria:
         ret
 		
 
-pantalla:
+wpantalla:
 
 	mov	ax,10h			
 	mov	ds,ax
@@ -214,6 +214,8 @@ pantalla:
         ret
 
 sys_read: 
+	cmp	bh,0
+	jz	rpantalla
 	cmp	bh,1
 	jz	mouse		; si el file descriptor es 1 -> leo del mouse
 	cmp	bh,2				
@@ -221,7 +223,19 @@ sys_read:
 	cmp	bh,3
 	jz	rmemoria		; si el file descriptor es 3 -> leo de la memoria
 	ret
-	
+
+rpantalla:
+
+	mov	ax,10h			
+	mov	ds,ax
+	mov	ebx,0B8000h
+
+	add	ebx,ecx
+	mov	eax,0
+	mov	al,[ds:ebx]			; Copio el char de  ds:ebx en al
+        ret
+
+
 mouse:
 	call	mouse_now			; leo del puerto 60h
 	ret

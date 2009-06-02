@@ -63,7 +63,7 @@ updateMouse(void){
         
         if (possibleDY < 0 ) {
             dy = -1;
-        } else if (possibleDX > 0 ){
+        } else if (possibleDYx > 0 ){
             dy = 1;
         } else {
             dy = 0;

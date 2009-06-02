@@ -32,6 +32,11 @@
 #define TECLADO_FD 2
 #define TCIRC_SIZE	80*25
 
+/* modos de la int_80 */
+#define WRITE 0
+#define READ 1
+// typedef enum eINT_80 {WRITE=0, READ} tINT_80;
+
 #pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */
 
 /* Descriptor de segmento */
@@ -63,7 +68,7 @@ typedef struct {
 
 typedef int size_t;
 typedef short int ssize_t;
-typedef enum eINT_80 {WRITE=0, READ} tINT_80;
+
 
 typedef struct {
 	int	next_write;

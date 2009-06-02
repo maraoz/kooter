@@ -205,7 +205,7 @@ wmemoria:
 	mov	ebx,0CAFEh
 	add	ebx,ecx
 	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
-        ret
+    ret
 		
 
 wpantalla:
@@ -218,6 +218,7 @@ wpantalla:
     
 	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
    	ret
+
 
 sys_read: 
 	cmp	bh,0
@@ -239,7 +240,7 @@ rpantalla:
     
 	mov	eax,0
 	mov	al,[ds:ebx]			; Copio el char de  ds:ebx en al
-        
+;     mov al, 'm'
     	ret
 
 

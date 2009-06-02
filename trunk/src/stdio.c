@@ -4,7 +4,7 @@
 
 
 
-extern int cursor = 0;
+int cursor = 0;
 
 
 
@@ -16,8 +16,11 @@ extern int cursor = 0;
 * 
 * 
 ****************************************************************/
+byte screen_buffer[2000] = {0};
+
 void page_roll() {
-    
+    read(PANTALLA_FD, screen_buffer, 1920);
+    write(PANTALLA_FD, screen_buffer,1920 );
 }
 
 /***************************************************************
@@ -82,6 +85,11 @@ void put_char( byte c) {
     }
     
     /* OTHER CHARACTERS */
+    if (cursor >= 2000) {
+        page_roll();
+        cursor -=80;
+    }
+    
     if (! (vb_counter < V_BUFFER_LENGTH)) {
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
@@ -147,9 +155,9 @@ void flush() {
 size_t write(int fd, const void* buffer, size_t count) {
 	int i;
 	for ( i = 0 ; i<count; i++) {
-		_int_80_caller(WRITE, fd, i + cursor, *((byte *)buffer+i));
+		_int_80_caller(WRITE, fd, i + cursor*2, *((byte *)buffer+i));
 	}
-	cursor+=count;
+	cursor+=count/2;
 	return 0;
 }
 
@@ -188,8 +196,8 @@ char * BLANK_LINE = "                                                           
 void k_clear_screen() 
 {
 	int i;
-	for (i = 0; i < 25*80; i++) {
-        put_char(' ');
+	for (i = 0; i < 25; i++) {
+        puts(BLANK_LINE);
 	}
 }
 

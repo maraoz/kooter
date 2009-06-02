@@ -8,9 +8,9 @@
     #define BLUE_TXT 0x09       // Atributo de video. Letras azules, fondo negro
     #define INVISIBLE_TXT 0x00 	// Atributo de video. Letras negras, fondo negro
 
-    /* el cursor de pantalla */
     
-    int cursor;
+    
+    
 
 
     void puts( const char * str );

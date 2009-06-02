@@ -16,11 +16,13 @@ int cursor = 0;
 * 
 * 
 ****************************************************************/
-byte screen_buffer[2000] = {0};
+byte screen_buffer[4000] = {0};
 
 void page_roll() {
-    read(PANTALLA_FD, screen_buffer, 1920);
-    write(PANTALLA_FD, screen_buffer,1920 );
+    read(PANTALLA_FD, screen_buffer, 4000);
+    cursor = 0;
+    write(PANTALLA_FD, screen_buffer,4000);
+//     write(PANTALLA_FD, screen_buffer+160,3840);
 }
 
 /***************************************************************
@@ -87,7 +89,7 @@ void put_char( byte c) {
     /* OTHER CHARACTERS */
     if (cursor >= 2000) {
         page_roll();
-        cursor -=160;
+//         cursor -=80;
     }
     
     if (! (vb_counter < V_BUFFER_LENGTH)) {

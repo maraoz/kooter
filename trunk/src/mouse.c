@@ -21,7 +21,7 @@ leomouse (int b){
 	if(!(qty_int)) {
 	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), DEFAULT_TXT);
 	    updateMouse();
-	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), 0x09);
+	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), 0x30);
 	}
 	return;
 }
@@ -92,7 +92,7 @@ updateMouse(void){
 
 int
 ptov(point pto) {
-	return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160)+1 : ((pto.x)*2 + (pto.y)*160));
+	return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160) : ((pto.x)*2 + (pto.y)*160))+1;
 }
 
 mouseSt 

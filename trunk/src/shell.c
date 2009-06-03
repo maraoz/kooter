@@ -31,15 +31,12 @@ char in[DIM_STR];
 
 
 /*
-** print_nline al ser llamada va una linea hacia abajo
-** en donde imprime el inicio de la linea de comandos.
+** print_nline al ser llamada imprime el inicio de la linea de comandos.
 */
 
 void
 print_nline()
 {
-	put_char('\n');
-	flush();
 	puts("kooter > ");
 	flush();
 }
@@ -101,29 +98,39 @@ separaPorEspacios(char *s, char out[][LONG_STR])
 ** en funcion del comando ingresado
 */
 
-void
+int
 llamaFunc(char s[2][LONG_STR])
 {
 	if(str_cmp(s[0], "echo"))
 	{
 		puts(s[1]);
 		flush();
+		return ECHO_CD;
 	}
 	else if(str_cmp(s[0], "clear"))
 	{
 // 		clear();
+		k_clear_screen();
+		return CLEAR_CD;
 	}
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
 // 		setTimeSp((atoi(s[1])));
+		return SETTIME_CD;
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-// 		activaSp();
+		/* Habria que crear un vector en el que se guarda la pantalla
+		como esta en este momento para que al volver del
+		screensaver quede todo como antes */
+		activaSp();
+		/* Recupera la pantalla anterior */
+		return ACTSP_CD;
 	}
 	else if(str_cmp(s[0], "exitpc"))
 	{
 // 		exitPc();
+		return EXIT_CD;
 	}
 	else
 	{
@@ -131,6 +138,7 @@ llamaFunc(char s[2][LONG_STR])
 		put_char(':');
 		puts(" command not found");
 		flush();
+		return CNF_CD;
 	}
 }
 
@@ -141,14 +149,29 @@ llamaFunc(char s[2][LONG_STR])
 void
 shell()
 {
+	int ret=AUX;
+
 	while(1)
 	{
-		print_nline();
+		if(ret!=AUX && ret!=CLEAR_CD)
+		{
+			put_char('\n');
+			flush();
+		}
+			print_nline();
 
 		gets(in);
 
 		separaPorEspacios(in, data);
 
-		llamaFunc(data);
+		ret=llamaFunc(data);
+
+		data[0][0]=data[1][0]=0;
 	}
+}
+
+void
+activaSp()
+{
+	screenSaver();
 }

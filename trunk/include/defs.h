@@ -44,6 +44,16 @@
 #define LONG_STR 50
 #define DIM_STR 100
 
+/* define para los return de las funciones en el shell */
+
+#define AUX 0
+#define ECHO_CD 1
+#define CLEAR_CD 2
+#define SETTIME_CD 3
+#define ACTSP_CD 4
+#define EXIT_CD 5
+#define CNF_CD 6
+
 
 /* Descriptor de segmento */
 typedef struct {

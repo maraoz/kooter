@@ -9,3 +9,15 @@ int isdigit(int c){
 int isalphanum(int c){
   return isdigit(c) && isalpha(c);
 }
+
+int abs(int a){
+    return (a>0)?a:-a;
+}
+
+int max(int a, int b){
+    return (a>b)?a:b;
+}
+
+int min(int a, int b){
+    return (a<b)?a:b;
+}

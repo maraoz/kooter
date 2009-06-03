@@ -7,4 +7,8 @@ void updateMouse(void);
 
 mouseSt mouse_now(void);
 
+void paste(void);
+
+void copy(point start, point end);
+
 #endif

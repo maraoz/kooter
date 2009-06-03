@@ -8,14 +8,15 @@
 mouseSt mouse = {0,0,{0,0}};
 byte first, second, third;
 byte clipboard[TCIRC_SIZE];
+byte bkpCursorPos = DEFAULT_TXT;
 
 void 
 leomouse (int b){
 	static int qty_int=0;
 	static point start,end;
 	static int mouseClickIzq = 0;
-	static byte backup = DEFAULT_TXT;
 
+	
 	switch(qty_int){
 		case 0:	first = (byte)b;break;
 		case 1:	second = (byte)b;break;
@@ -24,11 +25,10 @@ leomouse (int b){
 	}
 	qty_int++;
 	if(!(qty_int)) {
-	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), backup );
+	    hideMouseCursor();
 	    mouseClickIzq = mouse.izq;
 	    updateMouse();
-	    backup = _int_80_caller(READ, PANTALLA_FD, ptov(mouse.pos), 0);
-	    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), MOUSE_CURSOR);
+	    showMouseCursor();
 	    if (mouse.izq && !mouseClickIzq){
 		start.x = mouse.pos.x;
 		start.y = mouse.pos.y;
@@ -39,10 +39,9 @@ leomouse (int b){
 		copy(start,end);
 	    }
 	    if(mouse.der) {
-		_int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), backup );
+		hideMouseCursor();
 		paste();
-		backup = _int_80_caller(READ, PANTALLA_FD, ptov(mouse.pos), 0);
-		_int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), MOUSE_CURSOR);
+		showMouseCursor();
 	    }
 		
 	}
@@ -117,6 +116,18 @@ int
 ptov(point pto) {
     return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160) : ((pto.x)*2 + (pto.y)*160))+1;
 }
+
+void
+hideMouseCursor(void) {
+    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), bkpCursorPos );
+}
+
+void
+showMouseCursor(void) {
+    bkpCursorPos = _int_80_caller(READ, PANTALLA_FD, ptov(mouse.pos), 0);
+    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), MOUSE_CURSOR);
+}
+
 
 void
 copy(point start, point end){

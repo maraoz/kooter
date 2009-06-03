@@ -41,6 +41,7 @@ print_nline()
 	put_char('\n');
 	flush();
 	puts("kooter > ");
+	flush();
 }
 
 /* strcmp retorna 1 si los strings eran iguales y 0 en caso contrario */
@@ -104,23 +105,32 @@ void
 llamaFunc(char s[2][LONG_STR])
 {
 	if(str_cmp(s[0], "echo"))
+	{
 		puts(s[1]);
+		flush();
+	}
+	else if(str_cmp(s[0], "clear"))
+	{
+// 		clear();
+	}
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
-		/* llamo a la funcion que setea en que 
-			tiempo se activa el protector de pantalla, le paso s[1] */
+// 		setTimeSp((atoi(s[1])));
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-		/* llamo a la funcion, no recibe parametros */
+// 		activaSp();
 	}
 	else if(str_cmp(s[0], "exitpc"))
 	{
-		/* llamo a la funcion, no recibe parametros */
+// 		exitPc();
 	}
 	else
 	{
-		puts("command not found");
+		puts(s[0]);
+		put_char(':');
+		puts(" command not found");
+		flush();
 	}
 }
 

@@ -27,6 +27,7 @@ void page_roll() {
     read(PANTALLA_FD, screen_buffer, 4000);
     cursor = 0;
 
+    
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
     showMouseCursor();

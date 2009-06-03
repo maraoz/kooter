@@ -262,45 +262,45 @@ rmemoria:
 enable_mouse:
 	mov	al,0A8h
 	out	64h,al
-	call	wait
+	call	mouseWait
 	
 	mov	al,20h
 	out	64h,al
-	call	wait
+	call	mouseWait
 	
 	in	al,60h
 	mov	ah,al
 	or	ah,2
-	call	wait
+	call	mouseWait
 	
 	mov	al,60h
 	out	64h,al
-	call	wait
+	call	mouseWait
 	
 	mov	al,ah
 	out     60h,al
-	call	wait
+	call	mouseWait
 	
 	mov	al,0D4h
 	out	64h,al
-	call	wait
+	call	mouseWait
 	mov	al,0F6h
 	out	60h,al
 	in	al,60h
-	call	wait
+	call	mouseWait
 	
 	mov	al,0D4h
 	out	64h,al
-	call	wait
+	call	mouseWait
 	mov	al,0F4h
 	out	60h,al
 	in	al,60h
-	call	wait
+	call	mouseWait
 	
 	ret
 	
 	
-wait:
+mouseWait:
 	push	ax
 	mov	ax,10000
 	

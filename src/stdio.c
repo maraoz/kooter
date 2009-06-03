@@ -23,11 +23,13 @@ void memcpy(byte * a, byte * b, size_t size) {
 byte screen_buffer[4160] = {};
 
 void page_roll() {
+    hideMouseCursor();
     read(PANTALLA_FD, screen_buffer, 4000);
     cursor = 0;
 
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
+    showMouseCursor();
     return;
 }
 

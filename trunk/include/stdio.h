@@ -11,6 +11,7 @@
     #define INVISIBLE_TXT 0x00 	// Atributo de video. Letras negras, fondo negro
 
     #define DEFAULT_TXT BLUE_TXT // Atributo para el video por default.
+    #define MOUSE_CURSOR 0x30	//  Atributo para el cursor del mouse.
     
     
     void flush();

@@ -240,8 +240,7 @@ rpantalla:
     
 	mov	eax,0
 	mov	al,[ds:ebx]			; Copio el char de  ds:ebx en al
-;     mov al, 'm'
-    	ret
+        ret
 
 
 mouse:

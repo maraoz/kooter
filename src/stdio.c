@@ -239,6 +239,7 @@ void k_clear_screen()
 	for (i = 0; i < 25; i++) {
         puts(BLANK_LINE);
 	}
+	cursor-=2000;
 }
 
 
@@ -281,4 +282,13 @@ void showSplashScreen() {
         puts(splash_screen[i]);
     }
 
+}
+
+void screenSaver()
+{
+	int i;
+	for(i = 0; i < 25; i++)
+		puts(splash_screen[i]);
+	for(i = 1; i < 25; i++)
+		puts(splash_screen[i]);
 }

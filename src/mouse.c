@@ -137,8 +137,8 @@ copy(point start, point end){
 	clipboard[i] = 0;
     }
     read(PANTALLA_FD, tmpbuf, 4000);
-    for(j = 0 ; j<abs(end.y - start.y) ; j++) {
-    	for( i = 0 ; i<abs(end.x-start.x) ; i++) {
+    for(j = 0 ; j<abs(end.y +1 - start.y) ; j++) {
+    	for( i = 0 ; i<abs(end.x +1 - start.x) ; i++) {
 	    auxi = tmpbuf[(min(start.x,end.x)*2+160*min(start.y,end.y))+i*2+j*160];
 	    if(auxi != 0) {
 		clipboard[k] = auxi;
@@ -151,6 +151,7 @@ copy(point start, point end){
 void
 paste(void){
     puts(clipboard);
+    flush();
 }
 
 

@@ -15,4 +15,6 @@ void hideMouseCursor(void);
 
 void showMouseCursor(void);
 
+void moveMouseCursor(point pto);
+
 #endif

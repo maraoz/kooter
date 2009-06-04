@@ -23,7 +23,7 @@
 extern int interrupted;
 extern char * splash_screen[25];
 extern int tTicks;
-
+extern int cursor;
 
 /*
 ** matriz de dos filas, en las que se van a guardar:
@@ -37,12 +37,14 @@ char data[2][LONG_STR];
 */
 char in[DIM_STR];
 
-
 /*
 ** vector para guardar la pantalla durante el screen saver
 */
-char bufferScr[2000];
-
+char bufferScr[TCIRC_SIZE*2];
+/*
+** variable con la posicion en el buffer
+*/
+int pos;
 
 /*
 ** variable con el tiempo para que entre el screen saver
@@ -135,6 +137,8 @@ separaPorEspacios(char *s, char out[][LONG_STR])
 int
 llamaFunc(char s[2][LONG_STR])
 {
+// 	int rec;
+
 	if(s[0][0]==0)
 		return NO_CD;
 	else if(str_cmp(s[0], "echo"))
@@ -158,19 +162,23 @@ llamaFunc(char s[2][LONG_STR])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-	/*	for(i=0; i<2000; i++)
-			bufferScr[i]= bufferpantalla[i]		*/
+		read(PANTALLA_FD, bufferScr, 4000);
+// 		rec=cursor;
 		activaSp();
-	/*	for(i=0; i<2000; i++)
-			bufferpantalla[i]= bufferScr[i]		*/
+		write(PANTALLA_FD, bufferScr, 4000);
+// 		cursor=rec;
 		return ACTSP_CD;
 	}
-	else if(str_cmp(s[0], "exitpc"))
+	else if(str_cmp(s[0], "turnOff"))
 	{
-// 		exitPc();
+// 		turnOff();
 		return EXIT_CD;
 	}
-	else
+	else if(str_cmp(s[0], "garbage"))
+	{
+// 		garbage();
+		return GBG_CD;
+	}
 	{
 		puts(s[0]);
 		put_char(':');
@@ -190,7 +198,8 @@ shell()
 	int ret=AUX;
 	int i;
 	int c;
-	entraSp=3;
+	int rec;
+	entraSp=10;
 	tTicks=0;
 
 	while(1)
@@ -198,15 +207,11 @@ shell()
 
 // 		if(tTicks>entraSp*18)
 // 		{
-// 			data[0][1]='a';
-// 			data[0][1]='c';
-// 			data[0][1]='t';
-// 			data[0][1]='i';
-// 			data[0][1]='v';
-// 			data[0][1]='a';
-// 			data[0][1]='S';
-// 			data[0][1]='p';
-// 			ret=llamaFunc(data);
+// 			rec=cursor;
+// 			read(PANTALLA_FD, bufferScr, 4000);
+// 			activaSp();
+// 			write(PANTALLA_FD, bufferScr, 4000);
+// 			cursor=rec;
 // 		}
 
 		if(ret!=AUX && ret!=CLEAR_CD && ret!=NO_CD)
@@ -222,7 +227,8 @@ shell()
 		{
 			if(c!='\x08')
 			{
-				in[i++]=c;
+				if(i<100)
+					in[i++]=c;
 				put_char(c);
 				flush();
 			}

@@ -283,12 +283,3 @@ void showSplashScreen() {
     }
 
 }
-
-void screenSaver()
-{
-	int i;
-	for(i = 0; i < 25; i++)
-		puts(splash_screen[i]);
-	for(i = 1; i < 25; i++)
-		puts(splash_screen[i]);
-}

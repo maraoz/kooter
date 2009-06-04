@@ -9,11 +9,11 @@
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
 
-
+extern int tTicks;
 
 
 void int_08() {
-
+	tTicks++;
 	return;
 
 }
@@ -62,7 +62,16 @@ kmain()
 
 /* Borra la pantalla. */ 
     
-//      k_clear_screen();
+
+
+
+
+/* habria que poner un wait aca para que se vea un rato la pantallita esa */
+     k_clear_screen();
+
+
+
+
      
 /* Para probar la splashscreen comentar arriba y descomentar esta. */ 
 //         showSplashScreen();
@@ -71,7 +80,7 @@ kmain()
 
 
     enable_mouse();
-    
+/*    
     char b[100];
     puts("*** hace un gets ***");
     gets(b);
@@ -85,7 +94,7 @@ kmain()
     int i;
     for (i=0;i<10;i++)
         puts("a");
-    
+    */
 	shell();
     
 //     put_char('a');

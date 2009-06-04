@@ -4,13 +4,17 @@
 #include "../include/stdio.h"
 #include "../include/keyboard.h"
 
+extern int cursor;
+
 tcirc teclator={0,0,0,{0}};
 
 void leoteclado (int k){
 	extern int interrupted;
+	extern int tTicks;
 	byte c;
 	
 	interrupted = 1;
+	tTicks=0;
 	if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 		if(c != 0x00) {
@@ -21,8 +25,11 @@ void leoteclado (int k){
             teclator.next_write++;
             teclator.qty_used++;
 //             if(c>=0x20) {
-                put_char(c);
-                flush();
+
+// 		if(c!='\x08' || ((c=='\x08') && (cursor%80>9)))
+//                 	put_char(c);
+// 
+//                 flush();
 //             }
 	    }
 	}

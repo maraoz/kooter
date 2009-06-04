@@ -12,11 +12,12 @@ byte bkpCursorPos = DEFAULT_TXT;
 
 void 
 leomouse (int b){
+	extern int interrupted;
 	static int qty_int=0;
 	static point start,end;
 	static int mouseClickIzq = 0;
 
-	
+	interrupted = 1;
 	switch(qty_int){
 		case 0:	first = (byte)b;break;
 		case 1:	second = (byte)b;break;
@@ -51,7 +52,8 @@ leomouse (int b){
 void 
 updateMouse(void){
 
-    int dx, dy, possibleDX, possibleDY;
+    int dx,dy;
+    point possible;
 
     if(first & 0x80 || first & 0x40){
 	puts("Overflow de mouse");
@@ -73,19 +75,19 @@ updateMouse(void){
 	    mouse.izq = 0;
 	}
 	
-    possibleDX = ((first & 0x10)? -1: 1)*second;
-    possibleDY = ((first & 0x20)? 1: -1)*third;
-    if (possibleDX < 0 ) {
+    possible.x = ((first & 0x10)? -1: 1)*second;
+    possible.y = ((first & 0x20)? 1: -1)*third;
+    if (possible.x < 0 ) {
 	dx = -1;
-    } else if (possibleDX > 0 ){
+    } else if (possible.x > 0 ){
 	dx = 1;
     } else {
 	dx = 0;
     }
     
-    if (possibleDY < 0 ) {
+    if (possible.y < 0 ) {
 	dy = -1;
-    } else if (possibleDY > 0 ){
+    } else if (possible.y > 0 ){
 	dy = 1;
     } else {
 	dy = 0;
@@ -94,6 +96,7 @@ updateMouse(void){
 	mouse.pos.x += dx;
 	mouse.pos.y += dy;
 	
+//	moveMouseCursor(possible);
 	
 	if(mouse.pos.x > 79){
 	    mouse.pos.x = 79;
@@ -130,6 +133,25 @@ showMouseCursor(void) {
 
 
 void
+moveMouseCursor(point pto){
+    hideMouseCursor();
+    if(pto.x > 0) {
+	mouse.pos.x++;
+    }
+    else if(pto.x < 0){
+	mouse.pos.x--;
+    }
+    if(pto.y > 0) {
+	mouse.pos.y++;
+    }
+    else if(pto.y < 0){
+	mouse.pos.y--;
+    }
+    showMouseCursor();
+}
+
+
+void
 copy(point start, point end){
     static byte tmpbuf[4000], auxi;
     int i,j,k=0;
@@ -144,6 +166,8 @@ copy(point start, point end){
 		clipboard[k] = auxi;
 		k++;
 	    }
+	clipboard[k] = '\n';
+	k++;
 	}
     }
 }
@@ -151,7 +175,6 @@ copy(point start, point end){
 void
 paste(void){
     puts(clipboard);
-    flush();
 }
 
 

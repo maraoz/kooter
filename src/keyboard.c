@@ -7,7 +7,10 @@
 tcirc teclator={0,0,0,{0}};
 
 void leoteclado (int k){
+	extern int interrupted;
 	byte c;
+	
+	interrupted = 1;
 	if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 		if(c != 0x00) {

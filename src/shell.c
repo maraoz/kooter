@@ -18,6 +18,14 @@
 */
 
 /*
+** variable que esta en 0 mientras no lleguen interrupciones
+*/
+extern int interrupted;
+extern char * splash_screen[25];
+extern int tTicks;
+
+
+/*
 ** matriz de dos filas, en las que se van a guardar:
 ** en la primera el comando ingresado
 ** en la segunda el parametro, en caso de haberlo
@@ -29,6 +37,17 @@ char data[2][LONG_STR];
 */
 char in[DIM_STR];
 
+
+/*
+** vector para guardar la pantalla durante el screen saver
+*/
+char bufferScr[2000];
+
+
+/*
+** variable con el tiempo para que entre el screen saver
+*/
+int entraSp;
 
 /*
 ** print_nline al ser llamada imprime el inicio de la linea de comandos.
@@ -55,6 +74,21 @@ str_cmp(char *s, char *t)
 			flag=0;
 
 	return (s[i]==0 && t[i]==0);
+}
+
+/*
+** recibe una cadena de numeros ascii y la transforma en un int
+*/
+
+int
+atoi(char *s)
+{
+	int num=0;
+
+	while(isdigit(*s))
+		num=num*10+(*(s++)-'0');
+
+	return num;
 }
 
 /*
@@ -101,7 +135,9 @@ separaPorEspacios(char *s, char out[][LONG_STR])
 int
 llamaFunc(char s[2][LONG_STR])
 {
-	if(str_cmp(s[0], "echo"))
+	if(s[0][0]==0)
+		return NO_CD;
+	else if(str_cmp(s[0], "echo"))
 	{
 		puts(s[1]);
 		flush();
@@ -109,22 +145,24 @@ llamaFunc(char s[2][LONG_STR])
 	}
 	else if(str_cmp(s[0], "clear"))
 	{
-// 		clear();
 		k_clear_screen();
 		return CLEAR_CD;
 	}
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
-// 		setTimeSp((atoi(s[1])));
+		setTimeSp((atoi(s[1])));
+		puts("tiempo seteado = ");
+		puts(s[1]);
+		puts(" segundos");
 		return SETTIME_CD;
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-		/* Habria que crear un vector en el que se guarda la pantalla
-		como esta en este momento para que al volver del
-		screensaver quede todo como antes */
+	/*	for(i=0; i<2000; i++)
+			bufferScr[i]= bufferpantalla[i]		*/
 		activaSp();
-		/* Recupera la pantalla anterior */
+	/*	for(i=0; i<2000; i++)
+			bufferpantalla[i]= bufferScr[i]		*/
 		return ACTSP_CD;
 	}
 	else if(str_cmp(s[0], "exitpc"))
@@ -150,17 +188,54 @@ void
 shell()
 {
 	int ret=AUX;
+	int i;
+	int c;
+	entraSp=3;
+	tTicks=0;
 
 	while(1)
 	{
-		if(ret!=AUX && ret!=CLEAR_CD)
+
+// 		if(tTicks>entraSp*18)
+// 		{
+// 			data[0][1]='a';
+// 			data[0][1]='c';
+// 			data[0][1]='t';
+// 			data[0][1]='i';
+// 			data[0][1]='v';
+// 			data[0][1]='a';
+// 			data[0][1]='S';
+// 			data[0][1]='p';
+// 			ret=llamaFunc(data);
+// 		}
+
+		if(ret!=AUX && ret!=CLEAR_CD && ret!=NO_CD)
 		{
 			put_char('\n');
 			flush();
 		}
-			print_nline();
 
-		gets(in);
+		print_nline();
+
+		i=0;
+		while((c=get_char())!='\n')
+		{
+			if(c!='\x08')
+			{
+				in[i++]=c;
+				put_char(c);
+				flush();
+			}
+			else if(i>0)
+			{
+				i--;
+				put_char(c);
+				flush();
+			}
+		}
+		put_char(c);
+		flush();
+		in[i]=0;
 
 		separaPorEspacios(in, data);
 
@@ -173,5 +248,20 @@ shell()
 void
 activaSp()
 {
-	screenSaver();
+	int i;
+	interrupted=0;
+	while(interrupted==0)
+		for(i = 0; i < 25; i++)
+		{
+			if(interrupted!=0)
+				break;
+			puts(splash_screen[i]);
+		}
+	return;
+}
+
+void
+setTimeSp(int time)
+{
+	entraSp=time;
 }

@@ -53,7 +53,7 @@
 #define ACTSP_CD 4
 #define EXIT_CD 5
 #define CNF_CD 6
-
+#define NO_CD 7
 
 /* Descriptor de segmento */
 typedef struct {
@@ -114,7 +114,7 @@ typedef struct {
 
 
 int interrupted;
-
+int tTicks;
 
 
 #endif

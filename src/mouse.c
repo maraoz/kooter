@@ -13,11 +13,13 @@ byte bkpCursorPos = DEFAULT_TXT;
 void 
 leomouse (int b){
 	extern int interrupted;
+	extern int tTicks;
 	static int qty_int=0;
 	static point start,end;
 	static int mouseClickIzq = 0;
 
 	interrupted = 1;
+	tTicks=0;
 	switch(qty_int){
 		case 0:	first = (byte)b;break;
 		case 1:	second = (byte)b;break;

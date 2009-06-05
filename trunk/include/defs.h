@@ -41,8 +41,8 @@
 
 /*  defines para la longitud de los strings de ingreso de datos */
 
-#define LONG_STR 50
-#define DIM_STR 100
+#define LONG_STR_TKN 100
+#define LONG_STR_CMD 320
 
 /* define para los return de las funciones en el shell */
 

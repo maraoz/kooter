@@ -15,41 +15,17 @@ extern int tTicks;
 extern int entraSp;
 extern int cursor;
 extern char bufferScr[TCIRC_SIZE*2];
-extern int rec;
-extern int scrIs;
-extern char * splash_screen[25];
-extern int ret;
+extern char * screenSaverImg[25];
 
-int lin=0;
+
+
+
+
 
 void int_08()
 {
-	if(scrIs==0)
-		tTicks++;
-
-	if(interrupted==0)
-	{
-		if(tTicks>entraSp*18)
-		{
-			if(scrIs==0)
-			{
-				read(PANTALLA_FD, bufferScr, 4000);
-				rec=cursor;
-			}
-			scrIs=1;
-			puts(splash_screen[(lin++)%26]);
-		}
-	}
-	else if(scrIs==1)
-	{
-		scrIs=0;
-		cursor = 0;
-		write(PANTALLA_FD, bufferScr, 4000);
-		cursor=rec;
-		print_nline();
-		ret==ACTSP_CD;
-	}
-
+	
+	check_screen_saver();
 	return;
 }
 

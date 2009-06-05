@@ -74,6 +74,10 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         mov     ax, 10h			; a utilizar.
         mov     ds, ax
         mov     es, ax
+
+	mov	al,20h			; Envio de EOI generico al PIC
+	out	20h,al	
+
         call    int_08
         mov	al,20h			; Envio de EOI generico al PIC
 	out	20h,al

@@ -14,7 +14,7 @@ void leoteclado (int k){
 	byte c;
 	
 	interrupted = 1;
-	tTicks=0;
+// 	tTicks=0;
 	if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 		if(c != 0x00) {

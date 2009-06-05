@@ -22,7 +22,7 @@
 ** variable que esta en 0 mientras no lleguen interrupciones
 */
 extern int interrupted;
-extern char * splash_screen[25];
+
 extern int tTicks;
 extern int cursor;
 
@@ -31,22 +31,18 @@ extern int cursor;
 ** en la primera el comando ingresado
 ** en la segunda el parametro, en caso de haberlo
 */
-char data[2][LONG_STR];
+char data[2][LONG_STR_TKN];
 
 /*
 ** vector en el que se guarda lo ingresado por el usuario
 */
-char in[DIM_STR];
+char in[LONG_STR_CMD];
 
 /*
 ** vector para guardar la pantalla durante el screen saver
 */
 char bufferScr[TCIRC_SIZE*2];
 
-/*
-** variable con la posicion en el buffer
-*/
-int rec;
 
 /*
 ** variable con el tiempo para que entre el screen saver
@@ -114,7 +110,7 @@ atoi(char *s)
 */
 
 void
-separaPorEspacios(char *s, char out[][LONG_STR])
+separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 {
 	int i, j;
 
@@ -148,8 +144,10 @@ separaPorEspacios(char *s, char out[][LONG_STR])
 */
 
 int
-llamaFunc(char s[2][LONG_STR])
+llamaFunc(char s[2][LONG_STR_TKN])
 {
+	int cursorBkp;
+
 	if(s[0][0]==0)
 		return NO_CD;
 	else if(str_cmp(s[0], "echo"))
@@ -176,12 +174,12 @@ llamaFunc(char s[2][LONG_STR])
 	else if(str_cmp(s[0], "activaSp"))
 	{
 		read(PANTALLA_FD, bufferScr, 4000);
-		rec=cursor;
+		cursorBkp=cursor;
 		activaSp();
+		interrupted = 0;
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
-		cursor=rec;
-		print_nline();
+		cursor=cursorBkp;
 		return ACTSP_CD;
 	}
 	else if(str_cmp(s[0], "dispImg"))
@@ -226,24 +224,26 @@ shell()
 
 	while(1)
 	{
-		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD)
+		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
 		{
 			put_char('\n');
 			flush();
 		}
 
-		if(ret!=ACTSP_CD)
-			print_nline();
+		print_nline();
 
 		i=0;
 		while((c=get_char())!='\n')
 		{
-			interrupted=0;
+			
 			if(c!='\x08')
 			{
-				if(i<100)
-					in[i++]=c;
+				if(i<LONG_STR_CMD)
+					in[i]=c;
+
+ 				i++;
 				put_char(c);
+
 				flush();
 			}
 			else if(i>0)
@@ -254,7 +254,6 @@ shell()
 			}
 		}
 		put_char(c);
-		flush();
 		in[i]=0;
 
 		separaPorEspacios(in, data);
@@ -262,26 +261,54 @@ shell()
 		ret=llamaFunc(data);
 
 		data[0][0]=data[1][0]=0;
-
-		interrupted=0;
 	}
 }
+
+char * screenSaverImg[25] = {
+"      x                                                                         ",
+"                                                                          x     ",
+"                                                    x                           ",
+"                                                                                ",
+"               x                                                                ",
+"                                                                                ",
+"                                                                                ",
+"                                                                                ",
+"                                                              x                 ",
+"                         x                                                      ",
+"                                                                                ",
+"                                                                                ",
+"                                                                                ",
+"                                                                                ",
+"      x                            x                                            ",
+"                                                                                ",
+"                                                                x               ",
+"                                                                                ",
+"                                                     x                          ",
+"                                                                                ",
+"                         x                                                      ",
+"                                                                                ",
+"                                                                 x              ",
+"             x                                                                  ",
+"   x                                                                            "
+};
 
 void
 activaSp()
 {
 	int i;
-	tTicks=0;
-	scrIs=1;
+	
+	k_clear_screen();
+
 	interrupted=0;
 	while(interrupted==0)
 		for(i = 0; i < 25; i++)
 		{
+			tTicks=0;
 			if(interrupted!=0)
 				break;
-			puts(splash_screen[i]);
+			puts(screenSaverImg[i]);
 		}
-	scrIs=0;
+	flush();
 	return;
 }
 
@@ -301,6 +328,54 @@ garbage()
 		put_char(c++);
 		flush();
 	}
-	put_char('\n');
-	flush();
+}
+
+
+void check_screen_saver() {
+	static int firstTime = 1;
+	static int cursorBkp = 0;
+	
+	static int thisLine = 0;
+	static int thisCol = 0;
+	
+	tTicks++;
+
+	if(tTicks>entraSp*18) {
+		
+		if (firstTime) {
+			read(PANTALLA_FD, bufferScr, 4000);
+			cursorBkp = cursor;
+			k_clear_screen();
+			firstTime = 0;
+		}
+
+		if (interrupted == 0) {
+			
+// 			if (++thisCol >= 80) {
+// 				thisCol = 0;
+			if (tTicks % 2) {
+				if (++thisLine >= 25)
+				thisLine = 0;
+				puts(screenSaverImg[thisLine]/*[thisCol]*/);
+ 			}
+
+			
+ 			
+// 			put_char(screenSaverImg[thisLine][thisCol]);
+ 			
+		}
+			
+
+		if (interrupted == 1) {
+			cursor = 0;
+			write(PANTALLA_FD, bufferScr, 4000);
+			cursor = cursorBkp;
+			tTicks = 0;
+			firstTime = 1;
+		}
+		interrupted = 0;
+		
+		flush();
+		
+	}
 }

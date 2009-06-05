@@ -23,14 +23,14 @@ void memcpy(byte * a, byte * b, size_t size) {
 byte screen_buffer[4160] = {};
 
 void page_roll() {
-    hideMouseCursor();
-    read(PANTALLA_FD, screen_buffer, 4000);
+
+//     hideMouseCursor();
     cursor = 0;
 
-    
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
-    showMouseCursor();
+//     showMouseCursor();
+
     return;
 }
 
@@ -118,11 +118,11 @@ void put_char( byte c) {
 
     /* BACKSPACE */
     if (c == '\x08') {
-        if (cursor % 80) {
+
         cursor -= 1;
         write(PANTALLA_FD, clean_buffer, 2);
         cursor -= 1;
-        }
+
         return;
     }
     
@@ -194,8 +194,15 @@ void flush() {
 
 size_t write(int fd, const void* buffer, size_t count) {
 	int i;
+	int offset;
+	byte data;
+
 	for ( i = 0 ; i<count; i++) {
-		_int_80_caller(WRITE, fd, i + cursor*2, *((byte *)buffer+i));
+		offset = i + cursor*2;
+		data = *((byte *)buffer+i);
+
+		_int_80_caller(WRITE, fd, offset, data);
+		screen_buffer[offset] = data;
 	}
 	cursor+=count/2;
 	return 0;

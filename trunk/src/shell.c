@@ -220,7 +220,11 @@ shell()
 			flush();
 		}
 
+		
+
 		print_nline();
+
+		
 
 		i=0;
 		while((c=get_char())!='\n')

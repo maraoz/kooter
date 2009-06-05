@@ -175,9 +175,12 @@ llamaFunc(char s[2][LONG_STR])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
+		
 		read(PANTALLA_FD, bufferScr, 4000);
 		rec=cursor;
+		cursor = 0;
 		activaSp();
+		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
 		cursor=rec;
 		return ACTSP_CD;

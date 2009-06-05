@@ -13,3 +13,5 @@ void activaSp();
 int atoi(char *s);
 
 void setTimeSp(int time);
+
+void garbage();

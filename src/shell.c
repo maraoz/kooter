@@ -41,15 +41,30 @@ char in[DIM_STR];
 ** vector para guardar la pantalla durante el screen saver
 */
 char bufferScr[TCIRC_SIZE*2];
+
 /*
 ** variable con la posicion en el buffer
 */
-int pos;
+int rec;
 
 /*
 ** variable con el tiempo para que entre el screen saver
 */
 int entraSp;
+
+/*
+** se activa al entrar el shell
+*/
+int shellIs=0;
+
+/*
+** es 1 mientras este el scr saver
+*/
+int scrIs;
+
+/*
+** variable para guardar cursor;
+*/
 
 /*
 ** print_nline al ser llamada imprime el inicio de la linea de comandos.
@@ -137,8 +152,6 @@ separaPorEspacios(char *s, char out[][LONG_STR])
 int
 llamaFunc(char s[2][LONG_STR])
 {
-// 	int rec;
-
 	if(s[0][0]==0)
 		return NO_CD;
 	else if(str_cmp(s[0], "echo"))
@@ -163,10 +176,10 @@ llamaFunc(char s[2][LONG_STR])
 	else if(str_cmp(s[0], "activaSp"))
 	{
 		read(PANTALLA_FD, bufferScr, 4000);
-// 		rec=cursor;
+		rec=cursor;
 		activaSp();
 		write(PANTALLA_FD, bufferScr, 4000);
-// 		cursor=rec;
+		cursor=rec;
 		return ACTSP_CD;
 	}
 	else if(str_cmp(s[0], "turnOff"))
@@ -176,7 +189,7 @@ llamaFunc(char s[2][LONG_STR])
 	}
 	else if(str_cmp(s[0], "garbage"))
 	{
-// 		garbage();
+		garbage();
 		return GBG_CD;
 	}
 	{
@@ -199,21 +212,13 @@ shell()
 	int i;
 	int c;
 	int rec;
-	entraSp=10;
+	shellIs=1;
+	entraSp=30;
 	tTicks=0;
+	scrIs=0;
 
 	while(1)
 	{
-
-// 		if(tTicks>entraSp*18)
-// 		{
-// 			rec=cursor;
-// 			read(PANTALLA_FD, bufferScr, 4000);
-// 			activaSp();
-// 			write(PANTALLA_FD, bufferScr, 4000);
-// 			cursor=rec;
-// 		}
-
 		if(ret!=AUX && ret!=CLEAR_CD && ret!=NO_CD)
 		{
 			put_char('\n');
@@ -259,6 +264,8 @@ void
 activaSp()
 {
 	int i;
+	tTicks=0;
+	scrIs=1;
 	interrupted=0;
 	while(interrupted==0)
 		for(i = 0; i < 25; i++)
@@ -266,7 +273,9 @@ activaSp()
 			if(interrupted!=0)
 				break;
 			puts(splash_screen[i]);
+			put_char(interrupted+'0');
 		}
+	scrIs=0;
 	return;
 }
 
@@ -274,4 +283,11 @@ void
 setTimeSp(int time)
 {
 	entraSp=time;
+}
+
+void
+garbage()
+{
+	write(PANTALLA_FD, bufferScr+1, 3999);
+	write(PANTALLA_FD, bufferScr, 1);
 }

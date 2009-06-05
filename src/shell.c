@@ -181,6 +181,7 @@ llamaFunc(char s[2][LONG_STR])
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
 		cursor=rec;
+		print_nline();
 		return ACTSP_CD;
 	}
 	else if(str_cmp(s[0], "dispImg"))
@@ -231,7 +232,8 @@ shell()
 			flush();
 		}
 
-		print_nline();
+		if(ret!=ACTSP_CD)
+			print_nline();
 
 		i=0;
 		while((c=get_char())!='\n')
@@ -292,10 +294,13 @@ setTimeSp(int time)
 void
 garbage()
 {
-// 	cursor=0;
 	int c = 'a';
         int i;
         for (i = 0; i<2000; i++)
-            put_char(c++);
-// 	cursor=0;
+        {
+		put_char(c++);
+		flush();
+	}
+	put_char('\n');
+	flush();
 }

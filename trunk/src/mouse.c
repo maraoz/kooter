@@ -17,7 +17,7 @@ leomouse (int b){
 	extern int tTicks;
 	static int qty_int=0;
 	static point start,end;
-	static int mouseClickIzq = 0;
+	static int mouseClickIzq = 0, mouseClickDer = 0;
 
 	interrupted = 1;
 	tTicks=0;
@@ -31,6 +31,7 @@ leomouse (int b){
 	if(!(qty_int)) {
 	    hideMouseCursor();
 	    mouseClickIzq = mouse.izq;
+	    mouseClickDer = mouse.der;
 	    updateMouse();
 	    showMouseCursor(ptov(mouse.pos));
 	    if (mouse.izq && !mouseClickIzq){
@@ -42,7 +43,7 @@ leomouse (int b){
 		end.y = mouse.pos.y;
 		copy(start,end);
 	    }
-	    if(mouse.der) {
+	    if(mouse.der && !mouseClickDer) {
 		hideMouseCursor();
 		paste();
 		showMouseCursor(ptov(mouse.pos));
@@ -147,6 +148,8 @@ void
 copy(point start, point end){
     static byte tmpbuf[4000], auxi;
     int i,j,k=0;
+    start.x = (start.x)%2?(start.x+1):(start.x);
+    end.x = (end.x)%2?(end.x+1):(end.x);
     for( i = 0 ; i < 4000 ; i++) {
 	clipboard[i] = 0;
     }
@@ -170,7 +173,10 @@ void
 paste(void){
     int k;
     for(k = 0 ; clipboard[k*2] != 0xFF ; k++) {
+// 	if(!(k%2)) {
 	writeToKeyboard(clipboard[k*2]);
+// 	}
+// 	screenShow(clipboard[k],k);
     }
 }
 

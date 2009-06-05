@@ -85,3 +85,11 @@ byte next_char (){
 		a = 0xFF;
 	return a;
 }
+
+void 
+writeToKeyboard(byte c)
+{
+    teclator.tcircular[teclator.next_write] = c;
+    teclator.next_write++;
+    teclator.qty_used++;
+}

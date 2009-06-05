@@ -159,26 +159,29 @@ void
 copy(point start, point end){
     static byte tmpbuf[4000], auxi;
     int i,j,k=0;
-    for( i = 0 ; i < TCIRC_SIZE ; i++) {
+    for( i = 0 ; i < 4000 ; i++) {
 	clipboard[i] = 0;
     }
     read(PANTALLA_FD, tmpbuf, 4000);
     for(j = 0 ; j<abs(end.y +1 - start.y) ; j++) {
-    	for( i = 0 ; i<abs(end.x +1 - start.x) ; i++) {
-	    auxi = tmpbuf[(min(start.x,end.x)*2+160*min(start.y,end.y))+i*2+j*160];
+    	for( i = 0 ; i<abs(end.x +1 - start.x)*2 ; i++) {
+	    auxi = tmpbuf[((min(start.x,end.x)+min(start.y,end.y)*80))*2+i+j*160];
 	    if(auxi != 0) {
 		clipboard[k] = auxi;
 		k++;
 	    }
-	clipboard[k] = '\n';
-	k++;
+	//clipboard[k] = '\n';
+	//k++;
 	}
     }
 }
 
 void
 paste(void){
-    puts(clipboard);
+    int k;
+    for(k = 0 ; k<2000 ; k++) {
+	writeToKeyboard(clipboard[k*2]);
+    }
 }
 
 

@@ -21,15 +21,16 @@ void memcpy(byte * a, byte * b, size_t size) {
 * 
 ****************************************************************/
 byte screen_buffer[4160] = {};
+byte blank_screen_buffer[4000] = {0};
 
 void page_roll() {
 
-//     hideMouseCursor();
+    hideMouseCursor();
     cursor = 0;
 
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
-//     showMouseCursor();
+    showMouseCursor();
 
     return;
 }
@@ -160,7 +161,7 @@ byte get_char() {
 	    n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
         }
         while (n_read == 0);
-        
+
         kb_counter = 0;
     }
     return keyboard_buffer[kb_counter++];
@@ -242,11 +243,9 @@ size_t read(int fd, void* buffer, size_t count) {
 char * BLANK_LINE = "                                                                                ";
 void k_clear_screen() 
 {
-	int i;
-	for (i = 0; i < 25; i++) {
-        puts(BLANK_LINE);
-	}
-	cursor-=2000;
+	cursor = 0;
+	write(PANTALLA_FD, blank_screen_buffer, 4000);
+  	cursor = 0;
 }
 
 

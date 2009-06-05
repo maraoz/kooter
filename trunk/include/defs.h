@@ -51,7 +51,7 @@
 #define CLEAR_CD 2
 #define SETTIME_CD 3
 #define ACTSP_CD 4
-#define EXIT_CD 5
+#define DSPIMG_CD 5
 #define CNF_CD 6
 #define NO_CD 7
 #define GBG_CD 8

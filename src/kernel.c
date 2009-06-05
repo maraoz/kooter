@@ -10,14 +10,15 @@
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
 
+extern int interrupted;
 extern int tTicks;
 extern int entraSp;
 extern int cursor;
 extern char bufferScr[TCIRC_SIZE*2];
 extern int rec;
 extern int scrIs;
-extern int shellIs;
 extern char * splash_screen[25];
+extern int ret;
 
 int lin=0;
 

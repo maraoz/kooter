@@ -53,18 +53,15 @@ int rec;
 int entraSp=30;
 
 /*
-** se activa al entrar el shell
-*/
-int shellIs=0;
-
-/*
 ** es 1 mientras este el scr saver
 */
 int scrIs=0;
 
 /*
-** variable para guardar cursor;
+** guarda el retorno de la ultima funcion ejecutada
 */
+int ret=AUX;
+
 
 /*
 ** print_nline al ser llamada imprime el inicio de la linea de comandos.
@@ -175,20 +172,20 @@ llamaFunc(char s[2][LONG_STR])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-		
 		read(PANTALLA_FD, bufferScr, 4000);
 		rec=cursor;
-		cursor = 0;
 		activaSp();
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
 		cursor=rec;
 		return ACTSP_CD;
 	}
-	else if(str_cmp(s[0], "turnOff"))
+	else if(str_cmp(s[0], "dispImg"))
 	{
-// 		turnOff();
-		return EXIT_CD;
+		cursor=0;
+		showSplashScreen();
+		cursor=0;
+		return DSPIMG_CD;
 	}
 	else if(str_cmp(s[0], "garbage"))
 	{
@@ -212,26 +209,26 @@ llamaFunc(char s[2][LONG_STR])
 void
 shell()
 {
-	int ret=AUX;
 	int i;
 	int c;
 	int rec;
-	shellIs=1;
 	tTicks=0;
 
 	while(1)
 	{
-		if(ret!=AUX && ret!=CLEAR_CD && ret!=NO_CD && ret!=GBG_CD)
+		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD)
 		{
 			put_char('\n');
 			flush();
 		}
 
-		print_nline();
+		if(ret!=ACTSP_CD)
+			print_nline();
 
 		i=0;
 		while((c=get_char())!='\n')
 		{
+			interrupted=0;
 			if(c!='\x08')
 			{
 				if(i<100)
@@ -255,6 +252,8 @@ shell()
 		ret=llamaFunc(data);
 
 		data[0][0]=data[1][0]=0;
+
+		interrupted=0;
 	}
 }
 

@@ -24,12 +24,30 @@ int lin=0;
 
 void int_08()
 {
-	if(!scrIs)
+	if(scrIs==0)
 		tTicks++;
 
 	if(interrupted==0)
+	{
 		if(tTicks>entraSp*18)
+		{
+			if(scrIs==0)
+			{
+				read(PANTALLA_FD, bufferScr, 4000);
+				rec=cursor;
+			}
+			scrIs=1;
 			puts(splash_screen[(lin++)%26]);
+		}
+	}
+	else if(scrIs==1)
+	{
+		scrIs=0;
+		cursor = 0;
+		write(PANTALLA_FD, bufferScr, 4000);
+		cursor=rec;
+		ret==ACTSP_CD;
+	}
 
 	return;
 }

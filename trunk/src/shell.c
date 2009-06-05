@@ -165,6 +165,8 @@ llamaFunc(char s[2][LONG_STR])
 	}
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
+		if(atoi(s[1])==0)
+			return SETTIME_CD;
 		setTimeSp((atoi(s[1])));
 		puts("tiempo seteado = ");
 		puts(s[1]);
@@ -219,6 +221,7 @@ shell()
 	int c;
 	int rec;
 	tTicks=0;
+	interrupted=0;
 
 	while(1)
 	{
@@ -228,8 +231,7 @@ shell()
 			flush();
 		}
 
-		if(ret!=ACTSP_CD)
-			print_nline();
+		print_nline();
 
 		i=0;
 		while((c=get_char())!='\n')

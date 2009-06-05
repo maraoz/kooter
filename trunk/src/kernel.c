@@ -17,31 +17,25 @@ extern char bufferScr[TCIRC_SIZE*2];
 extern int rec;
 extern int scrIs;
 extern int shellIs;
+extern char * splash_screen[25];
 
+int lin=0;
 
 void int_08()
 {
-	if(shellIs)
-	{
-		if(!scrIs)
-		{
-			tTicks++;
-			if(tTicks>entraSp*18)
-			{
-				rec=cursor;
-				read(PANTALLA_FD, bufferScr, 4000);
-				activaSp();
-				write(PANTALLA_FD, bufferScr, 4000);
-				cursor=rec;
-			}
-		}
-	}
+	if(!scrIs)
+		tTicks++;
+
+	if(interrupted==0)
+		if(tTicks>entraSp*18)
+			puts(splash_screen[(lin++)%26]);
+
 	return;
 }
 
 
 /**********************************************
-kmain() 
+kmain()
 Punto de entrada de código C.
 *************************************************/
 

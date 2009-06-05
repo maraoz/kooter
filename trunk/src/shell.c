@@ -50,7 +50,7 @@ int rec;
 /*
 ** variable con el tiempo para que entre el screen saver
 */
-int entraSp;
+int entraSp=30;
 
 /*
 ** se activa al entrar el shell
@@ -60,7 +60,7 @@ int shellIs=0;
 /*
 ** es 1 mientras este el scr saver
 */
-int scrIs;
+int scrIs=0;
 
 /*
 ** variable para guardar cursor;
@@ -195,6 +195,7 @@ llamaFunc(char s[2][LONG_STR])
 		garbage();
 		return GBG_CD;
 	}
+	else
 	{
 		puts(s[0]);
 		put_char(':');
@@ -216,23 +217,17 @@ shell()
 	int c;
 	int rec;
 	shellIs=1;
-	entraSp=30;
 	tTicks=0;
-	scrIs=0;
 
 	while(1)
 	{
-		if(ret!=AUX && ret!=CLEAR_CD && ret!=NO_CD)
+		if(ret!=AUX && ret!=CLEAR_CD && ret!=NO_CD && ret!=GBG_CD)
 		{
 			put_char('\n');
 			flush();
 		}
 
-		
-
 		print_nline();
-
-		
 
 		i=0;
 		while((c=get_char())!='\n')
@@ -276,7 +271,6 @@ activaSp()
 			if(interrupted!=0)
 				break;
 			puts(splash_screen[i]);
-			put_char(interrupted+'0');
 		}
 	scrIs=0;
 	return;
@@ -291,6 +285,8 @@ setTimeSp(int time)
 void
 garbage()
 {
+	cursor=0;
 	write(PANTALLA_FD, bufferScr+1, 3999);
 	write(PANTALLA_FD, bufferScr, 1);
+	cursor=0;
 }

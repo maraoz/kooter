@@ -11,12 +11,32 @@ DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
 
 extern int tTicks;
+extern int entraSp;
+extern int cursor;
+extern char bufferScr[TCIRC_SIZE*2];
+extern int rec;
+extern int scrIs;
+extern int shellIs;
 
 
-void int_08() {
-	tTicks++;
+void int_08()
+{
+	if(shellIs)
+	{
+		if(!scrIs)
+		{
+			tTicks++;
+			if(tTicks>entraSp*18)
+			{
+				rec=cursor;
+				read(PANTALLA_FD, bufferScr, 4000);
+				activaSp();
+				write(PANTALLA_FD, bufferScr, 4000);
+				cursor=rec;
+			}
+		}
+	}
 	return;
-
 }
 
 

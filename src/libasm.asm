@@ -7,7 +7,7 @@ GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
-
+GLOBAL	wpantalla
 
 
 EXTERN  int_08
@@ -15,6 +15,9 @@ EXTERN	leoteclado
 EXTERN 	leomouse
 EXTERN	next_char
 EXTERN	mouse_now
+EXTERN	screenShow
+EXTERN	fetch
+
 
 
 SECTION .text
@@ -188,36 +191,30 @@ int80end:
 	pop	ecx
 	pop	ebx
 	mov	esp,ebp
-	pop ebp
+	pop	ebp
 	iret
 	
 sys_write:
 	cmp	bh,0
-	jz	wpantalla		; si el file descriptor es 0 (pantalla) voy a escribir a a B8000h
+	jnz	no_bvideo		; si el file descriptor es 0 (pantalla) voy a escribir a a B8000h
+	push	ecx
+	push	edx
+	call	screenShow
+	add	esp,8
+	ret
+	
+no_bvideo:
 	cmp	bh,3
 	jz	wmemoria			; si el file descriptor es 3 (memoria) voy a escribir a a 0CAFEh
 	ret
 	
-
 wmemoria:
 	mov	ax,10h			
 	mov	ds,ax
 	mov	ebx,0CAFEh
 	add	ebx,ecx
 	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
-    ret
-		
-
-wpantalla:
-
-	mov	ax,10h			
-	mov	ds,ax
-    
-	mov	ebx,0B8000h
-	add	ebx,ecx
-    
-	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
-   	ret
+	ret
 
 
 sys_read: 
@@ -232,16 +229,8 @@ sys_read:
 	ret
 
 rpantalla:
-	mov	ax,10h			
-	mov	ds,ax
-    
-	mov	ebx,0B8000h
-	add	ebx,ecx
-    
-	mov	eax,0
-	mov	al,[ds:ebx]			; Copio el char de  ds:ebx en al
-        ret
-
+	call	fetch
+	ret
 
 mouse:
 	call	mouse_now			; leo del puerto 60h
@@ -310,6 +299,35 @@ ciclo:	dec	ax
 	ret
 
 
+		
+
+wpantalla:
+
+	push	ebp
+	mov	ebp,esp
+	push	ebx
+	push	edx
+	push	ecx
+	
+	mov	dl,[ebp+8]
+	mov	ecx,[ebp+12]
+	
+	mov	ax,10h			
+	mov	ds,ax
+    
+	mov	ebx,0B8000h
+	add	ebx,ecx
+	
+	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
+	
+	pop	ecx
+	pop	edx
+	pop	ebx
+	mov	esp,ebp
+	pop	ebp
+   	ret
+
+
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
 
@@ -323,3 +341,4 @@ vuelve:	mov     ax, 1
 	pop	ax
 	pop     bp
         retn
+

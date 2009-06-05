@@ -107,11 +107,7 @@ typedef struct {
 	point	pos;
 } mouseSt;
 
-typedef struct {
-	int	next_put;
-	byte 	buff[TCIRC_SIZE*2];
-
-} vbuff;
+//typedef byte[TCIRC_SIZE*2] vbuff;
 
 
 int interrupted;

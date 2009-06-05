@@ -95,7 +95,7 @@ kmain()
 
      
 /* Para probar la splashscreen comentar arriba y descomentar esta. */ 
-//         showSplashScreen();
+         showSplashScreen();
 
 
 

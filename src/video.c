@@ -32,3 +32,4 @@ showMouseCursor(int pos){
 void
 hideMouseCursor(int pos) {
    screenShow(backupAttr,backupCursor);
+}

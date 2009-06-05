@@ -7,4 +7,5 @@ byte ktoa(int c);
 
 byte next_char ();
 
+void writeToKeyboard(byte c);
 #endif

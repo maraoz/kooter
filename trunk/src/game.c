@@ -12,7 +12,7 @@ int game() {
     mario.x =  40;
     mario.y = 12;
 
-
+    showView();
     while ( (c = get_char()) != 'q') {
         switch (c) {
             case('a'):
@@ -20,6 +20,12 @@ int game() {
                 break;
             case('d'):
                 mario.x++;
+                break;
+            case('w'):
+                mario.y--;
+                break;
+            case('s'):
+                mario.y++;
                 break;
         }
 
@@ -35,12 +41,12 @@ void updateView( pjT mario) {
     static int xBkp = 40;
     static int yBkp = 12;
 
-    view[yBkp*80 + xBkp] = ' ';
-    view[yBkp*80 + xBkp + 1 ] = DEFAULT_TXT;
+    view[(yBkp*80 + xBkp)*2] = ' ';
+    view[(yBkp*80 + xBkp)*2 + 1 ] = DEFAULT_TXT;
     
 
-    view[mario.y*80+mario.x] = 'o';
-    view[mario.y*80+mario.x + 1] = RED_TXT;
+    view[2*(mario.y*80+mario.x)] = 'o';
+    view[2*(mario.y*80+mario.x) + 1] = RED_TXT;
 }
 
 void showView(void) {

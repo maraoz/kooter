@@ -25,12 +25,12 @@ byte blank_screen_buffer[4000] = {0};
 
 void page_roll() {
 
-    hideMouseCursor();
+
     cursor = 0;
 
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
-    showMouseCursor();
+
 
     return;
 }

@@ -1,6 +1,7 @@
 #include "../include/defs.h"
 #include "../include/stdio.h"
 #include "../include/shell.h"
+#include "../include/game.h"
 
 /*
 ** Comandos que acepta el shell
@@ -191,6 +192,11 @@ llamaFunc(char s[2][LONG_STR])
 	{
 		garbage();
 		return GBG_CD;
+	}
+        else if(str_cmp(s[0], "mario"))
+	{
+		game();
+		return MARIO_CD;
 	}
 	else
 	{

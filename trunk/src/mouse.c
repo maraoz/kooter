@@ -162,17 +162,19 @@ copy(point start, point end){
 		k++;
 	    }
 	}
+	k=k%2?k+1:k;
 	clipboard[k] = '\n';
 	k++;
+	clipboard[k] = DEFAULT_TXT;
+	k++;
     }
-    clipboard[k] = 0xFF;
-    clipboard[k+1] = 0xFF;
+	
 }
 
 void
 paste(void){
     int k;
-    for(k = 0 ; clipboard[k*2] != 0xFF ; k++) {
+    for(k = 0 ; clipboard[k*2] != 0 ; k++) {
 // 	if(!(k%2)) {
 	writeToKeyboard(clipboard[k*2]);
 // 	}

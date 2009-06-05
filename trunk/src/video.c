@@ -21,7 +21,7 @@ fetch(void) {
     byte c;
     static int vcursor = 0;
     c = bufferVideo[vcursor++];
-    if (vcursor >= TCIRC_SIZE*2)
+    if (vcursor >= 4000)
 	vcursor = 0;
     return c;
 }

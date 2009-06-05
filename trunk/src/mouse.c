@@ -4,6 +4,7 @@
 #include "../include/stdio.h"
 #include "../include/mouse.h"
 #include "../include/util.h"
+#include "../include/video.h"
 
 mouseSt mouse = {0,0,{0,0}};
 byte first, second, third;
@@ -28,10 +29,11 @@ leomouse (int b){
 	}
 	qty_int++;
 	if(!(qty_int)) {
-	    hideMouseCursor();
+	    //showMouseCursor(mouse.pos);
+	    hideMouseCursor(ptov(mouse.pos));
 	    mouseClickIzq = mouse.izq;
 	    updateMouse();
-	    showMouseCursor();
+	    showMouseCursor(ptov(mouse.pos));
 	    if (mouse.izq && !mouseClickIzq){
 		start.x = mouse.pos.x;
 		start.y = mouse.pos.y;
@@ -42,9 +44,9 @@ leomouse (int b){
 		copy(start,end);
 	    }
 	    if(mouse.der) {
-		hideMouseCursor();
+		hideMouseCursor(ptov(mouse.pos));
 		paste();
-		showMouseCursor();
+		showMouseCursor(ptov(mouse.pos));
 	    }
 		
 	}
@@ -122,21 +124,21 @@ ptov(point pto) {
     return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160) : ((pto.x)*2 + (pto.y)*160))+1;
 }
 
-void
-hideMouseCursor(void) {
-    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), bkpCursorPos );
-}
-
-void
-showMouseCursor(void) {
-    bkpCursorPos = _int_80_caller(READ, PANTALLA_FD, ptov(mouse.pos), 0);
-    _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), MOUSE_CURSOR);
-}
-
+// void
+// hideMouseCursor(void) {
+//     _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), bkpCursorPos );
+// }
+// 
+// void
+// showMouseCursor(void) {
+//     bkpCursorPos = _int_80_caller(READ, PANTALLA_FD, ptov(mouse.pos), 0);
+//     _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), MOUSE_CURSOR);
+// }
+/*
 
 void
 moveMouseCursor(point pto){
-    hideMouseCursor();
+    hideMouseCursor(mouse.pos);
     if(pto.x > 0) {
 	mouse.pos.x++;
     }
@@ -149,8 +151,8 @@ moveMouseCursor(point pto){
     else if(pto.y < 0){
 	mouse.pos.y--;
     }
-    showMouseCursor();
-}
+    showMouseCursor(mouse.pos);
+}*/
 
 
 void

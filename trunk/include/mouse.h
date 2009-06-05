@@ -11,9 +11,9 @@ void paste(void);
 
 void copy(point start, point end);
 
-void hideMouseCursor(void);
-
-void showMouseCursor(void);
+// void hideMouseCursor(void);
+// 
+// void showMouseCursor(void);
 
 void moveMouseCursor(point pto);
 

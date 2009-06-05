@@ -5,6 +5,7 @@
 #include "../include/util.h"
 #include "../include/keyboard.h"
 #include "../include/shell.h"
+#include "../include/video.h"	
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */

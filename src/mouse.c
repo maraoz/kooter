@@ -29,8 +29,7 @@ leomouse (int b){
 	}
 	qty_int++;
 	if(!(qty_int)) {
-	    //showMouseCursor(mouse.pos);
-	    hideMouseCursor(ptov(mouse.pos));
+	    hideMouseCursor();
 	    mouseClickIzq = mouse.izq;
 	    updateMouse();
 	    showMouseCursor(ptov(mouse.pos));
@@ -44,7 +43,7 @@ leomouse (int b){
 		copy(start,end);
 	    }
 	    if(mouse.der) {
-		hideMouseCursor(ptov(mouse.pos));
+		hideMouseCursor();
 		paste();
 		showMouseCursor(ptov(mouse.pos));
 	    }
@@ -60,7 +59,8 @@ updateMouse(void){
     point possible;
 
     if(first & 0x80 || first & 0x40){
-	puts("Overflow de mouse");
+ 	puts("Overflow de mouse");
+	mouse_reset();
     }
     else {
 	if(first & 0x02) {
@@ -69,38 +69,37 @@ updateMouse(void){
 	else if(!(first & 0x02)) {
 	    mouse.der = 0;
 	}
-	if(first & 0x04) {
-	    puts("Hizo click del medio");
-	}
+// 	if(first & 0x04) {
+// 	    puts("Hizo click del medio");
+// 	}
 	if(first & 0x01) {
 	    mouse.izq = 1;
 	}
 	else if(!(first & 0x01)) {
 	    mouse.izq = 0;
 	}
+	    
+	possible.x = ((first & 0x10)? -1: 1)*second;
+	possible.y = ((first & 0x20)? 1: -1)*third;
+	if (possible.x < 0 ) {
+	    dx = -1;
+	} else if (possible.x > 0 ){
+	    dx = 1;
+	} else {
+	    dx = 0;
+	}
 	
-    possible.x = ((first & 0x10)? -1: 1)*second;
-    possible.y = ((first & 0x20)? 1: -1)*third;
-    if (possible.x < 0 ) {
-	dx = -1;
-    } else if (possible.x > 0 ){
-	dx = 1;
-    } else {
-	dx = 0;
-    }
-    
-    if (possible.y < 0 ) {
-	dy = -1;
-    } else if (possible.y > 0 ){
-	dy = 1;
-    } else {
-	dy = 0;
-    }
+	if (possible.y < 0 ) {
+	    dy = -1;
+	} else if (possible.y > 0 ){
+	    dy = 1;
+	} else {
+	    dy = 0;
+	}
     
 	mouse.pos.x += dx;
 	mouse.pos.y += dy;
 	
-//	moveMouseCursor(possible);
 	
 	if(mouse.pos.x > 79){
 	    mouse.pos.x = 79;
@@ -124,18 +123,7 @@ ptov(point pto) {
     return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160) : ((pto.x)*2 + (pto.y)*160))+1;
 }
 
-// void
-// hideMouseCursor(void) {
-//     _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), bkpCursorPos );
-// }
-// 
-// void
-// showMouseCursor(void) {
-//     bkpCursorPos = _int_80_caller(READ, PANTALLA_FD, ptov(mouse.pos), 0);
-//     _int_80_caller(WRITE, PANTALLA_FD, ptov(mouse.pos), MOUSE_CURSOR);
-// }
 /*
-
 void
 moveMouseCursor(point pto){
     hideMouseCursor(mouse.pos);
@@ -163,23 +151,25 @@ copy(point start, point end){
 	clipboard[i] = 0;
     }
     read(PANTALLA_FD, tmpbuf, 4000);
-    for(j = 0 ; j<abs(end.y +1 - start.y) ; j++) {
-    	for( i = 0 ; i<abs(end.x +1 - start.x)*2 ; i++) {
+    for(j = 0 ; j<abs((end.y  - start.y))+1 ; j++) {
+    	for( i = 0 ; i<(abs(end.x  - start.x)+1)*2 ; i++) {
 	    auxi = tmpbuf[((min(start.x,end.x)+min(start.y,end.y)*80))*2+i+j*160];
 	    if(auxi != 0) {
 		clipboard[k] = auxi;
 		k++;
 	    }
-	//clipboard[k] = '\n';
-	//k++;
 	}
+	clipboard[k] = '\n';
+	k++;
     }
+    clipboard[k] = 0xFF;
+    clipboard[k+1] = 0xFF;
 }
 
 void
 paste(void){
     int k;
-    for(k = 0 ; k<2000 ; k++) {
+    for(k = 0 ; clipboard[k*2] != 0xFF ; k++) {
 	writeToKeyboard(clipboard[k*2]);
     }
 }

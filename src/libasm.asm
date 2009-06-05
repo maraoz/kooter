@@ -7,6 +7,7 @@ GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
+GLOBAL	mouse_reset
 GLOBAL	wpantalla
 
 
@@ -287,6 +288,21 @@ enable_mouse:
 	call	mouseWait
 	
 	ret
+	
+mouse_reset:
+
+	mov	al,0D4h
+	out	64h,al
+	call	mouseWait
+	mov	al,0FFh
+	out	60h,al
+	in	al,60h
+	call	mouseWait
+	
+	call	enable_mouse
+	
+	ret
+	
 	
 	
 mouseWait:

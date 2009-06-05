@@ -67,7 +67,7 @@ kmain()
 
 
 /* habria que poner un wait aca para que se vea un rato la pantallita esa */
-     k_clear_screen();
+//      k_clear_screen();
 
 
 

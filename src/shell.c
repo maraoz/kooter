@@ -290,8 +290,10 @@ setTimeSp(int time)
 void
 garbage()
 {
-	cursor=0;
-	write(PANTALLA_FD, bufferScr+1, 3999);
-	write(PANTALLA_FD, bufferScr, 1);
-	cursor=0;
+// 	cursor=0;
+	int c = 'a';
+        int i;
+        for (i = 0; i<2000; i++)
+            put_char(c++);
+// 	cursor=0;
 }

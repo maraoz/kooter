@@ -29,4 +29,6 @@ void		_debug (void);
 
 void		enable_mouse(void);
 
+void		mouse_reset(void);
+
 void		wpantalla(word c, int offset);

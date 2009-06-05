@@ -6,7 +6,7 @@ void screenShow(byte c, int cursor_toWrite);
 
 byte fetch(void);
 
-void hideMouseCursor(int pos);
+void hideMouseCursor(void);
 
 void showMouseCursor(int pos);
 

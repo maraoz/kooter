@@ -46,6 +46,7 @@ void int_08()
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
 		cursor=rec;
+		print_nline();
 		ret==ACTSP_CD;
 	}
 
@@ -101,14 +102,14 @@ kmain()
 
 
 /* habria que poner un wait aca para que se vea un rato la pantallita esa */
-//      k_clear_screen();
+     k_clear_screen();
 
 
 
 
      
 /* Para probar la splashscreen comentar arriba y descomentar esta. */ 
-         showSplashScreen();
+//          showSplashScreen();
 
 
 

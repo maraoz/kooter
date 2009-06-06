@@ -321,11 +321,11 @@ setTimeSp(int time)
 void
 garbage()
 {
-	int c = 'a';
+	char c = 'a';
         int i;
-        for (i = 0; i<2000; i++)
+        for (i = 0; i<1500; i++)
         {
-		put_char(c++);
+		put_char(c++%20+'a');
 		flush();
 	}
 }
@@ -338,6 +338,7 @@ void check_screen_saver() {
 	static int thisLine = 0;
 	static int thisCol = 0;
 	
+
 	tTicks++;
 
 	if(tTicks>entraSp*18) {
@@ -374,7 +375,8 @@ void check_screen_saver() {
 			firstTime = 1;
 		}
 		interrupted = 0;
-		
+
+
 		flush();
 		
 	}

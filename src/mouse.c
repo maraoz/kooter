@@ -10,12 +10,12 @@ mouseSt mouse = {0,0,{0,0}};
 byte first, second, third;
 byte clipboard[TCIRC_SIZE];
 byte bkpCursorPos = DEFAULT_TXT;
+int qty_int = 0;
 
 void 
 leomouse (int b){
 	extern int interrupted;
 	extern int tTicks;
-	static int qty_int=0;
 	static point start,end;
 	static int mouseClickIzq = 0, mouseClickDer = 0;
 
@@ -41,12 +41,14 @@ leomouse (int b){
 	    if (!mouse.izq && mouseClickIzq) {
 		end.x = mouse.pos.x;
 		end.y = mouse.pos.y;
+//		hideMouseCursor();
 		copy(start,end);
+//		showMouseCursor(ptov(mouse.pos));
 	    }
 	    if(mouse.der && !mouseClickDer) {
-		hideMouseCursor();
+// 		hideMouseCursor();
 		paste();
-		showMouseCursor(ptov(mouse.pos));
+// 		showMouseCursor(ptov(mouse.pos));
 	    }
 		
 	}
@@ -62,6 +64,7 @@ updateMouse(void){
     if(first & 0x80 || first & 0x40){
  	puts("Overflow de mouse");
 	mouse_reset();
+	qty_int = 0;
     }
     else {
 	if(first & 0x02) {
@@ -121,7 +124,8 @@ updateMouse(void){
 
 int
 ptov(point pto) {
-    return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160) : ((pto.x)*2 + (pto.y)*160))+1;
+//     return (((pto.x)*2 + (pto.y)*160)%2?((pto.x)*2 + (pto.y)*160) : ((pto.x)*2 + (pto.y)*160))+1;
+	return ((pto.x)+(pto.y)*80)*2+1;
 }
 
 /*
@@ -148,8 +152,8 @@ void
 copy(point start, point end){
     static byte tmpbuf[4000], auxi;
     int i,j,k=0;
-    start.x = (start.x)%2?(start.x+1):(start.x);
-    end.x = (end.x)%2?(end.x+1):(end.x);
+    start.x;
+    end.x;
     for( i = 0 ; i < 4000 ; i++) {
 	clipboard[i] = 0;
     }
@@ -157,26 +161,26 @@ copy(point start, point end){
     for(j = 0 ; j<abs((end.y  - start.y))+1 ; j++) {
     	for( i = 0 ; i<(abs(end.x  - start.x)+1)*2 ; i++) {
 	    auxi = tmpbuf[((min(start.x,end.x)+min(start.y,end.y)*80))*2+i+j*160];
-	    if(auxi != 0) {
-		clipboard[k] = auxi;
-		k++;
-	    }
+	    clipboard[k] = auxi;
+	    k++;
 	}
-	k=k%2?k+1:k;
 	clipboard[k] = '\n';
 	k++;
 	clipboard[k] = DEFAULT_TXT;
 	k++;
     }
-	
+    clipboard[k] = 0xFF;
+    k++;
+    clipboard[k] = 0xFF;
+    k++;
 }
 
 void
 paste(void){
     int k;
-    for(k = 0 ; clipboard[k*2] != 0 ; k++) {
+    for(k = 0 ; clipboard[k*2] != 0xFF ; k++) {
 // 	if(!(k%2)) {
-	writeToKeyboard(clipboard[k*2]);
+ 	writeToKeyboard(clipboard[k*2]);
 // 	}
 // 	screenShow(clipboard[k],k);
     }

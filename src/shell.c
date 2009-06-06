@@ -259,7 +259,7 @@ shell()
 		separaPorEspacios(in, data);
 
 		ret=llamaFunc(data);
-
+    
 		data[0][0]=data[1][0]=0;
 	}
 }

@@ -38,8 +38,6 @@ Punto de entrada de código C.
 kmain() 
 {
 
-
-
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 	
 	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
@@ -52,7 +50,6 @@ kmain()
 	
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ12   */
 	setup_IDT_entry (&idt[0x74], 0x08, (dword)&_int_74_hand, ACS_INT, 0);
-
 
 
 /* Carga de IDTR    */
@@ -89,29 +86,13 @@ kmain()
 
 
 
-
     enable_mouse();
-/*    
-    char b[100];
-    puts("*** hace un gets ***");
-    gets(b);
-    puts("*** ahora hago puts de lo que lei con gets ***");
-    puts(b);
-    puts("*** soporta borrar todo lo que quieras perfecto ***");
-    puts("");
-    puts("Hola mundo");
-    puts("iupiiiiii");
-    puts("chau mundo");
-    int i;
-    for (i=0;i<10;i++)
-        puts("a");
-    */
 	shell();
     
-//     put_char('a');
-    while(1) {
 
-    }
+//     while(1) {
+// 
+//     }
 
 }
 

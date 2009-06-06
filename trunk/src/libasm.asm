@@ -254,10 +254,19 @@ rmemoria:
 
 ; Habilita al mouse  para empezar a recibir sus interrupciones
 enable_mouse:
+	in	al,64h
+	and	al,2
+	cmp	al,0
+	jnz	enable_mouse
 	mov	al,0A8h
 	out	64h,al
 	call	mouseWait
-	
+
+loop1:
+	in	al,64h
+	and	al,2
+	cmp	al,0
+	jnz	loop1
 	mov	al,20h
 	out	64h,al
 	call	mouseWait
@@ -267,10 +276,20 @@ enable_mouse:
 	or	ah,2
 	call	mouseWait
 	
+loop2:
+	in	al,64h
+	and	al,2
+	cmp	al,0
+	jnz	loop2
 	mov	al,60h
 	out	64h,al
 	call	mouseWait
 	
+loop3:
+	in	al,64h
+	and	al,2
+	cmp	al,0
+	jnz	loop3
 	mov	al,ah
 	out     60h,al
 	call	mouseWait
@@ -302,7 +321,11 @@ mouse_reset:
 	out	60h,al
 	in	al,60h
 	call	mouseWait
-	
+	cmp	al,0AAh
+	jz	resetok
+	jmp	mouse_reset
+
+resetok:
 	call	enable_mouse
 	
 	ret
@@ -310,12 +333,12 @@ mouse_reset:
 	
 	
 mouseWait:
-	push	ax
-	mov	ax,10000
+	push	eax
+	mov	eax,0FFFFFFFFh
 	
 ciclo:	dec	ax
 	jnz	ciclo
-	pop	ax
+	pop	eax
 	ret
 
 

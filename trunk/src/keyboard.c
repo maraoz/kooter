@@ -9,11 +9,9 @@ extern int cursor;
 tcirc teclator={0,0,0,{0}};
 
 void leoteclado (int k){
-	extern int interrupted;
 	extern int tTicks;
 	byte c;
 	
-	interrupted = 1;
 // 	tTicks=0;
 	if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
@@ -37,6 +35,7 @@ void leoteclado (int k){
 
 byte ktoa(int c){
 	static int shift = 0;
+	extern int interrupted;
 	int const keystroke[2][83]={
         {0x1B,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
         ,0x30,0x2D,0x3D,0x08,0x09,0x71,0x77,0x65,0x72
@@ -69,9 +68,10 @@ byte ktoa(int c){
     if( c == 0x2A+0x80 || c == 0x36+0x80)
 	shift = 0;
    
-    if(c<0x81)
+    if(c>0x81)
       return (byte)0x00;
-    return (byte)keystroke[shift][c-1-0x80];
+    interrupted = 1;
+    return (byte)keystroke[shift][c-1];
 }
 
 byte next_char (){
@@ -89,6 +89,8 @@ byte next_char (){
 void 
 writeToKeyboard(byte c)
 {
+    if(teclator.next_write == TCIRC_SIZE)
+                teclator.next_write = 0;
     teclator.tcircular[teclator.next_write] = c;
     teclator.next_write++;
     teclator.qty_used++;

@@ -356,16 +356,15 @@ void check_screen_saver() {
 // 				thisCol = 0;
 			if (tTicks % 2) {
 				if (++thisLine >= 25)
-				thisLine = 0;
+					thisLine = 0;
 				puts(screenSaverImg[thisLine]/*[thisCol]*/);
  			}
 
 			
  			
 // 			put_char(screenSaverImg[thisLine][thisCol]);
- 			
+
 		}
-			
 
 		if (interrupted == 1) {
 			cursor = 0;

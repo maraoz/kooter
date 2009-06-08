@@ -27,6 +27,7 @@ Punto de entrada de código C.
 kmain() 
 {
 
+	enable_mouse();
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 	
 	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
@@ -75,7 +76,7 @@ kmain()
 
 
 
-    enable_mouse();
+
 	shell();
     
 

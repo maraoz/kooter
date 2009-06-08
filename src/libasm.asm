@@ -295,26 +295,27 @@ enable_mouse:
 	call	mouseWait1	
 	in	al,60h
 
-	
 	ret
 	
-; mouse_reset:
-; 
-; 	mov	al,0D4h
-; 	out	64h,al
-; 	call	mouseWait
-; 	mov	al,0FFh
-; 	out	60h,al
-; 	in	al,60h
-; 	call	mouseWait
-; 	cmp	al,0AAh
-; 	jz	resetok
-; 	jmp	mouse_reset
-; 
-; resetok:
-; 	call	enable_mouse
-; 	
-; 	ret
+mouse_reset:
+	call	mouseWait2	
+	mov	al,0D4h
+	out	64h,al
+	call	mouseWait2
+	mov	al,0FFh
+	out	60h,al
+
+	call	mouseWait1
+	in	al,60h
+
+	cmp	al,0AAh
+	jz	resetok
+	jmp	mouse_reset
+
+resetok:
+	call	enable_mouse
+	
+	ret
 	
 	
 	
@@ -342,7 +343,7 @@ mouseWait2:
 	mov	ecx,100000
 	
 ciclo2:	
-	in	al,60h
+	in	al,64h
 	and	al,2
 	cmp	al,0
 	jz	mwait2_end

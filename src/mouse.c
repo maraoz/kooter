@@ -63,8 +63,8 @@ updateMouse(void){
 
     if(first & 0x80 || first & 0x40){
  	puts("Overflow de mouse");
-	mouse_reset();
-	qty_int = 0;
+// 	mouse_reset();
+// 	qty_int = 0;
     }
     else {
 	if(first & 0x02) {

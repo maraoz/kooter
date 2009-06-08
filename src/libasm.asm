@@ -254,93 +254,105 @@ rmemoria:
 
 ; Habilita al mouse  para empezar a recibir sus interrupciones
 enable_mouse:
-	in	al,64h
-	and	al,2
-	cmp	al,0
-	jnz	enable_mouse
+	call	mouseWait2
 	mov	al,0A8h
 	out	64h,al
-	call	mouseWait
-
-loop1:
-	in	al,64h
-	and	al,2
-	cmp	al,0
-	jnz	loop1
+	
+	call	mouseWait2
 	mov	al,20h
 	out	64h,al
-	call	mouseWait
-	
+
+	call	mouseWait1
 	in	al,60h
 	mov	ah,al
 	or	ah,2
-	call	mouseWait
-	
-loop2:
-	in	al,64h
-	and	al,2
-	cmp	al,0
-	jnz	loop2
+
+	call	mouseWait2
 	mov	al,60h
 	out	64h,al
-	call	mouseWait
-	
-loop3:
-	in	al,64h
-	and	al,2
-	cmp	al,0
-	jnz	loop3
+
+	call	mouseWait2
 	mov	al,ah
 	out     60h,al
-	call	mouseWait
-	
+		
+	call	mouseWait2
 	mov	al,0D4h
 	out	64h,al
-	call	mouseWait
+	call	mouseWait2
 	mov	al,0F6h
 	out	60h,al
-	in	al,60h
-	call	mouseWait
 	
+	call	mouseWait1
+	in	al,60h
+
+	call	mouseWait2	
 	mov	al,0D4h
 	out	64h,al
-	call	mouseWait
+	call	mouseWait2
 	mov	al,0F4h
 	out	60h,al
+	
+	call	mouseWait1	
 	in	al,60h
-	call	mouseWait
+
 	
 	ret
 	
-mouse_reset:
-
-	mov	al,0D4h
-	out	64h,al
-	call	mouseWait
-	mov	al,0FFh
-	out	60h,al
-	in	al,60h
-	call	mouseWait
-	cmp	al,0AAh
-	jz	resetok
-	jmp	mouse_reset
-
-resetok:
-	call	enable_mouse
+; mouse_reset:
+; 
+; 	mov	al,0D4h
+; 	out	64h,al
+; 	call	mouseWait
+; 	mov	al,0FFh
+; 	out	60h,al
+; 	in	al,60h
+; 	call	mouseWait
+; 	cmp	al,0AAh
+; 	jz	resetok
+; 	jmp	mouse_reset
+; 
+; resetok:
+; 	call	enable_mouse
+; 	
+; 	ret
 	
-	ret
 	
 	
-	
-mouseWait:
+mouseWait1:
+	push	ecx
 	push	eax
-	mov	eax,0FFFFFFFFh
+	mov	ecx,100000
 	
-ciclo:	dec	ax
-	jnz	ciclo
+ciclo1:	
+	in	al,64h
+	and	al,1
+	cmp	al,1
+	jz	mwait1_end
+	dec	ecx
+	jnz	ciclo1
+
+mwait1_end:
 	pop	eax
+	pop	ecx
 	ret
 
+mouseWait2:
+	push	ecx
+	push	eax
+	mov	ecx,100000
+	
+ciclo2:	
+	in	al,60h
+	and	al,2
+	cmp	al,0
+	jz	mwait1_end
+	dec	ecx
+	jnz	ciclo2
+
+mwait2_end:
+	pop	eax
+	pop	ecx
+	ret
 
 		
 

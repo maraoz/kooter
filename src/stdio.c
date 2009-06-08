@@ -204,6 +204,7 @@ size_t write(int fd, const void* buffer, size_t count) {
 
 		_int_80_caller(WRITE, fd, offset, data);
 		screen_buffer[offset] = data;
+
 	}
 	cursor+=count/2;
 	return 0;

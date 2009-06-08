@@ -345,7 +345,7 @@ ciclo2:
 	in	al,60h
 	and	al,2
 	cmp	al,0
-	jz	mwait1_end
+	jz	mwait2_end
 	dec	ecx
 	jnz	ciclo2
 

@@ -109,7 +109,29 @@ void put_char( byte c) {
     
     /* ENTER */
     if (c == '\n') {
+//         if (cursor == 2000 && vb_counter==160) {
+//                 while (1) {
+//                     int H;
+//                     char * p = (char * ) 0xB8000;
+//                     for (H=79; H<100;H++) {
+//                             *(p+H*2)='0';
+//                             *(p+H*2+1)='0';
+//                     }
+//                 }
+//         }
         write(PANTALLA_FD, video_buffer, vb_counter);
+
+
+//         if (cursor == 2000 && V_BUFFER_LENGTH-(cursor%80)*2==160) {
+//                 while (1) {
+//                     int H;
+//                     char * p = (char * ) 0xB8000;
+//                     for (H=79; H<100;H++) {
+//                             *(p+H*2)='1';
+//                             *(p+H*2+1)='0';
+//                     }
+//                 }
+//         }
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(cursor%80)*2 );
         vb_counter = 0;
         check_screen_scroll();
@@ -131,17 +153,16 @@ void put_char( byte c) {
         
     if (! (vb_counter < V_BUFFER_LENGTH)) {
 
-
-	
-		int H;
-		char * p = (char * ) 0xB8000;
-		for (H=79; H<100;H++) {
-			*(p+H*2)='0';
-			*(p+H*2+1)='0';
-		}
-		
-	
-	
+//         if (cursor == 2000 && vb_counter==160) {
+//                 while (1) {
+//                     int H;
+//                     char * p = (char * ) 0xB8000;
+//                     for (H=79; H<100;H++) {
+//                             *(p+H*2)='3';
+//                             *(p+H*2+1)='0';
+//                     }
+//                 }
+//         }
 
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
@@ -189,8 +210,25 @@ byte get_char() {
 * 
 ****************************************************************/
 void flush() {
+
+    if (cursor == 2000 && vb_counter==160) {
+                while (1) {
+                    int H;
+                    char * p = (char * ) 0xB8000;
+                    for (H=79; H<100;H++) {
+                            *(p+H*2)='7';
+                            *(p+H*2+1)='0';
+                    }
+                }
+        }
+
     write(PANTALLA_FD, video_buffer, vb_counter);
     vb_counter = 0;
+}
+
+void borra_buffer() {
+    vb_counter = 0;
+    return;
 }
 
 

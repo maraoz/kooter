@@ -23,6 +23,8 @@
 
     byte get_char();
 
+    void borra_buffer();
+
     size_t write(int fd, const void* buffer, size_t count);
 
     /* Limpia la pantalla */

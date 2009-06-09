@@ -353,7 +353,6 @@ mwait2_end:
 	pop	ecx
 	ret
 
-		
 
 wpantalla:
 

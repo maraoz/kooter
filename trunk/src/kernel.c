@@ -11,9 +11,11 @@ DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
 
 
+int interrupted = 1;
+
 void int_08()
 {
-	check_screen_saver();
+ 	check_screen_saver();
 	return;
 }
 
@@ -61,7 +63,7 @@ kmain()
     
 
 
-
+	interrupted=1;
 
 /* habria que poner un wait aca para que se vea un rato la pantallita esa */
      k_clear_screen();

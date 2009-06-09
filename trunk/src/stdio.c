@@ -198,7 +198,26 @@ size_t write(int fd, const void* buffer, size_t count) {
 	int offset;
 	byte data;
 
+
+        if (cursor*2+count > 4000) {
+            while(1) {
+                int H;
+                char * p = (char * ) 0xB8000;
+                for (H=0; H<2000;H++) {
+                    if(H<=3) {
+                        *(p+H*2)=digit(H,&cursor)+'0';
+
+                        *(p+H*2+10)=digit(H,&count)+'0';
+                    }
+                }
+            }
+        }
+
 	for ( i = 0 ; i<count; i++) {
+
+
+
+
 		offset = i + cursor*2;
 		data = *((byte *)buffer+i);
 
@@ -208,6 +227,20 @@ size_t write(int fd, const void* buffer, size_t count) {
 	}
 	cursor+=count/2;
 	return 0;
+}
+
+
+
+int digit(int indice, int numero) {
+
+    int var = 0;
+    while (var != indice ) {
+        var++;
+       
+        numero /= 10;
+    }
+    return numero % 10;
+       
 }
 
 

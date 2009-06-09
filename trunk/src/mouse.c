@@ -20,7 +20,7 @@ leomouse (int b){
 	static int mouseClickIzq = 0, mouseClickDer = 0;
 
 	interrupted = 1;
-// 	tTicks=0;
+	tTicks=0;
 	switch(qty_int){
 		case 0:	first = (byte)b;break;
 		case 1:	second = (byte)b;break;

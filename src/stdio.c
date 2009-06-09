@@ -268,19 +268,19 @@ size_t write(int fd, const void* buffer, size_t count) {
 		offset = i + cursor*2;
 		data = *((byte *)buffer+i);
 
-		if (offset >= 4000) {
-			while(1) {
-					int H;
-					char * p = (char * ) 0xB8000;
-					for (H=0; H<2000;H++) {
-					if(H<=3) {
-						*(p+H*2)=digit(H,cursor)+'0';
-			
-						*(p+H*2+10)=digit(H,count)+'0';
-					}
-				}
-			}
-		}
+// 		if (offset >= 4000) {
+// 			while(1) {
+// 					int H;
+// 					char * p = (char * ) 0xB8000;
+// 					for (H=0; H<2000;H++) {
+// 					if(H<=3) {
+// 						*(p+H*2)=digit(H,cursor)+'0';
+// 			
+// 						*(p+H*2+10)=digit(H,count)+'0';
+// 					}
+// 				}
+// 			}
+// 		}
 
 		_int_80_caller(WRITE, fd, offset, data);
 		screen_buffer[offset] = data;

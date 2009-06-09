@@ -34,6 +34,7 @@ leomouse (int b){
 	    mouseClickDer = mouse.der;
 	    updateMouse();
 	    showMouseCursor(ptov(mouse.pos));
+
 	    if (mouse.izq && !mouseClickIzq){
 		start.x = mouse.pos.x;
 		start.y = mouse.pos.y;
@@ -41,16 +42,10 @@ leomouse (int b){
 	    if (!mouse.izq && mouseClickIzq) {
 		end.x = mouse.pos.x;
 		end.y = mouse.pos.y;
-//		hideMouseCursor();
 		copy(start,end);
-//		showMouseCursor(ptov(mouse.pos));
 	    }
-	    if(mouse.der && !mouseClickDer) {
-// 		hideMouseCursor();
+	    if(mouse.der && !mouseClickDer)
 		paste();
-// 		showMouseCursor(ptov(mouse.pos));
-	    }
-		
 	}
 	return;
 }

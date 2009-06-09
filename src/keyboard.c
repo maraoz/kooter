@@ -6,18 +6,18 @@
 
 extern int cursor;
 extern int interrupted;
+extern int tTicks;
 
 tcirc teclator={0,0,0,{0}};
 
 void leoteclado (int k){
-	extern int tTicks;
 	byte c;
 
 	tTicks=0;
 
 	if(interrupted==0)
 		interrupted = 1;
-	else if(!(teclator.qty_used == TCIRC_SIZE)){
+	else if (!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 		if(c != 0x00) {
             if(teclator.next_write == TCIRC_SIZE)
@@ -26,13 +26,6 @@ void leoteclado (int k){
             teclator.tcircular[teclator.next_write] = c;
             teclator.next_write++;
             teclator.qty_used++;
-//             if(c>=0x20) {
-
-// 		if(c!='\x08' || ((c=='\x08') && (cursor%80>9)))
-//                 	put_char(c);
-// 
-//                 flush();
-//             }
 	    }
 	}
 }
@@ -52,7 +45,7 @@ byte ktoa(int c){
         ,0x00/*num*/,0x00/*scrl*/,0x4700,0x4800,0x4900
         ,0x2D,0x4B00,0x4C00,0x4D00,0x2B,0x4F00,0x5000
         ,0x5100,0x5200,0x5300},
-        
+
         {0x1B,0x21,0x40,0x23,0x24,0x25,0x5E,0x26,0x2A,0x28
         ,0x29,0x5F,0x2B,0x08,0x0F00,0x51,0x57,0x45,0x52
         ,0x54,0x59,0x55,0x49,0x4F,0x50,0x7B,0x7D,0x0D
@@ -65,14 +58,15 @@ byte ktoa(int c){
         ,0x00/*num*/,0x00/*scrl*/,0x37,0x38,0x39
         ,0x2D,0x34,0x35,0x36,0x2B,0x31,0x32
         ,0x33,0x30,0x2E}};
-      
+
     if( c == 0x2A || c == 0x36)
 	shift = 1;
     if( c == 0x2A+0x80 || c == 0x36+0x80)
 	shift = 0;
-   
+
     if(c>0x81)
       return (byte)0x00;
+
     return (byte)keystroke[shift][c-1];
 }
 

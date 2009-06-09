@@ -21,3 +21,12 @@ int max(int a, int b){
 int min(int a, int b){
     return (a<b)?a:b;
 }
+
+void itoa(int num, char v[]){
+	
+	if(num == 0)
+		return;
+	else
+		itoa(num/10, v+1);
+		v[0]=num%10+'0';
+}

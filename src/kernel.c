@@ -10,7 +10,6 @@
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
 
-
 int interrupted = 1;
 
 void int_08()

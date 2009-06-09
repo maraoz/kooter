@@ -183,7 +183,7 @@ void put_char( byte c) {
 * Lee un caracter en pantalla y lo devuelve
 * 
 ****************************************************************/
-#define K_BUFFER_LENGTH 10
+#define K_BUFFER_LENGTH 1
 
 byte keyboard_buffer[K_BUFFER_LENGTH] = {0};
 int kb_counter = K_BUFFER_LENGTH;

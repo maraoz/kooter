@@ -58,31 +58,21 @@ kmain()
 	
 	_Sti();
 
+
+// muestra la splashScreen
+
+        showSplashScreen();
+
+/* espero a que la pueda ver */
+
+        wait(10);
+
 /* Borra la pantalla. */ 
-    
-
-
-	interrupted=1;
-
-/* habria que poner un wait aca para que se vea un rato la pantallita esa */
-     k_clear_screen();
-
-
-
-
-     
-/* Para probar la splashscreen comentar arriba y descomentar esta. */ 
-//          showSplashScreen();
-
+        k_clear_screen();
 
 
 
 	shell();
-    
-
-//     while(1) {
-// 
-//     }
 
 }
 

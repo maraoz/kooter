@@ -8,11 +8,15 @@ int backupCursor = 1;
 
 void
 screenShow(byte c,int offset){
-    if(offset>=4000) {
-        puts("ERROR: Me tiraste un offset muy grande\n");
-    }
-    bufferVideo[offset] = c;
-    wpantalla(c,offset);
+	if(offset>=4000) {
+		
+		puts("ERROR: Me tiraste un offset muy grande\n");
+	}
+	else {
+	bufferVideo[offset] = c;
+	wpantalla(c,offset);
+
+	}
 }
 
 byte

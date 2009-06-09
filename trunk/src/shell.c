@@ -295,18 +295,22 @@ char * screenSaverImg[25] = {
 void
 activaSp()
 {
-	int i;
+	int i=0;
+	int slow=0;
 	
 	k_clear_screen();
 
 	interrupted=0;
 	while(interrupted==0)
-		for(i = 0; i < 25; i++)
+		while(i < 25)
 		{
 			tTicks=0;
 			if(interrupted!=0)
 				break;
-			puts(screenSaverImg[i]);
+			if(slow%1000)
+				puts(screenSaverImg[i++]);
+			slow++;
+			(i==25)? i=0 : i;
 		}
 	flush();
 	return;
@@ -323,9 +327,9 @@ garbage()
 {
 	char c = 'a';
         int i;
-        for (i = 0; i<1500; i++)
+        for (i = 0; i<2000; i++)
         {
-		put_char(c++%20+'a');
+		put_char(c++%50+'a');
 		flush();
 	}
 }
@@ -355,9 +359,9 @@ void check_screen_saver() {
 // 			if (++thisCol >= 80) {
 // 				thisCol = 0;
 			if (tTicks % 2) {
-				if (++thisLine >= 25)
+				if (thisLine == 25)
 					thisLine = 0;
-				puts(screenSaverImg[thisLine]/*[thisCol]*/);
+				puts(screenSaverImg[thisLine++]/*[thisCol]*/);
  			}
 
 			

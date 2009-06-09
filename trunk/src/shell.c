@@ -253,6 +253,9 @@ shell()
 	int rec;
 	tTicks=0;
 
+	
+    flush();
+    cursor = 0;
 	while(1)
 	{
 		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)

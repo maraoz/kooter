@@ -22,6 +22,22 @@ int min(int a, int b){
     return (a<b)?a:b;
 }
 
+
+
+void wait(int t) {
+    int i,j;
+    int a;
+    
+    for (i=0; i<t*100;i++) {
+        for (j=0; j<t*100;j++) {
+           a <<= 1; 
+           a += a-- + 0xfb0c28c3;
+           a = a >> 4;
+        }
+    }
+}
+
+
 void itoa(int num, char v[]){
 	
 	if(num == 0)

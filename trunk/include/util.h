@@ -13,6 +13,8 @@ int min(int a, int b);
 
 int max(int a, int b);
 
+void wait(int t);
+
 void itoa(int num, char v[]);
 
 #endif

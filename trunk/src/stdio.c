@@ -211,17 +211,6 @@ byte get_char() {
 ****************************************************************/
 void flush() {
 
-    if (cursor == 2000 && vb_counter==160) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='7';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
-
     write(PANTALLA_FD, video_buffer, vb_counter);
     vb_counter = 0;
 }
@@ -248,21 +237,6 @@ size_t write(int fd, const void* buffer, size_t count) {
 	int i;
 	int offset;
 	byte data;
-
-
-        if (cursor*2+count-1 >= 4000) {
-//             while(1) {
-//                 int H;
-//                 char * p = (char * ) 0xB8000;
-//                 for (H=0; H<2000;H++) {
-//                     if(H<=3) {
-//                         *(p+H*2)=digit(H,&cursor)+'0';
-// 
-//                         *(p+H*2+10)=digit(H,&count)+'0';
-//                     }
-//                 }
-//             }
-        }
 
 	for ( i = 0 ; i<count; i++) {
 		offset = i + cursor*2;
@@ -345,7 +319,7 @@ char * splash_screen[25] = {
 "                                    =cc$$$$$$$$$$$$$$$cc.                       ",
 "                                          ,,\"\"\"\"\"??$$$$$$$c                     ",
 "        Kooter Kernel                  .,ccc$L,, ?bccc. \"\"?$$c     .             ",
-"           v 0.9                    ,d\"\"\"$P\"\" $,z$$$$$P\",,,d$bcd$$$b.           ",
+"           v 1.0                    ,d\"\"\"$P\"\" $,z$$$$$P\",,,d$bcd$$$b.           ",
 "                            ,z,,.  ??  ,$$\"  ,$$$$$$$ d$$$$$$$$$$$$$F           ",
 "                            ?$$$$$$$cc,\"$$b=???3$$$$$ $$$$P\" 4P  \"?$\"           ",
 "                             `\"?$$$$$$$????$$$$$$$$$$,\"\",,cdF'\"c                ",
@@ -364,7 +338,7 @@ char * splash_screen[25] = {
 "                      ::::::::::::::..:::::::::: <$$$$$$$$$$$P :::              ",
 "                      :::::::::::::::::::::::::: $$$$$$$$$$$$\" ::               ",
 "                                                                                ",
-"                                                                               "
+"                                                                                "
 };
 
 void showSplashScreen() {

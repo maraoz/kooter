@@ -22,7 +22,6 @@
 ** variable que esta en 0 mientras no lleguen interrupciones
 */
 extern int interrupted;
-
 extern int tTicks;
 extern int cursor;
 
@@ -43,7 +42,6 @@ char in[LONG_STR_CMD];
 */
 char bufferScr[TCIRC_SIZE*2];
 
-
 /*
 ** variable con el tiempo para que entre el screen saver
 */
@@ -58,6 +56,40 @@ int scrIs=0;
 ** guarda el retorno de la ultima funcion ejecutada
 */
 int ret=AUX;
+
+
+char * screenSaverImg[25] = {
+"      x                                                                         ",
+"                                                                          x     ",
+"                                                    x                           ",
+"                                                                                ",
+"               x                                                                ",
+"                                                                                ",
+"                                                                                ",
+"                                                                                ",
+"                                                              x                 ",
+"                         x                                                      ",
+"                                                                                ",
+"                                                                                ",
+"                                                                                ",
+"                                                                                ",
+"      x                            x                                            ",
+"                                                                                ",
+"                                                                x               ",
+"                                                                                ",
+"                                                     x                          ",
+"                                                                                ",
+"                         x                                                      ",
+"                                                                                ",
+"                                                                 x              ",
+"             x                                                                  ",
+"   x                                                                            "
+};
+
+
+
+
+
 
 
 /*
@@ -221,8 +253,6 @@ shell()
 	int rec;
 	tTicks=0;
 
-	
-
 	while(1)
 	{
 		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
@@ -264,34 +294,6 @@ shell()
 		data[0][0]=data[1][0]=0;
 	}
 }
-
-char * screenSaverImg[25] = {
-"      x                                                                         ",
-"                                                                          x     ",
-"                                                    x                           ",
-"                                                                                ",
-"               x                                                                ",
-"                                                                                ",
-"                                                                                ",
-"                                                                                ",
-"                                                              x                 ",
-"                         x                                                      ",
-"                                                                                ",
-"                                                                                ",
-"                                                                                ",
-"                                                                                ",
-"      x                            x                                            ",
-"                                                                                ",
-"                                                                x               ",
-"                                                                                ",
-"                                                     x                          ",
-"                                                                                ",
-"                         x                                                      ",
-"                                                                                ",
-"                                                                 x              ",
-"             x                                                                  ",
-"   x                                                                            "
-};
 
 void
 activaSp()
@@ -344,11 +346,6 @@ void check_screen_saver() {
 
 	tTicks++;
 
-
-
-	
-        
-
 	if(tTicks>entraSp*18 && firstTime)
 		interrupted=0;
 	
@@ -380,35 +377,4 @@ void check_screen_saver() {
 		tTicks = 0;
 		firstTime = 1;
 	}
-
-
-
-
-
-}
-
-
-int digit(int indice, int numero) {
-
-    int var = 0;
-    while (var != indice ) {
-        var++;
-       
-        numero /= 10;
-    }
-    return numero % 10;
-       
-}
-
-
-void
-itoa(int num, char v[])
-{
-	
-	if(num == 0)
-		return;
-	else
-		itoa(num/10, v+1);
-		v[0]=num%10+'0';
-
 }

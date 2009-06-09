@@ -9,6 +9,7 @@ GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
 GLOBAL	mouse_reset
 GLOBAL	wpantalla
+GLOBAL 	disable_text_cursor
 
 
 EXTERN  int_08
@@ -379,6 +380,35 @@ wpantalla:
 	mov	esp,ebp
 	pop	ebp
    	ret
+
+
+
+; disable_text_cursor:
+; 	push	ebp
+; 	mov	ebp,esp
+; 	push	eax
+; 	push	edx
+; 	
+; 	in	al,3DAh
+; 	in	al,3C0h
+; 
+; 	mov	dl,al
+; 
+; 	mov	al,0Ah
+; 	out	3C0h,al
+; 
+; 	in	al,3Ch
+; 	mov	dh,al
+; 
+; 	mov	al,20h
+; 	out	3C0h,al
+; 
+; 	pop	edx	
+; 	pop	eax
+; 	mov	esp,ebp
+; 	pop	ebp
+; 
+;    	ret
 
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0

@@ -254,8 +254,9 @@ shell()
 	tTicks=0;
 
 	
-    flush();
-    cursor = 0;
+	flush();
+	cursor = 0;
+
 	while(1)
 	{
 		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
@@ -269,15 +270,12 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
-			
 			if(c!='\x08')
 			{
 				if(i<LONG_STR_CMD)
 					in[i]=c;
-
  				i++;
  				put_char(c);
-
 				flush();
 			}
 			else if(i>0)

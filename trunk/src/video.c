@@ -9,7 +9,9 @@ int backupCursor = 1;
 void
 screenShow(byte c,int offset){
     if(offset>=4000) {
-	puts("Me tiraste un offset muy grande");
+
+        puts("ERROR: Me tiraste un offset muy grande\n");
+
 
 	int off=offset;
 	while(off!=0)
@@ -17,6 +19,7 @@ screenShow(byte c,int offset){
 		put_char(off%10+'0');
 		off/=10;
 	}
+
 
     }
     bufferVideo[offset] = c;

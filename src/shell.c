@@ -221,6 +221,8 @@ shell()
 	int rec;
 	tTicks=0;
 
+	
+
 	while(1)
 	{
 		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
@@ -342,6 +344,11 @@ void check_screen_saver() {
 
 	tTicks++;
 
+
+
+	
+        
+
 	if(tTicks>entraSp*18 && firstTime)
 		interrupted=0;
 	
@@ -368,15 +375,30 @@ void check_screen_saver() {
 	{
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
-		cursor=0;
+		flush();
 		cursor = cursorBkp;
 		tTicks = 0;
 		firstTime = 1;
 	}
 
-	flush();
+
+
+
+
 }
 
+
+int digit(int indice, int numero) {
+
+    int var = 0;
+    while (var != indice ) {
+        var++;
+       
+        numero /= 10;
+    }
+    return numero % 10;
+       
+}
 
 
 void

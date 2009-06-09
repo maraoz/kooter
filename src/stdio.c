@@ -130,6 +130,19 @@ void put_char( byte c) {
     /* OTHER CHARACTERS */
         
     if (! (vb_counter < V_BUFFER_LENGTH)) {
+
+
+	
+		int H;
+		char * p = (char * ) 0xB8000;
+		for (H=79; H<100;H++) {
+			*(p+H*2)='0';
+			*(p+H*2+1)='0';
+		}
+		
+	
+	
+
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
     }
@@ -199,27 +212,37 @@ size_t write(int fd, const void* buffer, size_t count) {
 	byte data;
 
 
-        if (cursor*2+count > 4000) {
-            while(1) {
-                int H;
-                char * p = (char * ) 0xB8000;
-                for (H=0; H<2000;H++) {
-                    if(H<=3) {
-                        *(p+H*2)=digit(H,&cursor)+'0';
-
-                        *(p+H*2+10)=digit(H,&count)+'0';
-                    }
-                }
-            }
+        if (cursor*2+count-1 >= 4000) {
+//             while(1) {
+//                 int H;
+//                 char * p = (char * ) 0xB8000;
+//                 for (H=0; H<2000;H++) {
+//                     if(H<=3) {
+//                         *(p+H*2)=digit(H,&cursor)+'0';
+// 
+//                         *(p+H*2+10)=digit(H,&count)+'0';
+//                     }
+//                 }
+//             }
         }
 
 	for ( i = 0 ; i<count; i++) {
-
-
-
-
 		offset = i + cursor*2;
 		data = *((byte *)buffer+i);
+
+		if (offset >= 4000) {
+			while(1) {
+					int H;
+					char * p = (char * ) 0xB8000;
+					for (H=0; H<2000;H++) {
+					if(H<=3) {
+						*(p+H*2)=digit(H,cursor)+'0';
+			
+						*(p+H*2+10)=digit(H,count)+'0';
+					}
+				}
+			}
+		}
 
 		_int_80_caller(WRITE, fd, offset, data);
 		screen_buffer[offset] = data;
@@ -231,17 +254,7 @@ size_t write(int fd, const void* buffer, size_t count) {
 
 
 
-int digit(int indice, int numero) {
 
-    int var = 0;
-    while (var != indice ) {
-        var++;
-       
-        numero /= 10;
-    }
-    return numero % 10;
-       
-}
 
 
 /***************************************************************

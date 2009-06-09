@@ -10,6 +10,14 @@ void
 screenShow(byte c,int offset){
     if(offset>4000) {
 	puts("Me tiraste un offset muy grande");
+
+	int off=offset;
+	while(off!=0)
+	{
+		put_char(off%10+'0');
+		off/=10;
+	}
+
     }
     bufferVideo[offset] = c;
     wpantalla(c,offset);

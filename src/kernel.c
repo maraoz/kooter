@@ -13,7 +13,6 @@ IDTR idtr;				/* IDTR */
 
 void int_08()
 {
-	
 	check_screen_saver();
 	return;
 }

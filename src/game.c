@@ -11,7 +11,7 @@ int game() {
     pjT mario;
     mario.x =  40;
     mario.y = 12;
-
+    cursor = 0;
     showView();
     while ( (c = get_char()) != 'q') {
         switch (c) {
@@ -50,6 +50,7 @@ void updateView( pjT mario) {
 }
 
 void showView(void) {
+//     cursor = 0;
     write(PANTALLA_FD, view, 4000);
     cursor = 0;
 }

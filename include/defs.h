@@ -111,7 +111,6 @@ typedef struct {
 //typedef byte[TCIRC_SIZE*2] vbuff;
 
 
-int interrupted;
 int tTicks;
 
 

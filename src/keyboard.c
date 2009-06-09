@@ -5,6 +5,7 @@
 #include "../include/keyboard.h"
 
 extern int cursor;
+extern int interrupted;
 
 tcirc teclator={0,0,0,{0}};
 
@@ -12,9 +13,11 @@ void leoteclado (int k){
 	extern int tTicks;
 	byte c;
 
-// 	tTicks=0;
-	interrupted = 1;
-	if(!(teclator.qty_used == TCIRC_SIZE)){
+	tTicks=0;
+
+	if(interrupted==0)
+		interrupted = 1;
+	else if(!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 		if(c != 0x00) {
             if(teclator.next_write == TCIRC_SIZE)
@@ -36,7 +39,6 @@ void leoteclado (int k){
 
 byte ktoa(int c){
 	static int shift = 0;
-	extern int interrupted;
 	int const keystroke[2][83]={
         {0x1B,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
         ,0x30,0x2D,0x3D,0x08,0x09,0x71,0x77,0x65,0x72
@@ -71,7 +73,6 @@ byte ktoa(int c){
    
     if(c>0x81)
       return (byte)0x00;
-//     interrupted = 1;
     return (byte)keystroke[shift][c-1];
 }
 

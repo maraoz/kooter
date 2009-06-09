@@ -220,7 +220,6 @@ shell()
 	int c;
 	int rec;
 	tTicks=0;
-	interrupted=0;
 
 	while(1)
 	{
@@ -242,7 +241,7 @@ shell()
 					in[i]=c;
 
  				i++;
-				put_char(c);
+ 				put_char(c);
 
 				flush();
 			}
@@ -259,7 +258,7 @@ shell()
 		separaPorEspacios(in, data);
 
 		ret=llamaFunc(data);
-    
+
 		data[0][0]=data[1][0]=0;
 	}
 }
@@ -340,47 +339,54 @@ void check_screen_saver() {
 	static int cursorBkp = 0;
 	
 	static int thisLine = 0;
-	static int thisCol = 0;
-	
 
 	tTicks++;
 
-	if(tTicks>entraSp*18) {
-		
-		if (firstTime) {
-			read(PANTALLA_FD, bufferScr, 4000);
-			cursorBkp = cursor;
-			k_clear_screen();
-			firstTime = 0;
-		}
-
-		if (interrupted == 0) {
-			
-// 			if (++thisCol >= 80) {
-// 				thisCol = 0;
-			if (tTicks % 2) {
-				if (thisLine == 25)
-					thisLine = 0;
-				puts(screenSaverImg[thisLine++]/*[thisCol]*/);
- 			}
-
-			
- 			
-// 			put_char(screenSaverImg[thisLine][thisCol]);
-
-		}
-
-		if (interrupted == 1) {
-			cursor = 0;
-			write(PANTALLA_FD, bufferScr, 4000);
-			cursor = cursorBkp;
-			tTicks = 0;
-			firstTime = 1;
-		}
-		interrupted = 0;
-
-
-		flush();
-		
+	if(tTicks>entraSp*18 && firstTime)
+		interrupted=0;
+	
+	if (firstTime && interrupted==0)
+	{
+		read(PANTALLA_FD, bufferScr, 4000);
+		cursorBkp = cursor;
+		k_clear_screen();
+		firstTime = 0;
+		interrupted=0;
 	}
+
+	if (interrupted == 0)
+	{
+		if (tTicks % 2)
+		{
+			if (thisLine == 25)
+				thisLine = 0;
+			puts(screenSaverImg[thisLine++]);
+ 		}
+	}
+
+	if (interrupted == 1 && firstTime == 0)
+	{
+		cursor = 0;
+		write(PANTALLA_FD, bufferScr, 4000);
+		cursor=0;
+		cursor = cursorBkp;
+		tTicks = 0;
+		firstTime = 1;
+	}
+
+	flush();
+}
+
+
+
+void
+itoa(int num, char v[])
+{
+	
+	if(num == 0)
+		return;
+	else
+		itoa(num/10, v+1);
+		v[0]=num%10+'0';
+
 }

@@ -18,3 +18,4 @@ void garbage();
 
 void check_screen_saver();
 
+void itoa(int num, char v[]);

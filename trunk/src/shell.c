@@ -375,7 +375,7 @@ void check_screen_saver() {
 	{
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
-		flush();
+                borra_buffer();
 		cursor = cursorBkp;
 		tTicks = 0;
 		firstTime = 1;

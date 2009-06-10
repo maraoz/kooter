@@ -18,15 +18,15 @@ void leoteclado (int k){
 	
 	if (!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
-		if(c != 0x00 && interrupted==1 ) {
-            
-        
-            if(teclator.next_write == TCIRC_SIZE)
-                teclator.next_write = 0;
 
-            teclator.tcircular[teclator.next_write] = c;
-            teclator.next_write++;
-            teclator.qty_used++;
+	   if(c != 0x00 && interrupted==1) {
+
+                if(teclator.next_write == TCIRC_SIZE)
+                    teclator.next_write = 0;
+    
+                teclator.tcircular[teclator.next_write] = c;
+                teclator.next_write++;
+                teclator.qty_used++;
 	    }
 	}
 }

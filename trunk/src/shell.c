@@ -205,14 +205,17 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-		read(PANTALLA_FD, bufferScr, 4000);
-		cursorBkp=cursor;
-		activaSp();
-		interrupted = 0;
-		cursor = 0;
-		borra_buffer();
-		write(PANTALLA_FD, bufferScr, 4000);
-		cursor=cursorBkp;
+// 		read(PANTALLA_FD, bufferScr, 4000);
+// 		cursorBkp=cursor;
+//                 cursor = 0;
+// 		activaSp();
+// 		interrupted = 0;
+// 		
+// 		borra_buffer();
+//                 cursor=0;
+// 		write(PANTALLA_FD, bufferScr, 4000);
+// 		cursor=cursorBkp;
+                tTicks = entraSp * 18 +1;
 		return ACTSP_CD;
 	}
 	else if(str_cmp(s[0], "dispImg"))
@@ -297,25 +300,28 @@ shell()
 	}
 }
 
-void
-activaSp()
-{
-	int i=0;
-	
-	k_clear_screen();
-
-	interrupted=0;
-	while(interrupted==0)
-		while(i < 25)
-		{
-			tTicks=0;
-			if(interrupted!=0)
-				break;
-			puts(screenSaverImg[i++]);
-		}
-	flush();
-	return;
-}
+// void
+// activaSp()
+// {
+// 	int i=0;
+// 	
+// 	k_clear_screen();
+// 
+// 	interrupted=0;
+// 	while(interrupted==0)
+// 		while(i < 25)
+// 		{
+// 			tTicks=0;
+// 			if(interrupted!=0)
+// 				break;
+// // 			puts(screenSaverImg[i++]);
+//                         if (i == 25) {
+//                             i=0;
+//                         }
+// 		}
+// 	flush();
+// 	return;
+// }
 
 void
 setTimeSp(int time)

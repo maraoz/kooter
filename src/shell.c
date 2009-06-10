@@ -266,7 +266,7 @@ shell()
 		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
 		{
 			put_char('\n');
-			flush();
+// 			flush();
 		}
 
 		print_nline();
@@ -289,7 +289,7 @@ shell()
 				flush();
 			}
 		}
-		put_char(c);
+		put_char('\n');
 		in[i]=0;
 
 		separaPorEspacios(in, data);
@@ -356,6 +356,7 @@ void check_screen_saver() {
 	if (firstTime && interrupted==0)
 	{
 		read(PANTALLA_FD, bufferScr, 4000);
+                
 		cursorBkp = cursor;
 		k_clear_screen();
 		firstTime = 0;
@@ -368,15 +369,20 @@ void check_screen_saver() {
 			if (thisLine == 25)
 				thisLine = 0;
 			puts(screenSaverImg[thisLine++]);
+                        put_char('\n');
 		}
 
 	if (interrupted == 1 && firstTime == 0)
 	{
 		cursor = 0;
 		write(PANTALLA_FD, bufferScr, 4000);
-                borra_buffer();
+                
 		cursor = cursorBkp;
 		tTicks = 0;
 		firstTime = 1;
+                borra_buffer();
+                
+                
+                
 	}
 }

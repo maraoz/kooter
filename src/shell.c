@@ -210,6 +210,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
 		activaSp();
 		interrupted = 0;
 		cursor = 0;
+		borra_buffer();
 		write(PANTALLA_FD, bufferScr, 4000);
 		cursor=cursorBkp;
 		return ACTSP_CD;
@@ -300,7 +301,6 @@ void
 activaSp()
 {
 	int i=0;
-	int slow=0;
 	
 	k_clear_screen();
 
@@ -311,10 +311,7 @@ activaSp()
 			tTicks=0;
 			if(interrupted!=0)
 				break;
-			if(slow%1000)
-				puts(screenSaverImg[i++]);
-			slow++;
-			(i==25)? i=0 : i;
+			puts(screenSaverImg[i++]);
 		}
 	flush();
 	return;
@@ -360,14 +357,12 @@ void check_screen_saver() {
 	}
 
 	if (interrupted == 0)
-	{
 		if (tTicks % 2)
 		{
 			if (thisLine == 25)
 				thisLine = 0;
 			puts(screenSaverImg[thisLine++]);
- 		}
-	}
+		}
 
 	if (interrupted == 1 && firstTime == 0)
 	{

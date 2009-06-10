@@ -29,7 +29,7 @@ kmain()
 
 	enable_mouse();
 	
-	disable_text_cursor();
+	//disable_text_cursor();
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 	
 	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);

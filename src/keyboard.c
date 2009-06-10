@@ -76,6 +76,9 @@ byte next_char (){
 		a=teclator.tcircular[teclator.next_read];
 		teclator.next_read++;
 		teclator.qty_used--;
+
+		if(teclator.next_read >= TCIRC_SIZE)
+			teclator.next_read = 0;
 	}
 	else
 		a = 0xFF;

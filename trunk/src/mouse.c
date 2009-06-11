@@ -49,17 +49,16 @@ leomouse (int b){
 	    }
 	    if (!mouse.izq && mouseClickIzq) {
 		hideSelection();
-		showSelection(start,end);
 		end.x = mouse.pos.x;
 		end.y = mouse.pos.y;
+		showSelection(start,end);
 		copy(start,end);
 		hideSelection();
 	    }
 	    if(mouse.der && !mouseClickDer){
-		hideMouseCursor();
 		hideSelection();
 	    	paste();
-		
+		hideMouseCursor();
 	    }
 	    showMouseCursor(ptov(mouse.pos));
 	}
@@ -116,8 +115,8 @@ updateMouse(void){
 	mouse.pos.y += dy;
 	
 	
-	if(mouse.pos.x > 78){
-	    mouse.pos.x = 78;
+	if(mouse.pos.x > 79){
+	    mouse.pos.x = 79;
 	}
 	else if(mouse.pos.x < 0){
 	    mouse.pos.x = 0;

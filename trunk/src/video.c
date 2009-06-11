@@ -35,7 +35,7 @@ fetch(void) {
 void
 showMouseCursor(int pos){
     backupCursor = pos;
-    backupAttr = bufferVideo[backupCursor];
+    backupAttr = bufferVideo[backupCursor]?bufferVideo[backupCursor]:BLUE_TXT;
     screenShow(MOUSE_CURSOR,backupCursor );
 }
 
@@ -49,10 +49,12 @@ showSelection(point start, point end) {
     int i,j;
     backupSelectionStart = start;
     backupSelectionEnd = end;
+    int auxi;
     for( i = 0 ; i<abs(start.y-end.y)+1 ; i++) {
 	for( j = 0; j<abs(start.x - end.x)+1 ; j++) {
-		backupSelection[((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j)] = bufferVideo[((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j)*2+1];
-		screenShow(MOUSE_CURSOR,((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j)*2+1);
+		auxi = ((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j);
+		backupSelection[auxi] = bufferVideo[auxi*2+1]?bufferVideo[auxi*2+1]:BLUE_TXT;
+		screenShow(MOUSE_CURSOR,auxi*2+1);
 	}
     }	 
 }
@@ -61,7 +63,11 @@ void
 hideSelection(void){
     int i,j;
     for( i = 0 ; i<abs(backupSelectionStart.y-backupSelectionEnd.y)+1 ; i++) {
-	for( j = 0; j<abs(backupSelectionStart.x - backupSelectionEnd.x)+1 ; j++) {					screenShow(backupSelection[(min(backupSelectionStart.x,backupSelectionEnd.x))+(min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j],(((min(backupSelectionStart.x,backupSelectionEnd.x))+(min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j)*2+1));
+	for( j = 0; j<abs(backupSelectionStart.x - backupSelectionEnd.x)+1 ; j++) {
+	    screenShow(backupSelection[(min(backupSelectionStart.x,backupSelectionEnd.x))
+	    +(min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j],
+	    (((min(backupSelectionStart.x,backupSelectionEnd.x))+
+	    (min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j)*2+1));
 	}
     }	 
 }

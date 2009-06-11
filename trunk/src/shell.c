@@ -376,6 +376,7 @@ void check_screen_saver() {
 	
 	if (firstTime && interrupted==0)
 	{
+		hideMouseCursor();
 		read(PANTALLA_FD, bufferScr, 4000);
 		cursorBkp = cursor;
 		k_clear_screen();

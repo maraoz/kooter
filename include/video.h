@@ -10,4 +10,8 @@ void hideMouseCursor(void);
 
 void showMouseCursor(int pos);
 
+void showSelection(point start, point end);
+
+void hideSelection(void);
+
 #endif

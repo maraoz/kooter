@@ -3,7 +3,10 @@
 #include "../include/stdio.h"	
 
 byte bufferVideo[4000]={0};
+byte backupSelection[2000]={BLUE_TXT};
 byte backupAttr = BLUE_TXT;
+point backupSelectionStart = {0,0};
+point backupSelectionEnd = {0,0};
 int backupCursor = 1;
 
 void
@@ -39,4 +42,26 @@ showMouseCursor(int pos){
 void
 hideMouseCursor(void) {
    screenShow(backupAttr,backupCursor);
+}
+
+void
+showSelection(point start, point end) {
+    int i,j;
+    backupSelectionStart = start;
+    backupSelectionEnd = end;
+    for( i = 0 ; i<abs(start.y-end.y)+1 ; i++) {
+	for( j = 0; j<abs(start.x - end.x)+1 ; j++) {
+		backupSelection[((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j)] = bufferVideo[((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j)*2+1];
+		screenShow(MOUSE_CURSOR,((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j)*2+1);
+	}
+    }	 
+}
+
+void
+hideSelection(void){
+    int i,j;
+    for( i = 0 ; i<abs(backupSelectionStart.y-backupSelectionEnd.y)+1 ; i++) {
+	for( j = 0; j<abs(backupSelectionStart.x - backupSelectionEnd.x)+1 ; j++) {					screenShow(backupSelection[(min(backupSelectionStart.x,backupSelectionEnd.x))+(min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j],(((min(backupSelectionStart.x,backupSelectionEnd.x))+(min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j)*2+1));
+	}
+    }	 
 }

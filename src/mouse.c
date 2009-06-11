@@ -33,19 +33,35 @@ leomouse (int b){
 	    mouseClickIzq = mouse.izq;
 	    mouseClickDer = mouse.der;
 	    updateMouse();
-	    showMouseCursor(ptov(mouse.pos));
+
 
 	    if (mouse.izq && !mouseClickIzq){
 		start.x = mouse.pos.x;
 		start.y = mouse.pos.y;
+		hideSelection();
+		showSelection(start, start);
+	    }
+	    if(mouse.izq && mouseClickIzq){
+		end.x = mouse.pos.x;
+		end.y = mouse.pos.y;
+		hideSelection();
+		showSelection(start,end);
 	    }
 	    if (!mouse.izq && mouseClickIzq) {
+		hideSelection();
+		showSelection(start,end);
 		end.x = mouse.pos.x;
 		end.y = mouse.pos.y;
 		copy(start,end);
+		hideSelection();
 	    }
-	    if(mouse.der && !mouseClickDer)
-		paste();
+	    if(mouse.der && !mouseClickDer){
+		hideMouseCursor();
+		hideSelection();
+	    	paste();
+		
+	    }
+	    showMouseCursor(ptov(mouse.pos));
 	}
 	return;
 }

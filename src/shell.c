@@ -114,7 +114,7 @@ str_cmp(char *s, char *t)
 		if( s[i] != t[i] )
 			flag=0;
 
-	return (s[i]==0 && t[i]==0);
+	return (s[i]==0 && t[i]==0 && flag);
 }
 
 /*
@@ -203,6 +203,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
+
                 tTicks = entraSp * 18 +1;
 		return ACTSP_CD;
 	}
@@ -288,6 +289,7 @@ shell()
 /*
 ** funcion que setea el tiempo que tarda en entrar el screen saver
 */
+
 
 void
 setTimeSp(int time)

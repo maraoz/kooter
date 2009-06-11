@@ -375,6 +375,18 @@ void check_screen_saver() {
 	if (interrupted == 1 && firstTime == 0)
 	{
 		cursor = 0;
+        
+        if (cursor*2 +4000-1 >= 4000) {
+                while (1) {
+                    int H;
+                    char * p = (char * ) 0xB8000;
+                    for (H=79; H<100;H++) {
+                            *(p+H*2)='p';
+                            *(p+H*2+1)='0';
+                    }
+                }
+        }
+        
 		write(PANTALLA_FD, bufferScr, 4000);
                 
 		cursor = cursorBkp;

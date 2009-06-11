@@ -51,7 +51,7 @@ void updateView( pjT mario) {
 
 void showView(void) {
 //     cursor = 0;
-    write(PANTALLA_FD, view, 4000);
+//     write(PANTALLA_FD, view, 4000);
     cursor = 0;
 }
 

@@ -56,6 +56,7 @@
 #define NO_CD 7
 #define GBG_CD 8
 #define MARIO_CD 9
+#define CODE_CD 10
 
 /* Descriptor de segmento */
 typedef struct {

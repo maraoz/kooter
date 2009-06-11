@@ -4,17 +4,6 @@
 #include "../include/game.h"
 
 /*
-** Comandos que acepta el shell
-**
-** echo parametro, el cual imprime en pantalla parametro
-** setTimeSp time, el cual setea en time el tiempo en el que se activa el protector de pantalla
-** activaSp activa el protector de pantalla
-** proximamente muchas mas!!!
-**
-*/
-
-
-/*
 ** Variables globales:
 */
 
@@ -203,7 +192,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-
                 tTicks = entraSp * 18 +1;
 		return ACTSP_CD;
 	}
@@ -219,12 +207,67 @@ llamaFunc(char s[2][LONG_STR_TKN])
 		garbage();
 		return GBG_CD;
 	}
-    else if(str_cmp(s[0], "mario"))
+	else if(str_cmp(s[0], "mario"))
 	{
+		read(PANTALLA_FD, bufferScr, 4000);
+		cursorBkp = cursor;
 		game();
+		cursor = 0;
+	        check_offset('m',4000);
+	        write(PANTALLA_FD, bufferScr, 4000);
 		return MARIO_CD;
 	}
-	else
+	else if(str_cmp(s[0], "uname"))
+	{
+		puts("Kooter v 1.0");
+		flush();
+		return CODE_CD;
+	}
+	else if(str_cmp(s[0], "pwd"))
+	{
+		puts("/");
+		flush();
+		return CODE_CD;
+	}
+	else if(str_cmp(s[0], "ls"))
+	{
+		puts("dev      root     home");
+		put_char('\n');
+		puts("bin      mnt      boot" );
+		put_char('\n');
+		puts("usr      etc      media");
+		return CODE_CD;
+	}
+	else if(str_cmp(s[0], "help"))
+	{
+		puts("kooter bash version 1.0");
+		put_char('\n');
+		put_char('\n');
+		puts("echo [string arguments]");
+		put_char('\n');
+		puts("clear");
+		put_char('\n');
+		puts("setTimeSp [numeric argument]");
+		put_char('\n');
+		puts("activaSp");
+		put_char('\n');
+		puts("dispImg");
+		put_char('\n');
+		puts("garbage");
+		put_char('\n');
+		puts("mario");
+		put_char('\n');
+		puts("uname");
+		put_char('\n');
+		puts("pwd");
+		put_char('\n');
+		puts("ls");
+		put_char('\n');
+		puts("help");
+		put_char('\n');
+		return CODE_CD;
+	}
+	else	
 	{
 		puts(s[0]);
 		put_char(':');
@@ -246,13 +289,12 @@ shell()
 	int rec;
 	tTicks=0;
 
-	
 	flush();
 	cursor = 0;
 
 	while(1)
 	{
-		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
+		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD || ret==CODE_CD)
 			put_char('\n');
 
 		print_nline();
@@ -289,7 +331,6 @@ shell()
 /*
 ** funcion que setea el tiempo que tarda en entrar el screen saver
 */
-
 
 void
 setTimeSp(int time)
@@ -350,14 +391,11 @@ void check_screen_saver() {
 	if (interrupted == 1 && firstTime == 0)
 	{
 		cursor = 0;
-
-
-        check_offset('p',4000);
-        write(PANTALLA_FD, bufferScr, 4000);
-        cursor = cursorBkp;
-        tTicks = 0;
-        firstTime = 1;
+	        check_offset('p',4000);
+	        write(PANTALLA_FD, bufferScr, 4000);
+        	cursor = cursorBkp;
+        	tTicks = 0;
+        	firstTime = 1;
                 borra_buffer();
-
 	}
 }

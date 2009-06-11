@@ -15,11 +15,14 @@ void leoteclado (int k){
 
 	tTicks=0;
 
-	
-	if (!(teclator.qty_used == TCIRC_SIZE)){
+	if(interrupted==0){
+		/* tomar una tecla y desperdiciarla */
+		interrupted = 1;
+	}
+	else if (!(teclator.qty_used == TCIRC_SIZE)){
 		c = ktoa(k);
 
-	   if(c != 0x00 && interrupted==1) {
+	   if(c != 0x00) {
 
                 if(teclator.next_write == TCIRC_SIZE)
                     teclator.next_write = 0;
@@ -67,8 +70,10 @@ byte ktoa(int c){
 
     if(c>0x81)
       return (byte)0x00;
-    if(interrupted==0)
-		interrupted = 1;
+
+//     if(interrupted==0)
+// 		interrupted = 1;
+
     return (byte)keystroke[shift][c-1];
 }
 

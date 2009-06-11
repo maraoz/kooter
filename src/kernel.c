@@ -60,6 +60,8 @@ kmain()
 	
 	_Sti();
 
+// seteo las interrupciones en 1
+	interrupted=1;
 
 // muestra la splashScreen
 

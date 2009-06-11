@@ -13,4 +13,6 @@ void copy(point start, point end);
 
 void moveMouseCursor(point pto);
 
+
+
 #endif

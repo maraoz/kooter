@@ -215,6 +215,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
 		cursor = 0;
 	        check_offset('m',4000);
 	        write(PANTALLA_FD, bufferScr, 4000);
+		cursor=cursorBkp;
 		return MARIO_CD;
 	}
 	else if(str_cmp(s[0], "uname"))

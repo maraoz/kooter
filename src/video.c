@@ -70,4 +70,5 @@ hideSelection(void){
 	    (min(backupSelectionStart.y,backupSelectionEnd.y))*80+i*80+j)*2+1));
 	}
     }	 
+
 }

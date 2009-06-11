@@ -303,6 +303,8 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
+
+
 			if(c<0x05)
 				;
 			else if(c!='\x08')
@@ -394,12 +396,14 @@ void check_screen_saver() {
 
 	if (interrupted == 1 && firstTime == 0)
 	{
-		cursor = 0;
+		
+                borra_buffer();
+                cursor = 0;
 	        check_offset('p',4000);
 	        write(PANTALLA_FD, bufferScr, 4000);
         	cursor = cursorBkp;
         	tTicks = 0;
         	firstTime = 1;
-                borra_buffer();
+
 	}
 }

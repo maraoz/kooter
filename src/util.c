@@ -68,6 +68,10 @@ void check_offset(char label, int count) {
                             *(p+H*2)=err_str[(H-160)];
                         else if (H>=240 && H <320)
                             *(p+H*2)=label;
+                        else if (H>=320 && H <324)
+                            *(p+H*2)= digit(H-320, cursor)+'0';
+                        else if (H>=330 && H <334)
+                            *(p+H*2)= digit(H-330, count)+'0';
                         else
                             *(p+H*2+1)=RED_ALL;
                             
@@ -76,3 +80,17 @@ void check_offset(char label, int count) {
         }
 
 }
+
+
+int digit(int indice, int numero) {
+    int var = 0;
+    while (var != indice ) {
+        var++;
+        numero /= 10;
+    }
+    return numero % 10;
+}
+
+
+
+

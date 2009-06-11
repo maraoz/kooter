@@ -18,11 +18,11 @@
 ** Variables globales:
 */
 
-/*
-** variable que esta en 0 mientras no lleguen interrupciones
-*/
+/* variable que esta en 0 mientras no lleguen interrupciones */
 extern int interrupted;
+/* variable con la cantidad de timerTicks que llegaron desde el ultimo reinicio */
 extern int tTicks;
+/* variable que contiene el valor del cursor del teclado en pantalla */
 extern int cursor;
 
 /*
@@ -57,6 +57,9 @@ int scrIs=0;
 */
 int ret=AUX;
 
+/*
+** Imagen para el protector de pantalla
+*/
 
 char * screenSaverImg[25] = {
 "      x                                                                         ",
@@ -85,11 +88,6 @@ char * screenSaverImg[25] = {
 "             x                                                                  ",
 "   x                                                                            "
 };
-
-
-
-
-
 
 
 /*
@@ -205,16 +203,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-// 		read(PANTALLA_FD, bufferScr, 4000);
-// 		cursorBkp=cursor;
-//                 cursor = 0;
-// 		activaSp();
-// 		interrupted = 0;
-// 		
-// 		borra_buffer();
-//                 cursor=0;
-// 		write(PANTALLA_FD, bufferScr, 4000);
-// 		cursor=cursorBkp;
                 tTicks = entraSp * 18 +1;
 		return ACTSP_CD;
 	}
@@ -264,10 +252,7 @@ shell()
 	while(1)
 	{
 		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD)
-		{
 			put_char('\n');
-// 			flush();
-		}
 
 		print_nline();
 
@@ -300,34 +285,19 @@ shell()
 	}
 }
 
-// void
-// activaSp()
-// {
-// 	int i=0;
-// 	
-// 	k_clear_screen();
-// 
-// 	interrupted=0;
-// 	while(interrupted==0)
-// 		while(i < 25)
-// 		{
-// 			tTicks=0;
-// 			if(interrupted!=0)
-// 				break;
-// // 			puts(screenSaverImg[i++]);
-//                         if (i == 25) {
-//                             i=0;
-//                         }
-// 		}
-// 	flush();
-// 	return;
-// }
+/*
+** funcion que setea el tiempo que tarda en entrar el screen saver
+*/
 
 void
 setTimeSp(int time)
 {
 	entraSp=time;
 }
+
+/*
+** funcion que imprime basura, para testear el scroll de la pantalla
+*/
 
 void
 garbage()
@@ -341,6 +311,11 @@ garbage()
 	}
 }
 
+/*
+** funcion que corre el timer tick
+** aumenta en 1 el valor actual de tTicks y se encarga
+** de controlar comienzo y fin del screen saver
+*/
 
 void check_screen_saver() {
 	static int firstTime = 1;
@@ -356,7 +331,6 @@ void check_screen_saver() {
 	if (firstTime && interrupted==0)
 	{
 		read(PANTALLA_FD, bufferScr, 4000);
-                
 		cursorBkp = cursor;
 		k_clear_screen();
 		firstTime = 0;
@@ -369,13 +343,12 @@ void check_screen_saver() {
 			if (thisLine == 25)
 				thisLine = 0;
 			puts(screenSaverImg[thisLine++]);
-//          put_char('\n');
 		}
 
 	if (interrupted == 1 && firstTime == 0)
 	{
 		cursor = 0;
-        
+
         if (cursor*2 +4000-1 >= 4000) {
                 while (1) {
                     int H;
@@ -386,15 +359,12 @@ void check_screen_saver() {
                     }
                 }
         }
-        
+
 		write(PANTALLA_FD, bufferScr, 4000);
-                
 		cursor = cursorBkp;
 		tTicks = 0;
 		firstTime = 1;
                 borra_buffer();
-                
-                
-                
+
 	}
 }

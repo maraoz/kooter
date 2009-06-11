@@ -369,7 +369,7 @@ void check_screen_saver() {
 			if (thisLine == 25)
 				thisLine = 0;
 			puts(screenSaverImg[thisLine++]);
-                        put_char('\n');
+//          put_char('\n');
 		}
 
 	if (interrupted == 1 && firstTime == 0)

@@ -17,4 +17,6 @@ void wait(int t);
 
 void itoa(int num, char v[]);
 
+void check_offset(char label, int count);
+
 #endif

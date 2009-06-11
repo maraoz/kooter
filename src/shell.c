@@ -218,7 +218,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
 		garbage();
 		return GBG_CD;
 	}
-        else if(str_cmp(s[0], "mario"))
+    else if(str_cmp(s[0], "mario"))
 	{
 		game();
 		return MARIO_CD;
@@ -349,21 +349,12 @@ void check_screen_saver() {
 	{
 		cursor = 0;
 
-        if (cursor*2 +4000-1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='p';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
 
-		write(PANTALLA_FD, bufferScr, 4000);
-		cursor = cursorBkp;
-		tTicks = 0;
-		firstTime = 1;
+        check_offset('p',4000);
+        write(PANTALLA_FD, bufferScr, 4000);
+        cursor = cursorBkp;
+        tTicks = 0;
+        firstTime = 1;
                 borra_buffer();
 
 	}

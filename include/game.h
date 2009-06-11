@@ -5,14 +5,17 @@
 
 
 typedef struct personaje {
+    char sprite;
     int x;
     int y;
 } pjT;
 
 int game();
 
-void updateView( pjT mario);
+void updateView( pjT * mario);
 
 void showView(void);
+
+void init_mario(pjT * mario);
 
 #endif

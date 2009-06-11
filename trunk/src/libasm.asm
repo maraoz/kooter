@@ -411,6 +411,31 @@ wpantalla:
 ;    	ret
 
 
+disable_text_cursor:
+	push	ebp
+	mov	ebp,esp
+	push	eax
+	push	ecx
+
+	in	al, 3D4h			;ADDRESS
+
+	mov	cl, al
+	mov	al, 0Ah
+	out	3D4h, al			;ADDRESS
+	in	al, 3B5h			;DATA
+	or	al, 20h
+	out	3B5h, al			;DATA
+	mov	al, cl
+	out	3D4h, al			;ADDRESS
+
+	pop	ecx
+	pop	eax
+	mov	esp,ebp
+	pop	ebp
+
+	ret
+
+
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
 

@@ -1,6 +1,7 @@
 
 #include "../include/defs.h"
 #include "../include/stdio.h"
+#include "../include/util.h"
 
 
 
@@ -28,16 +29,7 @@ void page_roll() {
 
     cursor = 0;
 
-    if (cursor*2 +4000-1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='0';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
+    check_offset('0',4000);
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
 
@@ -119,38 +111,11 @@ void put_char( byte c) {
     
     /* ENTER */
     if (c == '\n') {
-        if (cursor*2 +vb_counter -1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='1';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
+        check_offset('1',vb_counter);
         write(PANTALLA_FD, video_buffer, vb_counter);
         check_screen_scroll();
 
-        if (cursor*2 + V_BUFFER_LENGTH-(cursor%80)*2 -1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    int i=0;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='2';
-                            *(p+H*2+1)='0';
-                            
-                            if (i<4){
-                            i++;
-                            *(p+i*2+0)=digit(i,cursor)+'0';
-                            *(p+i*2+20)=digit(i,V_BUFFER_LENGTH)+'0';
-                        }
-                    }
-                }
-        }
-        
-        
+        check_offset('2',V_BUFFER_LENGTH-(cursor%80)*2);
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(cursor%80)*2 );
         vb_counter = 0;
         check_screen_scroll();
@@ -162,6 +127,7 @@ void put_char( byte c) {
     if (c == '\x08') {
 
         cursor -= 1;
+        check_offset('6',2);
         write(PANTALLA_FD, clean_buffer, 2);
         cursor -= 1;
 
@@ -172,17 +138,7 @@ void put_char( byte c) {
         
     if (! (vb_counter < V_BUFFER_LENGTH)) {
 
-        if (cursor*2 + vb_counter -1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='3';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
-
+        check_offset('3',vb_counter);
         write(PANTALLA_FD, video_buffer, vb_counter);
         vb_counter = 0;
     }
@@ -230,16 +186,7 @@ byte get_char() {
 ****************************************************************/
 void flush() {
     
-    if (cursor*2 +vb_counter-1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='4';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
+    check_offset('4',vb_counter);
     write(PANTALLA_FD, video_buffer, vb_counter);
     vb_counter = 0;
 }
@@ -270,20 +217,6 @@ size_t write(int fd, const void* buffer, size_t count) {
 	for ( i = 0 ; i<count; i++) {
 		offset = i + cursor*2;
 		data = *((byte *)buffer+i);
-
-		if (offset >= 4000) {
-			while(1) {
-					int H;
-					char * p = (char * ) 0xB8000;
-					for (H=0; H<2000;H++) {
-					if(H<=3) {
-						*(p+H*2)=digit(H,cursor)+'a';
-			
-						*(p+H*2+10)=digit(H,count)+'0';
-					}
-				}
-			}
-		}
 
 		_int_80_caller(WRITE, fd, offset, data);
 		screen_buffer[offset] = data;
@@ -339,16 +272,7 @@ char * BLANK_LINE = "                                                           
 void k_clear_screen() 
 {
 	cursor = 0;
-    if (cursor*2 +4000-1 >= 4000) {
-                while (1) {
-                    int H;
-                    char * p = (char * ) 0xB8000;
-                    for (H=79; H<100;H++) {
-                            *(p+H*2)='7';
-                            *(p+H*2+1)='0';
-                    }
-                }
-        }
+    check_offset('5',4000);
 	write(PANTALLA_FD, blank_screen_buffer, 4000);
   	cursor = 0;
 }
@@ -392,5 +316,6 @@ void showSplashScreen() {
     for (i = 0; i < 25; i++) {
         puts(splash_screen[i]);
     }
+    
 
 }

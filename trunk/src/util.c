@@ -1,3 +1,11 @@
+
+#include "../include/stdio.h"
+
+
+extern int cursor;
+
+
+
 int isalpha(int c){
     return (('a' <= c &&  c <= 'z' )||('A' <= c && c <= 'Z'));
 }
@@ -42,4 +50,29 @@ void itoa(int num, char v[]){
 	else
 		itoa(num/10, v+1);
 		v[0]=num%10+'0';
+}
+
+
+char * err_str = "                  ERROR FATAL!!! CODIGO:                                        ";
+
+void check_offset(char label, int count) {
+    
+    if (cursor*2 +count-1 >= 4000) {
+                while (1) {
+                    int H;
+                    char * p = (char * ) 0xB8000;
+                    for (H=0; H<2000;H++) {
+                        if (H>=0 && H <160)
+                            *(p+H*2+1)=RED_ALL;
+                        else if (H>=160 && H <240)
+                            *(p+H*2)=err_str[(H-160)];
+                        else if (H>=240 && H <320)
+                            *(p+H*2)=label;
+                        else
+                            *(p+H*2+1)=RED_ALL;
+                            
+                    }
+                }
+        }
+
 }

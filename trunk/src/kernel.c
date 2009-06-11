@@ -73,7 +73,7 @@ kmain()
 
 /* Borra la pantalla. */ 
         k_clear_screen();
-
+        
 
 
 	shell();

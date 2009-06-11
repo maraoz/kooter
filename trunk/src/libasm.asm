@@ -382,52 +382,30 @@ wpantalla:
    	ret
 
 
-
-; disable_text_cursor:
-; 	push	ebp
-; 	mov	ebp,esp
-; 	push	eax
-; 	push	edx
-; 	
-; 	in	al,3DAh
-; 	in	al,3C0h
-; 
-; 	mov	dl,al
-; 
-; 	mov	al,0Ah
-; 	out	3C0h,al
-; 
-; 	in	al,3Ch
-; 	mov	dh,al
-; 
-; 	mov	al,20h
-; 	out	3C0h,al
-; 
-; 	pop	edx	
-; 	pop	eax
-; 	mov	esp,ebp
-; 	pop	ebp
-; 
-;    	ret
-
-
 disable_text_cursor:
 	push	ebp
 	mov	ebp,esp
 	push	eax
 	push	ecx
+	push	edx
 
-	in	al, 3D4h			;ADDRESS
+	mov	dx, 03D4h
+	in	al, dx
 
 	mov	cl, al
 	mov	al, 0Ah
-	out	3D4h, al			;ADDRESS
-	in	al, 3B5h			;DATA
-	or	al, 20h
-	out	3B5h, al			;DATA
-	mov	al, cl
-	out	3D4h, al			;ADDRESS
+	out	dx, al
 
+	mov	dx, 03D5h
+	in	al, dx
+	or	al, 20h
+	out	dx, al
+	mov	al, cl
+
+	mov	dx, 03D4h
+	out	dx, al
+
+	pop	edx
 	pop	ecx
 	pop	eax
 	mov	esp,ebp

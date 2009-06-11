@@ -22,9 +22,9 @@ void memcpy(byte * a, byte * b, size_t size) {
 * 
 ****************************************************************/
 byte screen_buffer[4160] = {};
-byte blank_screen_buffer[4000] = {0};
+byte blank_screen_buffer[4000] = {' ', DEFAULT_TXT, ' ', DEFAULT_TXT, ' ', DEFAULT_TXT};
 
-void page_roll() {
+void page_roll(int backwards) {
 
 
     cursor = 0;
@@ -32,6 +32,7 @@ void page_roll() {
     check_offset('0',4000);
     write(PANTALLA_FD, screen_buffer+160,4000);
     cursor -= 80;
+    cursor -= backwards;
 
 
     return;
@@ -43,9 +44,9 @@ void page_roll() {
 * 
 * 
 ****************************************************************/
-void check_screen_scroll() {
-    if (cursor >= 2000) {
-        page_roll();
+void check_screen_scroll(int offset) {
+    if (cursor + offset >= 2000) {
+        page_roll(2000-cursor);
     }
     return;
 }
@@ -107,18 +108,18 @@ byte clean_buffer[V_BUFFER_LENGTH] = {0};
 static int vb_counter = 0;
 
 void put_char( byte c) {
-    check_screen_scroll();
+    check_screen_scroll(0);
     
     /* ENTER */
     if (c == '\n') {
         check_offset('1',vb_counter);
         write(PANTALLA_FD, video_buffer, vb_counter);
-        check_screen_scroll();
+        check_screen_scroll(0);
 
         check_offset('2',V_BUFFER_LENGTH-(cursor%80)*2);
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(cursor%80)*2 );
         vb_counter = 0;
-        check_screen_scroll();
+        check_screen_scroll(0);
         return;
     }
 
@@ -138,9 +139,21 @@ void put_char( byte c) {
         
     if (! (vb_counter < V_BUFFER_LENGTH)) {
 
-        check_offset('3',vb_counter);
-        write(PANTALLA_FD, video_buffer, vb_counter);
-        vb_counter = 0;
+        
+
+        if (cursor + vb_counter >= 2000) {
+            int cursorBkp;
+            check_screen_scroll(vb_counter);
+            check_offset('7',vb_counter);
+            write(PANTALLA_FD, video_buffer, vb_counter);
+            vb_counter = 0;
+        }
+        else {
+            check_screen_scroll(0);
+            check_offset('3',vb_counter);
+            write(PANTALLA_FD, video_buffer, vb_counter);
+            vb_counter = 0;
+        }
     }
 
     video_buffer[vb_counter] = c;
@@ -186,9 +199,18 @@ byte get_char() {
 ****************************************************************/
 void flush() {
     
-    check_offset('4',vb_counter);
-    write(PANTALLA_FD, video_buffer, vb_counter);
-    vb_counter = 0;
+    if (cursor + vb_counter >= 2000) {
+
+        check_screen_scroll(vb_counter);
+        check_offset('9',vb_counter);
+
+        write(PANTALLA_FD, video_buffer, vb_counter);
+        vb_counter = 0;
+    } else {
+        check_offset('4',vb_counter);
+        write(PANTALLA_FD, video_buffer, vb_counter);
+        vb_counter = 0;
+    }
 }
 
 void borra_buffer() {
@@ -226,14 +248,7 @@ size_t write(int fd, const void* buffer, size_t count) {
 	return 0;
 }
 
-int digit(int indice, int numero) {
-    int var = 0;
-    while (var != indice ) {
-        var++;
-        numero /= 10;
-    }
-    return numero % 10;
-}
+
 
 
 
@@ -283,7 +298,8 @@ void k_clear_screen()
 *
 * Muestra la imagen de inicio
 ****************************************************************/
-char * splash_screen[25] = {
+char * splash_screen[24] = {
+"                                                                                ",
 "                                                                                ",
 "                                -===ccc,.                                       ",
 "                                    =cc$$$$$$$$$$$$$$$cc.                       ",
@@ -307,13 +323,13 @@ char * splash_screen[25] = {
 "                      :::::::::.::: ``:::::::::: .$$$$$$$$$$$$F ::              ",
 "                      ::::::::::::::..:::::::::: <$$$$$$$$$$$P :::              ",
 "                      :::::::::::::::::::::::::: $$$$$$$$$$$$\" ::               ",
-"                                                                                ",
-"                                                                                "
+
+
 };
 
 void showSplashScreen() {
     int i;
-    for (i = 0; i < 25; i++) {
+    for (i = 0; i < 24; i++) {
         puts(splash_screen[i]);
     }
     

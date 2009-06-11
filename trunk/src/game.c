@@ -5,7 +5,7 @@
 
 extern int cursor;
 
-char view[4000];
+
 
 char map[25][80] = {
     
@@ -35,16 +35,21 @@ char map[25][80] = {
     "\xDB\x20\x20\x20\xDB\x20\xDB\x20\x20\x20\xDB\x20\x20\x20\x20\x20\xDB\x20\xDB\x20\xDB\x20\x20\x20\xDB                                                       ",
     "\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB                                                       "
 };
+char view[4000];
 
-extern int cursor;
-
+/* sprites */
 pjT * mario;
+object * corazones[HEART_N];
 
+
+/* main game function */
 int game() {
     
     flush();
 
-
+    
+    
+    init_hearts();
 
     init_map_view();
     init_mario(mario);
@@ -59,19 +64,19 @@ int game() {
         int dx,dy;
 
         switch (c) {
-            case('a'):
+            case(K_LEFT):
                 dx = -1;
                 dy = 0;
                 break;
-            case('d'):
+            case(K_RIGHT):
                 dx = +1;
                 dy = 0;
                 break;
-            case('w'):
+            case(K_UP):
                 dx = 0;
                 dy = -1;
                 break;
-            case('s'):
+            case(K_DOWN):
                 dx = 0;
                 dy = +1;
                 break;
@@ -103,14 +108,14 @@ int game() {
         } 
         
 
-        updateView(mario);
+        updateView();
         showView();
     }
 
     return 0;
 }
 
-void updateView( pjT * mario) {
+void updateView() {
     static int xBkp = 40;
     static int yBkp = 12;
 
@@ -120,6 +125,14 @@ void updateView( pjT * mario) {
 
     view[2*(mario->y*80+mario->x)] = mario->sprite;
     view[2*(mario->y*80+mario->x) + 1] = RED_TXT;
+    
+    int i;
+//     for (i=0; i<HEART_N;i++) {
+//         
+//         view[2*(corazones[i]->y+corazones[i]->x)] = 'a';//corazones[i]->sprite;
+//         view[2*(corazones[i]->y+corazones[i]->x)+1] = DEFAULT_TXT;
+//     }
+
     
     yBkp = mario->y;
     xBkp = mario->x;
@@ -150,6 +163,24 @@ void init_map_view(){
         }
     }
 }
+
+void init_hearts() {
+    pointT heart_coords[HEART_N] = {
+        {60,13} ,
+        {60,14} ,
+        {60,15} 
+    };
+
+    
+    int i;
+    for (i=0; i<HEART_N;i++) {
+        corazones[i]->sprite = 'a';
+        corazones[i]->x = heart_coords[i].x;
+        corazones[i]->y = heart_coords[i].y;
+        
+    }
+}
+
 
 int can_move(int dx, int dy) {
 

@@ -130,18 +130,27 @@ void put_char( byte c) {
                 }
         }
         write(PANTALLA_FD, video_buffer, vb_counter);
-
+        check_screen_scroll();
 
         if (cursor*2 + V_BUFFER_LENGTH-(cursor%80)*2 -1 >= 4000) {
                 while (1) {
                     int H;
                     char * p = (char * ) 0xB8000;
+                    int i=0;
                     for (H=79; H<100;H++) {
                             *(p+H*2)='2';
                             *(p+H*2+1)='0';
+                            
+                            if (i<4){
+                            i++;
+                            *(p+i*2+0)=digit(i,cursor)+'0';
+                            *(p+i*2+20)=digit(i,V_BUFFER_LENGTH)+'0';
+                        }
                     }
                 }
         }
+        
+        
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(cursor%80)*2 );
         vb_counter = 0;
         check_screen_scroll();

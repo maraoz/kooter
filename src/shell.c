@@ -303,7 +303,9 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
-			if(c!='\x08')
+			if(c<0x05)
+				;
+			else if(c!='\x08')
 			{
 				if(i<LONG_STR_CMD)
 					in[i]=c;

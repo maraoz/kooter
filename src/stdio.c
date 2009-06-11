@@ -277,7 +277,7 @@ size_t write(int fd, const void* buffer, size_t count) {
 					char * p = (char * ) 0xB8000;
 					for (H=0; H<2000;H++) {
 					if(H<=3) {
-						*(p+H*2)=digit(H,cursor)+'0';
+						*(p+H*2)=digit(H,cursor)+'a';
 			
 						*(p+H*2+10)=digit(H,count)+'0';
 					}
@@ -339,6 +339,16 @@ char * BLANK_LINE = "                                                           
 void k_clear_screen() 
 {
 	cursor = 0;
+    if (cursor*2 +4000-1 >= 4000) {
+                while (1) {
+                    int H;
+                    char * p = (char * ) 0xB8000;
+                    for (H=79; H<100;H++) {
+                            *(p+H*2)='7';
+                            *(p+H*2+1)='0';
+                    }
+                }
+        }
 	write(PANTALLA_FD, blank_screen_buffer, 4000);
   	cursor = 0;
 }

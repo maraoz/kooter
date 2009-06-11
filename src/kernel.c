@@ -55,7 +55,7 @@ kmain()
 
 // seteo las interrupciones en 1
 	interrupted=1;
-
+        tTicks = 0;
 /* Habilito interrupcion de timer tick y del teclado y del mouse*/
 	_mascaraPIC1(0xF8);
     /*          1111 1000   */

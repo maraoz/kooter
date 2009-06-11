@@ -241,7 +241,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "help"))
 	{
-		puts("kooter bash version 1.0");
+		puts("Kooter kernel version 1.0");
 		put_char('\n');
 		put_char('\n');
 		puts("echo [string arguments]");

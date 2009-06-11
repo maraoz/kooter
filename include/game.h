@@ -18,4 +18,6 @@ void showView(void);
 
 void init_mario(pjT * mario);
 
+void init_map_view();
+
 #endif

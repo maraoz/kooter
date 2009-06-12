@@ -254,13 +254,9 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	{
 		if(s[1][0]==0)
 		{
-			read(PANTALLA_FD, bufferScr, 4000);
-			cursorBkp = cursor;
-			game();
-			cursor = 0;
-		        check_offset('m',4000);
-		        write(PANTALLA_FD, bufferScr, 4000);
-			cursor=cursorBkp;
+			
+			game(); 
+                        k_clear_screen();
 			return MARIO_CD;
 		}
 		else

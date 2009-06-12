@@ -53,6 +53,9 @@ void itoa(int num, char v[]){
 }
 
 
+
+
+
 char * err_str = "                  ERROR FATAL!!! CODIGO:                                        ";
 
 void check_offset(char label, int count) {

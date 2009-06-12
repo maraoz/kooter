@@ -15,6 +15,10 @@ int max(int a, int b);
 
 void wait(int t);
 
+void habilitar_int_mouse (void);
+
+void deshabilitar_int_mouse (void);
+
 void itoa(int num, char v[]);
 
 void check_offset(char label, int count);

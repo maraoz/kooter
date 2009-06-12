@@ -3,6 +3,8 @@
 #include "../include/game.h"
 #include "../include/util.h"
 #include "../include/mouse.h"
+#include "../include/video.h"
+
 
 
 extern int cursor;
@@ -56,7 +58,7 @@ int game() {
     
     flush();
     cleanClipboard();
-
+    hideMouseCursor();
 
     init_map_view();
 
@@ -186,10 +188,11 @@ void init_mario() {
 
 void init_hearts() {
 
-    pointT start_coords[HEART_N] = {
-        {40,13} ,
-        {40,14} ,
-        {40,15}
+    static pointT start_coords[HEART_N] = {
+        {40,13}, {40,14}, {40,15}, {40,16}, {40,17}, 
+        {40,18}, {40,19}, {40,20}, {40,21}, {40,22}, 
+        {41,13}, {41,14}, {41,15}, {41,16}, {41,17} 
+        
     };
 
 

@@ -8,11 +8,11 @@ timeout 5
 
 # Primera entrada
 
-title Kooter v0.9 Mini Kernel Booter
+title Kooter v1.0 Mini Kernel Booter
 kernel /boot/kernel.bin
 
 title Ubuntu 9.04 
 kernel /boot/ubuntu-904.bin
 
 title Windows Vista
-kernel /boot/ubuntu-904.bin
+kernel /boot/windowsvista.bin

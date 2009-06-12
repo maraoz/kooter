@@ -28,7 +28,7 @@
 
     size_t write(int fd, const void* buffer, size_t count);
 
-    void str_cpy(byte * a, byte * b, size_t size);
+    void str_ncpy(byte * dest, byte * src, size_t size);
 
     /* Limpia la pantalla */
     void k_clear_screen();

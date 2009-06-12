@@ -7,11 +7,18 @@
 
 int cursor = 0;
 
-
-void str_cpy(byte * a, byte * b, size_t size) {
+/***************************************************************
+* str_cpy
+*
+* copia un string en otro tomando solo size caracteres
+* 
+****************************************************************/
+void str_ncpy(byte * dest, byte * src, size_t size) {
+    dest[size--]= '\0';
     while (size--) {
-        a[size] = b[size];
+        dest[size] = src[size];
     }
+    dest[0] = src[0];
 }
 
 

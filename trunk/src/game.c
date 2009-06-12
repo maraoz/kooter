@@ -140,8 +140,13 @@ void updateView() {
     int i;
     for (i=0; i<HEART_N;i++) {
         
-        view[2*(corazones[i]->y+corazones[i]->x)] = 'a';//corazones[i]->sprite;
-        view[2*(corazones[i]->y+corazones[i]->x)+1] = DEFAULT_TXT;
+        view[2*(corazones[i]->y*80+corazones[i]->x)] = 'm';//corazones[i]->sprite;
+
+        if (2*(corazones[i]->y*80+corazones[i]->x) == 2*(mario->y*80+mario->x) ) {
+            check_offset('w',7000);
+        }
+
+        view[2*(corazones[i]->y*80+corazones[i]->x)+1] = DEFAULT_TXT;
     }
 
     

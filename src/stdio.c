@@ -14,11 +14,12 @@ int cursor = 0;
 * 
 ****************************************************************/
 void str_ncpy(byte * dest, byte * src, size_t size) {
-    dest[size--]= '\0';
-    while (size--) {
-        dest[size] = src[size];
+    
+    int i;
+    for (i=0; i<size && src[i]; i++)  {
+        dest[i] = src[i];
     }
-    dest[0] = src[0];
+    dest[i] = '\0';
 }
 
 
@@ -194,7 +195,9 @@ byte get_char() {
         kb_counter = 0;
     }
     return keyboard_buffer[kb_counter++];
+    
 
+    
 }
 /***************************************************************
 * flush

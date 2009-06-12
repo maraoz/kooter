@@ -413,9 +413,9 @@ shell()
 			else if(c!='\x08')
 			{
 				if(i<LONG_STR_CMD)
-					in[i]=c;
+				{	in[i]=c;
 				remember[0][i]=c;
-				remember[0][i+1]=0;
+				remember[0][i+1]=0;}
  				i++;
  				put_char(c);
 				flush();

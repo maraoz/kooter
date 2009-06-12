@@ -194,9 +194,7 @@ byte get_char() {
         kb_counter = 0;
     }
     return keyboard_buffer[kb_counter++];
-    
 
-    
 }
 /***************************************************************
 * flush

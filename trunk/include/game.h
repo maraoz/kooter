@@ -7,7 +7,7 @@
 #define K_DOWN 3
 #define K_LEFT 4
 
-#define HEART_N 15
+#define HEART_N 9
 
 typedef struct object {
     char sprite;

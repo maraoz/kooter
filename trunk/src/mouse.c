@@ -67,11 +67,14 @@ leomouse (int b){
 	    /* Se no se hizo click y se estaba sosteniendo,
 	    entonces quiere decir que se solto y que se
 	    debe copiar */
+		point none={79,24};
 		hideSelection();
 		end.x = mouse.pos.x;
 		end.y = mouse.pos.y;
 		showSelection(start,end);
 		copy(start,end);
+		hideSelection();
+		showSelection(none,none);
 		hideSelection();
 	    }
 	    if(mouse.der && !mouseClickDer){
@@ -191,7 +194,7 @@ copy(point start, point end){
     int i,j,k=0;
     clipboardEmpty = 0;
 
-   
+    cleanClipboard();
     
     /* leo toda la pantalla y la dejo en tmpbuf*/
     read(PANTALLA_FD, tmpbuf, 4000);

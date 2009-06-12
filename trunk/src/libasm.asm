@@ -252,51 +252,51 @@ rmemoria:
 
 ; Habilita al mouse  para empezar a recibir sus interrupciones
 enable_mouse:
-	call	mouseWait2
+	call	mouseWait2	; espero para poder enviar datos al mouse.
 	mov	al,0A8h
-	out	64h,al
+	out	64h,al		; activo el dispositivo auxiliar del mouse.
 	
-	call	mouseWait2
+	call	mouseWait2	; espero para poder enviar datos al mouse.
 	mov	al,20h
-	out	64h,al
+	out	64h,al 		; envio 20h al puerto 64h para que el mouse mande el byte de estado
 
-	call	mouseWait1
-	in	al,60h
+	call	mouseWait1	; espero para poder recibir datos del mouse.
+	in	al,60h		; recibo el byte de estado del mouse
 	mov	ah,al
-	or	ah,2
+	or	ah,2		; habilito al mouse para que mande interrupciones
 
-	call	mouseWait2
+	call	mouseWait2 	; espero para poder enviar datos al mouse.
 	mov	al,60h
-	out	64h,al
+	out	64h,al		; envio 60h al puerto 64h para avisar que se va a enviar el byte de estado de nuevo.
 
-	call	mouseWait2
+	call	mouseWait2 	; espero para poder enviar datos al mouse.
 	mov	al,ah
-	out     60h,al
+	out     60h,al		; envio el byte de estado.
 		
-	call	mouseWait2
-	mov	al,0D4h
-	out	64h,al
-	call	mouseWait2
-	mov	al,0F6h
-	out	60h,al
+	call	mouseWait2 	; espero para poder enviar datos al mouse.
+	mov	al,0D4h	
+	out	64h,al		; envio D4h al puerto 64h para decirle al mouse que se va a enviar un comando.
+	call	mouseWait2 	; espero para poder enviar datos al mouse.
+	mov	al,0F6h		
+	out	60h,al		; envio el comando de cargar la configuracion default del mouse.
 	
-	call	mouseWait1
+	call	mouseWait1	; espero para poder recibir datos del mouse.
 	in	al,60h
 
-	call	mouseWait2	
+	call	mouseWait2	 ; espero para poder enviar datos al mouse.
 	mov	al,0D4h
-	out	64h,al
-	call	mouseWait2
-	mov	al,0F4h
-	out	60h,al
+	out	64h,al		; envio D4h al puerto 64h para decirle al mouse que se va a enviar un comando.
+	call	mouseWait2 	; espero para poder enviar datos al mouse.
+	mov	al,0F4h		
+	out	60h,al		; habilito el mouse
 	
-	call	mouseWait1	
+	call	mouseWait1	; espero para poder recibir datos del mouse.
 	in	al,60h
 
 	ret
 	
 	
-; Espera para poder escribir en el mouse, tiene un timeout por si no se recibe nada.	
+; Espera para poder recibir datos del mouse, tiene un timeout por si no se recibe nada.	
 mouseWait1:
 	push	ecx
 	push	eax
@@ -305,29 +305,29 @@ mouseWait1:
 ciclo1:	
 	in	al,64h
 	and	al,1
-	cmp	al,1
+	cmp	al,1		; si recibe un 1 en el primer bit puedo recibir datos
 	jz	mwait1_end
-	dec	ecx
-	jnz	ciclo1
+	dec	ecx		; si no recibe un 0 en el segundo bit, decremento el timer,
+	jnz	ciclo1		; asi no queda en un ciclo infinito.
 
 mwait1_end:
 	pop	eax
 	pop	ecx
 	ret
 
-; Espera para poder leer del mouse, tiene un timeout por si no se recibe nada.
+; Espera para poder enviar datos al mouse, tiene un timeout por si no se recibe nada.
 mouseWait2:
 	push	ecx
 	push	eax
 	mov	ecx,100000
 	
 ciclo2:	
-	in	al,64h
-	and	al,2
-	cmp	al,0
-	jz	mwait2_end
-	dec	ecx
-	jnz	ciclo2
+	in	al,64h		
+	and	al,2		; si recibe un 0 en el segundo bit puedo enviar datos
+	cmp	al,0		
+	jz	mwait2_end	
+	dec	ecx		; si no recibe un 0 en el segundo bit, decremento el timer,
+	jnz	ciclo2		; asi no queda en un ciclo infinito.
 
 mwait2_end:
 	pop	eax

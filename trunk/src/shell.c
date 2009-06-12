@@ -137,8 +137,14 @@ atoi(char *s)
 {
 	int num=0;
 
+	if(isdigit(*s)==0)
+		return -1;
+
 	while(isdigit(*s))
 		num=num*10+(*(s++)-'0');
+
+	if(num>10000 || num<=0 || *s!=0)
+		num = -1;
 
 	return num;
 }
@@ -210,8 +216,11 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
-		if(atoi(s[1])==0)
+		if(atoi(s[1])<0)
+		{
+			puts("tiempo no valido");
 			return SETTIME_CD;
+		}
 		setTimeSp((atoi(s[1])));
 		puts("tiempo seteado = ");
 		puts(s[1]);

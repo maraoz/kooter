@@ -361,12 +361,6 @@ shell()
 	int i;
 	int c;
 
-	char remember[HIST_LEN][LONG_STR_CMD];
-	int s=0;
-	int sign;
-	int diff;
-	int rec;
-
 	tTicks=0;
 	flush();
 	cursor = 0;
@@ -381,44 +375,13 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
-			if(c==0x02 || c==0x04)
+			if(c<0x05)
 				;
-			else if(c==0x01 || c==0x03)
-			{
-				if (c==0x01)
-					sign = +1;
-				else
-					sign = -1;
-			
-				if (s+sign >= 0 && s+sign < HIST_LEN)
-				{
-					s=s+sign;
-
-					diff= str_len(in) - str_len(remember[s]);
-					if(diff<0)
-						diff=0;
-					str_ncpy(in, remember[s], LONG_STR_CMD);
-					cursor-=cursor%80-9;
-					for(i=0; in[i]; i++)
-						put_char(in[i]);	
-					flush();
-
-					rec=diff;
-					while(diff-->0)
-						put_char(' ');
-					flush();
-					cursor-=rec;
-				}
-			}
 			else if(c!='\x08')
 			{
-				if(i<LONG_STR_CMD-1)
-				{	
+				if(i<LONG_STR_CMD)
 					in[i]=c;
-					remember[0][i]=c;
-					remember[0][i+1]=0;
-					i++;
-				}
+				i++;
 				put_char(c);
 				flush();
 			}
@@ -430,11 +393,9 @@ shell()
 			}
 		}
 		put_char('\n');
+		if(i>=LONG_STR_CMD)
+			i=LONG_STR_CMD-1;
 		in[i]=0;
-		remember[0][0]=0;
-
-		if(in[0]!=0)
-			swap_rem(remember, in);
 
 		separaPorEspacios(in, data);
 

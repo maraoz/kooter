@@ -171,7 +171,7 @@ _int_80_caller:
 ; Se recibe en ah 0 si se quiere llamar a sys_read y 1 si se quiere llamar a sys_write
 ; Se recibe en bx el file descritpor
 ; Se carga en ds el segment y en bx el offset
-	
+
 _int_80_hand:				; Handler de INT 80h (sys_read  y sys_write)
 	push	ebp
 	mov	ebp,esp

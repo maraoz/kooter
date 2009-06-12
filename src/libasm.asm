@@ -84,7 +84,7 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         pop     ds
         iret
 
-
+;Handler de la interrupcion 09 del teclado
 _int_09_hand:
 	push	ebp
 	mov	ebp,esp
@@ -109,6 +109,7 @@ _int_09_hand:
 
 
 
+;Handler de la interrupcion 74, del teclado
 _int_74_hand:
 
 	push	ebp

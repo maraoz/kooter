@@ -114,21 +114,45 @@ int game() {
             dy = -24;
         }
 
+        int i;
+        
+        for (i=0; i< HEART_N; i++) {
+            if ((mario.x+dx)+(mario.y+dy)*80 == corazones[i].x+corazones[i].y*80) {
+                corazones[i].alive = 0;
+            }
+        }
 
+        int flag = 1;
+        for (i=0; i<HEART_N; i++) {
+            if (corazones[i].alive)
+                flag = 0;
+        }
 
         if (can_move(dx,dy)) {
             
             mario.x += dx;
             mario.y += dy;
         } 
-        
+
+
         if (dx != 0 || dy != 0) {
             updateView();
             showView();
         }
+
+
+        if (flag) {
+            k_clear_screen();
+            cursor = 1000;
+            puts("FELICITACIONES, GANASTE!!!");
+            flush();
+            wait(10);
+            
+            break;
+        }
+
     }
-    
-    
+
     return 0;
 }
 
@@ -138,16 +162,22 @@ void updateView() {
 
     view[yBkp][xBkp][0] = ' ';
     view[yBkp][xBkp][1] = DEFAULT_TXT;
-    
 
-    view[mario.y][mario.x][0] = mario.sprite;
-    view[mario.y][mario.x][1] = RED_TXT;
-    
     int i;
     for (i=0; i<HEART_N;i++) {
-        view[corazones[i].y][corazones[i].x][0] = corazones[i].sprite;
-        view[corazones[i].y][corazones[i].x][1] = RED_TXT;
+        if (corazones[i].alive == 1) {
+            view[corazones[i].y][corazones[i].x][0] = corazones[i].sprite;
+            view[corazones[i].y][corazones[i].x][1] = RED_TXT;
+        }
+        else {
+            view[corazones[i].y][corazones[i].x][0] = ' ';
+            view[corazones[i].y][corazones[i].x][1] = DEFAULT_TXT;
+        }
     }
+
+    view[mario.y][mario.x][0] = mario.sprite;
+    view[mario.y][mario.x][1] = YELLOW_TXT;
+
 
     yBkp = mario.y;
     xBkp = mario.x;
@@ -182,6 +212,7 @@ void init_mario() {
     mario.x = 40;
     mario.y = 12;
     mario.sprite = 1;
+    mario.alive = 1;
 
 }
 
@@ -201,6 +232,7 @@ void init_hearts() {
         corazones[i].x = start_coords[i].x;
         corazones[i].y = start_coords[i].y;
         corazones[i].sprite = 3;
+        corazones[i].alive = 1;
     }
 
 

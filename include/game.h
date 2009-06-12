@@ -13,6 +13,7 @@ typedef struct object {
     char sprite;
     int x;
     int y;
+    int alive;
 } object;
 
 typedef object pjT;

@@ -6,7 +6,7 @@
 
 
 
-    #define WHITE_TXT 0x07 		// Atributo de video. Letras blancas, fondo negro
+    #define WHITE_TXT 0x07 	// Atributo de video. Letras blancas, fondo negro
     #define BLUE_TXT 0x09       // Atributo de video. Letras azules, fondo negro
     #define INVISIBLE_TXT 0x00 	// Atributo de video. Letras negras, fondo negro
     #define RED_TXT 0x04
@@ -16,18 +16,40 @@
     #define MOUSE_CURSOR 0x30	//  Atributo para el cursor del mouse.
     
     
-    void flush();
-
-    void puts( const char * str );
-
     void put_char( byte c);
 
-    byte get_char();
-
+    /* borrar el buffer de put_char */
     void borra_buffer();
 
+    /* lee un caracter del teclado */
+    byte get_char();
+
+    /* imprime en pantalla lo que no se imprimió del buffer de put_char */
+    void flush();
+
+    /* imrpime en pantalla el string str */
+    void puts( const char * str );
+
+    /* Lee un string del teclado hasta que el usuario presione enter */
+    void gets( char str[] );
+
+    /* escribe el string y agrega una bajada de linea al final */
+    void putln( const char * str );
+
+
+
+
+
+    /* primitiva para escribir dispositivos */
     size_t write(int fd, const void* buffer, size_t count);
 
+    /* primitiva para leer desde dispositivos */
+    size_t read(int fd, void* buffer, size_t count);
+
+
+
+
+    /* Copia n chars de un string a otro */
     void str_ncpy(byte * dest, byte * src, size_t size);
 
     /* Limpia la pantalla */

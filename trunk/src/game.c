@@ -3,11 +3,13 @@
 #include "../include/game.h"
 #include "../include/util.h"
 #include "../include/mouse.h"
+
+
 extern int cursor;
 
 
 /*
- *
+ * una matriz que almacena los elementos dentro del mapa
  */
 char map[25][80] = {
     
@@ -37,11 +39,12 @@ char map[25][80] = {
     "\xDB\x20\x20\x20\xDB\x20\xDB\x20\x20\x20\xDB\x20\x20\x20\x20\x20\xDB\x20\xDB\x20\xDB\x20\x20\x20\xDB                                                       ",
     "\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB                                                       "
 };
-char view[4000];
+char view[25][80][2];
 
 /* sprites */
-pjT * mario;
-object * corazones[HEART_N];
+
+static pjT mario;
+static object corazones[HEART_N];
 
 
 /* 
@@ -52,14 +55,14 @@ object * corazones[HEART_N];
 int game() {
     
     flush();
-
     cleanClipboard();
-    
-    init_hearts();
+
 
     init_map_view();
+
     init_mario();
-    
+    init_hearts();
+
     updateView();
     showView();
     
@@ -91,21 +94,21 @@ int game() {
                 dy = +1;
                 break;
             default:
-                dx=0;
-                dy=0;
+                dx = 0;
+                dy = 0;
                 break;
         }
 
-        if (mario->x+dx < 0) {
+        if (mario.x+dx < 0) {
             dx = 79;
         }
-        if (mario->x+dx >= 80) {
+        if (mario.x+dx >= 80) {
             dx = -79;
         }
-        if (mario->y+dy < 0) {
+        if (mario.y+dy < 0) {
             dy = +24;
         }
-        if (mario->y+dy >= 25) {
+        if (mario.y+dy >= 25) {
             dy = -24;
         }
 
@@ -113,8 +116,8 @@ int game() {
 
         if (can_move(dx,dy)) {
             
-            mario->x += dx;
-            mario->y += dy;
+            mario.x += dx;
+            mario.y += dy;
         } 
         
         if (dx != 0 || dy != 0) {
@@ -131,24 +134,22 @@ void updateView() {
     static int xBkp = 40;
     static int yBkp = 12;
 
-    view[(yBkp*80 + xBkp)*2] = ' ';
-    view[(yBkp*80 + xBkp)*2 + 1 ] = DEFAULT_TXT;
+    view[yBkp][xBkp][0] = ' ';
+    view[yBkp][xBkp][1] = DEFAULT_TXT;
     
 
-    view[2*(mario->y*80+mario->x)] = mario->sprite;
-    view[2*(mario->y*80+mario->x) + 1] = RED_TXT;
+    view[mario.y][mario.x][0] = mario.sprite;
+    view[mario.y][mario.x][1] = RED_TXT;
     
     int i;
     for (i=0; i<HEART_N;i++) {
-        
-        view[2*(corazones[i]->y*80+corazones[i]->x)] = 'm';//corazones[i]->sprite;
-        view[2*(corazones[i]->y*80+corazones[i]->x)+1] = DEFAULT_TXT;
+        view[corazones[i].y][corazones[i].x][0] = corazones[i].sprite;
+        view[corazones[i].y][corazones[i].x][1] = RED_TXT;
     }
 
-    
-    yBkp = mario->y;
-    xBkp = mario->x;
-    
+    yBkp = mario.y;
+    xBkp = mario.x;
+
 }
 
 void showView(void) {
@@ -159,48 +160,55 @@ void showView(void) {
     cursor = 0;
 }
 
-void init_mario() {
-    
-    mario->x = 40;
-    mario->y = 12;
-    mario->sprite = 1;
-}
+
+
+
+
 
 void init_map_view(){
     int i,j;
     for (i=0; i<25;i++) {
         for (j=0; j<80;j++) {
-            view[(i*80+j)*2] = map[i][j];
-            view[(i*80+j)*2+1] = WHITE_TXT;
+            view[i][j][0] = map[i][j];
+            view[i][j][1] = WHITE_TXT;
         }
     }
 }
 
+
+void init_mario() {
+    mario.x = 40;
+    mario.y = 12;
+    mario.sprite = 1;
+
+}
+
+
 void init_hearts() {
-    pointT heart_coords[HEART_N] = {
-        {60,13} ,
-        {60,14} ,
-        {60,15} 
+
+    pointT start_coords[HEART_N] = {
+        {40,13} ,
+        {40,14} ,
+        {40,15}
     };
 
-    
+
     int i;
-    for (i=0; i<HEART_N;i++) {
-        corazones[i]->sprite = 'a';
-        corazones[i]->x = heart_coords[i].x;
-        corazones[i]->y = heart_coords[i].y;
-        
-        if (corazones[i]->y== mario->y && corazones[i]->x == mario->x) {
-//             check_offset('w',7000);
-        }
-        
+    for (i = 0; i< HEART_N; i++) {
+        corazones[i].x = start_coords[i].x;
+        corazones[i].y = start_coords[i].y;
+        corazones[i].sprite = 3;
     }
+
+
+
+    
 }
 
 
 int can_move(int dx, int dy) {
 
-    return map[(mario->y+dy)][(mario->x+dx)] == ' ';
+    return map[(mario.y+dy)][(mario.x+dx)] == ' ';
 
 }
 

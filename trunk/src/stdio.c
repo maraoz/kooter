@@ -8,7 +8,7 @@
 int cursor = 0;
 
 
-void memcpy(byte * a, byte * b, size_t size) {
+void str_cpy(byte * a, byte * b, size_t size) {
     while (size--) {
         a[size] = b[size];
     }
@@ -18,7 +18,9 @@ void memcpy(byte * a, byte * b, size_t size) {
 /***************************************************************
 * page_roll
 *
-* 
+* scrollea la pantalla hacia arriba para dar lugar a más caracteres.
+* deja el cursor en la posición correspondiente para seguir escribiendo
+* sin notar el cambio.
 * 
 ****************************************************************/
 byte screen_buffer[4160] = {};
@@ -41,7 +43,8 @@ void page_roll(int backwards) {
 /***************************************************************
 * check_screen_scroll
 *
-* 
+* checkea si se necesita scrollear la pantalla antes de escribir
+* offset cantidad de caracteres.
 * 
 ****************************************************************/
 void check_screen_scroll(int offset) {
@@ -134,12 +137,9 @@ void put_char( byte c) {
 
         return;
     }
-    
-    /* OTHER CHARACTERS */
-        
-    if (! (vb_counter < V_BUFFER_LENGTH)) {
 
-        
+    /* OTHER CHARACTERS */
+    if (! (vb_counter < V_BUFFER_LENGTH)) {
 
         if (cursor + vb_counter >= 2000) {
             int cursorBkp;

@@ -347,6 +347,7 @@ shell()
 
 	flush();
 	cursor = 0;
+        
 
 	while(1)
 	{

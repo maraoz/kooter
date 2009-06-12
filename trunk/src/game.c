@@ -6,7 +6,9 @@
 extern int cursor;
 
 
-
+/*
+ *
+ */
 char map[25][80] = {
     
     "\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\x20\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB                                                       ",
@@ -42,7 +44,11 @@ pjT * mario;
 object * corazones[HEART_N];
 
 
-/* main game function */
+/* 
+ * main game function 
+ * 
+ * runs game main loop
+ */
 int game() {
     
     flush();
@@ -65,18 +71,22 @@ int game() {
 
         switch (c) {
             case(K_LEFT):
+            case 'a':
                 dx = -1;
                 dy = 0;
                 break;
             case(K_RIGHT):
+            case 'd':
                 dx = +1;
                 dy = 0;
                 break;
             case(K_UP):
+            case 'w':
                 dx = 0;
                 dy = -1;
                 break;
             case(K_DOWN):
+            case 's':
                 dx = 0;
                 dy = +1;
                 break;
@@ -111,7 +121,8 @@ int game() {
         updateView();
         showView();
     }
-
+    
+    
     return 0;
 }
 
@@ -127,11 +138,11 @@ void updateView() {
     view[2*(mario->y*80+mario->x) + 1] = RED_TXT;
     
     int i;
-//     for (i=0; i<HEART_N;i++) {
-//         
-//         view[2*(corazones[i]->y+corazones[i]->x)] = 'a';//corazones[i]->sprite;
-//         view[2*(corazones[i]->y+corazones[i]->x)+1] = DEFAULT_TXT;
-//     }
+    for (i=0; i<HEART_N;i++) {
+        
+        view[2*(corazones[i]->y+corazones[i]->x)] = 'a';//corazones[i]->sprite;
+        view[2*(corazones[i]->y+corazones[i]->x)+1] = DEFAULT_TXT;
+    }
 
     
     yBkp = mario->y;

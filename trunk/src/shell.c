@@ -161,7 +161,7 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 	while( *s == ' ' )
 		s++;
 
-	for(i=0, j=0; s[i] != ' ' && s[i] != 0; i++, j++)
+	for(i=0, j=0; s[i] != ' ' && s[i] != 0 && j<LONG_STR_TKN; i++, j++)
 		out[0][j] = s[i];
 	out[0][j]=0;
 
@@ -171,7 +171,7 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 	if( s[i] == 0 )
 		return;
 
-	for(j=0; s[i] != 0; i++, j++)
+	for(j=0; s[i] != 0 && j<LONG_STR_TKN; i++, j++)
 		out[1][j] = s[i];
 	out[1][j]=0;
 
@@ -397,7 +397,7 @@ shell()
 					diff= str_len(in) - str_len(remember[s]);
 					if(diff<0)
 						diff=0;
-					str_cpy(in, remember[s]);
+					str_ncpy(in, remember[s], LONG_STR_CMD);
 					cursor-=cursor%80-9;
 					for(i=0; in[i]; i++)
 						put_char(in[i]);	
@@ -412,12 +412,14 @@ shell()
 			}
 			else if(c!='\x08')
 			{
-				if(i<LONG_STR_CMD)
-				{	in[i]=c;
-				remember[0][i]=c;
-				remember[0][i+1]=0;}
- 				i++;
- 				put_char(c);
+				if(i<LONG_STR_CMD-1)
+				{	
+					in[i]=c;
+					remember[0][i]=c;
+					remember[0][i+1]=0;
+					i++;
+				}
+				put_char(c);
 				flush();
 			}
 			else if(i>0)
@@ -448,8 +450,8 @@ swap_rem(char remember[][LONG_STR_CMD], char in[])
 	int i;
 
 	for(i=HIST_LEN-1; i; i--)
-		str_cpy(remember[i], remember[i-1]);
-	str_cpy(remember[1], in);
+		str_ncpy(remember[i], remember[i-1], LONG_STR_CMD);
+	str_ncpy(remember[1], in, LONG_STR_CMD);
 }
 
 /*

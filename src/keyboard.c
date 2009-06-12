@@ -19,7 +19,7 @@ void leoteclado (int k){
 
 	tTicks=0;
 	
-	if (!(teclator.qty_used == TCIRC_SIZE)){
+	if (!(teclator.qty_used >= TCIRC_SIZE)){
 	/* Si le buffer de teclado no está lleno entonces procedo
 	a decodificar el scancode en ascii */
 		c = ktoa(k);
@@ -94,7 +94,7 @@ byte ktoa(int c){
  */
 byte next_char (){
 	byte a;
-	if(teclator.qty_used != 0) {
+	if(teclator.qty_used > 0) {
 		a=teclator.tcircular[teclator.next_read];
 		teclator.next_read++;
 		teclator.qty_used--;
@@ -115,7 +115,9 @@ writeToKeyboard(byte c)
 {
     if(teclator.next_write == TCIRC_SIZE)
                 teclator.next_write = 0;
-    teclator.tcircular[teclator.next_write] = c;
-    teclator.next_write++;
-    teclator.qty_used++;
+    if(!(teclator.qty_used >= TCIRC_SIZE)){
+	teclator.tcircular[teclator.next_write] = c;
+	teclator.next_write++;
+	teclator.qty_used++;
+    }
 }

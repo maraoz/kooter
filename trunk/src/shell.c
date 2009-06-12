@@ -387,7 +387,7 @@ shell()
 			{
 				if (c==0x01)
 					sign = +1;
-				else 	
+				else
 					sign = -1;
 			
 				if (s+sign >= 0 && s+sign < HIST_LEN)

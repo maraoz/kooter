@@ -166,6 +166,7 @@ int
 llamaFunc(char s[2][LONG_STR_TKN])
 {
 	int cursorBkp;
+	int arg_extra=0;
 
 	if(s[0][0]==0)
 		return NO_CD;
@@ -177,8 +178,13 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "clear"))
 	{
-		k_clear_screen();
-		return CLEAR_CD;
+		if(s[1][0]==0)
+		{
+			k_clear_screen();
+			return CLEAR_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "setTimeSp"))
 	{
@@ -192,87 +198,136 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	}
 	else if(str_cmp(s[0], "activaSp"))
 	{
-                tTicks = entraSp * 18 +1;
-		return ACTSP_CD;
+		if(s[1][0]==0)
+		{
+        	        tTicks = entraSp * 18 +1;
+			return ACTSP_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "dispImg"))
 	{
-		cursor=0;
-		showSplashScreen();
-		cursor=0;
-		return DSPIMG_CD;
+		if(s[1][0]==0)
+		{
+			cursor=0;
+			showSplashScreen();
+			cursor=0;
+			return DSPIMG_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "garbage"))
 	{
-		garbage();
-		return GBG_CD;
+		if(s[1][0]==0)
+		{
+			garbage();
+			return GBG_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "mario"))
 	{
-		read(PANTALLA_FD, bufferScr, 4000);
-		cursorBkp = cursor;
-		game();
-		cursor = 0;
-	        check_offset('m',4000);
-	        write(PANTALLA_FD, bufferScr, 4000);
-		cursor=cursorBkp;
-		return MARIO_CD;
+		if(s[1][0]==0)
+		{
+			read(PANTALLA_FD, bufferScr, 4000);
+			cursorBkp = cursor;
+			game();
+			cursor = 0;
+		        check_offset('m',4000);
+		        write(PANTALLA_FD, bufferScr, 4000);
+			cursor=cursorBkp;
+			return MARIO_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "uname"))
 	{
-		puts("Kooter v 1.0");
-		flush();
-		return CODE_CD;
+		if(s[1][0]==0)
+		{
+			puts("Kooter v 1.0");
+			flush();
+			return CODE_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "pwd"))
 	{
-		puts("/");
-		flush();
-		return CODE_CD;
+		if(s[1][0]==0)
+		{
+			puts("/");
+			flush();
+			return CODE_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "ls"))
 	{
-		puts("dev      root     home");
-		put_char('\n');
-		puts("bin      mnt      boot" );
-		put_char('\n');
-		puts("usr      etc      media");
-		return CODE_CD;
+		if(s[1][0]==0)
+		{
+			puts("dev      root     home");
+			put_char('\n');
+			puts("bin      mnt      boot" );
+			put_char('\n');
+			puts("usr      etc      media");
+			return CODE_CD;
+		}
+		else
+			arg_extra=1;
 	}
 	else if(str_cmp(s[0], "help"))
 	{
-		puts("Kooter kernel version 1.0");
-		put_char('\n');
-		put_char('\n');
-		puts("echo [string arguments]");
-		put_char('\n');
-		puts("clear");
-		put_char('\n');
-		puts("setTimeSp [numeric argument]");
-		put_char('\n');
-		puts("activaSp");
-		put_char('\n');
-		puts("dispImg");
-		put_char('\n');
-		puts("garbage");
-		put_char('\n');
-		puts("mario");
-		put_char('\n');
-		puts("uname");
-		put_char('\n');
-		puts("pwd");
-		put_char('\n');
-		puts("ls");
-		put_char('\n');
-		puts("help");
-		put_char('\n');
-		return CODE_CD;
+		if(s[1][0]==0)
+		{
+			puts("Kooter kernel version 1.0");
+			put_char('\n');
+			put_char('\n');
+			puts("echo [string arguments]");
+			put_char('\n');
+			puts("clear");
+			put_char('\n');
+			puts("setTimeSp [numeric argument]");
+			put_char('\n');
+			puts("activaSp");
+			put_char('\n');
+			puts("dispImg");
+			put_char('\n');
+			puts("garbage");
+			put_char('\n');
+			puts("mario");
+			put_char('\n');
+			puts("uname");
+			put_char('\n');
+			puts("pwd");
+			put_char('\n');
+			puts("ls");
+			put_char('\n');
+			puts("help");
+			put_char('\n');
+			return CODE_CD;
+		}
+		else
+			arg_extra=1;
 	}
-	else	
+
+	if(arg_extra==0)
 	{
 		puts(s[0]);
 		put_char(':');
 		puts(" command not found");
+		flush();
+		return CNF_CD;
+	}
+	else
+	{
+		puts(s[0]);
+		put_char(':');
+		puts(" does not receive arguments");
 		flush();
 		return CNF_CD;
 	}
@@ -303,8 +358,6 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
-
-
 			if(c<0x05)
 				;
 			else if(c!='\x08')
@@ -396,7 +449,6 @@ void check_screen_saver() {
 
 	if (interrupted == 1 && firstTime == 0)
 	{
-		
                 borra_buffer();
                 cursor = 0;
 	        check_offset('p',4000);
@@ -404,6 +456,5 @@ void check_screen_saver() {
         	cursor = cursorBkp;
         	tTicks = 0;
         	firstTime = 1;
-
 	}
 }

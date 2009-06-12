@@ -1,3 +1,5 @@
+#define HIST_LEN 10
+
 void print_nline();
 
 int str_cmp(char *s, char *t);

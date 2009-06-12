@@ -36,4 +36,7 @@
     /* Muestra la imagen de inicio */
     void showSplashScreen();
 
+
+    
+
 #endif

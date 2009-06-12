@@ -2,7 +2,7 @@
 #include "../include/defs.h"
 #include "../include/game.h"
 #include "../include/util.h"
-
+#include "../include/mouse.h"
 extern int cursor;
 
 
@@ -53,14 +53,14 @@ int game() {
     
     flush();
 
-    
+    cleanClipboard();
     
     init_hearts();
 
     init_map_view();
-    init_mario(mario);
+    init_mario();
     
-    updateView(mario);
+    updateView();
     showView();
     
     char c; 
@@ -117,9 +117,10 @@ int game() {
             mario->y += dy;
         } 
         
-
-        updateView();
-        showView();
+        if (dx != 0 || dy != 0) {
+            updateView();
+            showView();
+        }
     }
     
     
@@ -141,11 +142,6 @@ void updateView() {
     for (i=0; i<HEART_N;i++) {
         
         view[2*(corazones[i]->y*80+corazones[i]->x)] = 'm';//corazones[i]->sprite;
-
-        if (2*(corazones[i]->y*80+corazones[i]->x) == 2*(mario->y*80+mario->x) ) {
-            check_offset('w',7000);
-        }
-
         view[2*(corazones[i]->y*80+corazones[i]->x)+1] = DEFAULT_TXT;
     }
 
@@ -163,7 +159,7 @@ void showView(void) {
     cursor = 0;
 }
 
-void init_mario(pjT * mario) {
+void init_mario() {
     
     mario->x = 40;
     mario->y = 12;
@@ -193,6 +189,10 @@ void init_hearts() {
         corazones[i]->sprite = 'a';
         corazones[i]->x = heart_coords[i].x;
         corazones[i]->y = heart_coords[i].y;
+        
+        if (corazones[i]->y== mario->y && corazones[i]->x == mario->x) {
+//             check_offset('w',7000);
+        }
         
     }
 }

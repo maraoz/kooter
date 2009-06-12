@@ -405,16 +405,6 @@ shell()
 	}
 }
 
-void
-swap_rem(char remember[][LONG_STR_CMD], char in[])
-{
-	int i;
-
-	for(i=HIST_LEN-1; i; i--)
-		str_ncpy(remember[i], remember[i-1], LONG_STR_CMD);
-	str_ncpy(remember[1], in, LONG_STR_CMD);
-}
-
 /*
 ** funcion que setea el tiempo que tarda en entrar el screen saver
 */

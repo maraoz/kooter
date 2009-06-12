@@ -361,9 +361,11 @@ shell()
 	int i;
 	int c;
 
-	char remember[3][LONG_STR_CMD];
+	char remember[HIST_LEN][LONG_STR_CMD];
 	int s=0;
+	int sign;
 	int diff;
+	int rec;
 
 	tTicks=0;
 	flush();
@@ -381,48 +383,39 @@ shell()
 		{
 			if(c==0x02 || c==0x04)
 				;
-			else if(c==0x01)
+			else if(c==0x01 || c==0x03)
 			{
-				diff=str_len(in)-str_len(remember[s]);
-				str_cpy(in, remember[s]);
-				cursor-=cursor%80-9;
-				for(i=0; in[i]; i++)
+				if (c==0x01)
+					sign = +1;
+				else 	
+					sign = -1;
+			
+				if (s+sign >= 0 && s+sign < HIST_LEN)
 				{
-					put_char(in[i]);
+					s=s+sign;
+
+					diff= str_len(in) - str_len(remember[s]);
+					if(diff<0)
+						diff=0;
+					str_cpy(in, remember[s]);
+					cursor-=cursor%80-9;
+					for(i=0; in[i]; i++)
+						put_char(in[i]);	
 					flush();
-				}
-				while(diff>0)
-				{
-					put_char(' ');
+
+					rec=diff;
+					while(diff-->0)
+						put_char(' ');
 					flush();
-					diff--;
+					cursor-=rec;
 				}
-				s=(s+1)%3;
-			}
-			else if(c==0x03)
-			{
-				diff=str_len(in)-str_len(remember[2-(s%3)]);
-				str_cpy(in, remember[2-(s%3)]);
-				cursor-=cursor%80-9;
-				for(i=0; in[i]; i++)
-				{
-					put_char(in[i]);
-					flush();
-				}
-				while(diff>0)
-				{
-					put_char(' ');
-					flush();
-					diff--;
-				}
-				s=(s+1)%3;
 			}
 			else if(c!='\x08')
 			{
 				if(i<LONG_STR_CMD)
 					in[i]=c;
-				remember[2][i]=c;
-				remember[2][i+1]=0;
+				remember[0][i]=c;
+				remember[0][i+1]=0;
  				i++;
  				put_char(c);
 				flush();
@@ -436,8 +429,10 @@ shell()
 		}
 		put_char('\n');
 		in[i]=0;
+		remember[0][0]=0;
 
-		swap_rem(remember, in);
+		if(in[0]!=0)
+			swap_rem(remember, in);
 
 		separaPorEspacios(in, data);
 
@@ -450,8 +445,11 @@ shell()
 void
 swap_rem(char remember[][LONG_STR_CMD], char in[])
 {
-	str_cpy(remember[1], remember[0]);
-	str_cpy(remember[0], in);
+	int i;
+
+	for(i=HIST_LEN-1; i; i--)
+		str_cpy(remember[i], remember[i-1]);
+	str_cpy(remember[1], in);
 }
 
 /*

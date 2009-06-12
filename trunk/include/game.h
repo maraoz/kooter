@@ -26,9 +26,9 @@ int game();
 
 void updateView();
 
-void showView(void);
+void showView();
 
-void init_mario(pjT * mario);
+void init_mario();
 
 void init_map_view();
 

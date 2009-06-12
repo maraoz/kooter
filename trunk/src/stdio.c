@@ -294,7 +294,7 @@ char * BLANK_LINE = "                                                           
 void k_clear_screen() 
 {
 	cursor = 0;
-    check_offset('5',4000);
+        check_offset('5',4000);
 	write(PANTALLA_FD, blank_screen_buffer, 4000);
   	cursor = 0;
 }

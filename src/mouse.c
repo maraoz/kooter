@@ -173,6 +173,7 @@ ptov(point pto) {
 void
 cleanClipboard(void){
  /* limpio el clibpoard*/
+   int i;
    clipboard[0] = 0xFF;
    clipboard[1] = 0xFF;
    for( i = 2 ; i < 4002 ; i++) {

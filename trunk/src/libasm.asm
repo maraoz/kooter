@@ -7,7 +7,6 @@ GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
-GLOBAL	mouse_reset
 GLOBAL	wpantalla
 GLOBAL 	disable_text_cursor
 
@@ -294,26 +293,6 @@ enable_mouse:
 	call	mouseWait1	
 	in	al,60h
 
-	ret
-	
-mouse_reset:
-	call	mouseWait2	
-	mov	al,0D4h
-	out	64h,al
-	call	mouseWait2
-	mov	al,0FFh
-	out	60h,al
-
-	call	mouseWait1
-	in	al,60h
-
-	cmp	al,0AAh
-	jz	resetok
-	jmp	mouse_reset
-
-resetok:
-	call	enable_mouse
-	
 	ret
 	
 	

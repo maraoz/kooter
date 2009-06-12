@@ -8,7 +8,8 @@
 
 mouseSt mouse = {0,0,{0,0}};
 byte first, second, third;
-byte clipboard[TCIRC_SIZE];
+byte clipboard[TCIRC_SIZE+2];
+int clipboardEmpty = 1;
 byte bkpCursorPos = DEFAULT_TXT;
 int qty_int = 0;
 
@@ -95,12 +96,7 @@ updateMouse(void){
 
     /* Si se recibe un 1 en el 8 bit o en el bit 7 del primer 
     byte recibido del mouse, eso indica que hay overflow */
-    if(first & 0x80 || first & 0x40){
- 	puts("Ahhhh Overflow de mouse");
- 	mouse_reset();
- 	qty_int = 0;
-    }
-    else {
+    if(!(first & 0x80 || first & 0x40)){
         /* Se setean los botones del mouse dependiendo si 
 	están apretados o no */
 	if(first & 0x02) {
@@ -172,6 +168,19 @@ ptov(point pto) {
 
 
 /*
+ * Función que limpia el buffer de copiado del mouse.
+ */
+void
+cleanClipboard(void){
+ /* limpio el clibpoard*/
+   clipboard[0] = 0xFF;
+   clipboard[1] = 0xFF;
+   for( i = 2 ; i < 4002 ; i++) {
+	clipboard[i] = 0;
+   } 
+}
+
+/*
  * Función que copia desde el punto start hasta el punto
  * end. Copia tanto atributos como caracteres.
  */
@@ -179,13 +188,9 @@ void
 copy(point start, point end){
     static byte tmpbuf[4000], auxi;
     int i,j,k=0;
-    start.x;
-    end.x;
-    
-    /* limpio el clibpoard*/
-    for( i = 0 ; i < 4002 ; i++) {
-	clipboard[i] = 0;
-    }
+    clipboardEmpty = 0;
+
+   
     
     /* leo toda la pantalla y la dejo en tmpbuf*/
     read(PANTALLA_FD, tmpbuf, 4000);
@@ -220,7 +225,7 @@ void
 paste(void){
     int k;
     /* Sólo toma los caracteres y no los atributos para pegar en el buffer de teclado */
-    for(k = 0 ; clipboard[k*2] != 0xFF ; k++) {
+    for(k = 0 ; clipboard[k*2] != 0xFF && !clipboardEmpty; k++) {
  	writeToKeyboard(clipboard[k*2]);
     }
 }

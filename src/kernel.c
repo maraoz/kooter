@@ -27,11 +27,13 @@ Punto de entrada de código C.
 kmain() 
 {
 
+/* Habilito el mouse */
 	enable_mouse();
 
+/* Deshabilito el cursor de texto */
 	disable_text_cursor();
-/* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 	
+/* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
 	
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA INT80h   */

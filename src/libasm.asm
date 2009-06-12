@@ -317,7 +317,7 @@ resetok:
 	ret
 	
 	
-	
+; Espera para poder escribir en el mouse, tiene un timeout por si no se recibe nada.	
 mouseWait1:
 	push	ecx
 	push	eax
@@ -336,6 +336,7 @@ mwait1_end:
 	pop	ecx
 	ret
 
+; Espera para poder leer del mouse, tiene un timeout por si no se recibe nada.
 mouseWait2:
 	push	ecx
 	push	eax
@@ -355,6 +356,9 @@ mwait2_end:
 	ret
 
 
+; Función que escribe en una determinada posición de pantalla un caracter. 
+; El primer parámetro que recibe la función es el caracter a imprimir y
+; el segundo que recibe es donde imprimir el caracter.
 wpantalla:
 
 	push	ebp
@@ -369,7 +373,7 @@ wpantalla:
 	mov	ax,10h			
 	mov	ds,ax
     
-	mov	ebx,0B8000h
+	mov	ebx,0B8000h			; Escribo en la pantalla
 	add	ebx,ecx
 	
 	mov	[ds:ebx],dl			; Copio en la posicion de memoria el char a escribir
@@ -382,6 +386,10 @@ wpantalla:
    	ret
 
 
+; Función que deshabilita el cursor de texto para que no se muestre en pantalla.
+; Este cursor esta seteado inicialmente y cuando se escribe el caracter de atributo
+; correspondiente se puede ver a menos que sea deshabilitado ingresando a los registros
+; de la placa de video.
 disable_text_cursor:
 	push	ebp
 	mov	ebp,esp
@@ -393,12 +401,12 @@ disable_text_cursor:
 	in	al, dx
 
 	mov	cl, al
-	mov	al, 0Ah
+	mov	al, 0Ah		;ingreso al registro de índice 0Ah de la placa de video
 	out	dx, al
 
 	mov	dx, 03D5h
 	in	al, dx
-	or	al, 20h
+	or	al, 20h		;Seteo el 6 bit del registro en 1 para que desaparezca el cursor
 	out	dx, al
 	mov	al, cl
 

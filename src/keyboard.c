@@ -10,19 +10,30 @@ extern int tTicks;
 
 tcirc teclator={0,0,0,{0}};
 
+/* 
+ * Función que recibe un scancode k y lo 
+ * decodifica en ascii.
+ */
 void leoteclado (int k){
 	byte c;
 
 	tTicks=0;
 
 	if (!(teclator.qty_used == TCIRC_SIZE)){
+	/* Si le buffer de teclado no está lleno entonces procedo
+	a decodificar el scancode en ascii */
 		c = ktoa(k);
 
 	   if(c != 0x00) {
+	   /* Si no es un carácter no soportado por Kooter,
+	   lo agrego al buffer de teclado */
 		if(interrupted==0)
+		/* Si estaba en el salva pantallas, vuelvo 
+		y no dejo el ascii en el buffer de teclado */
 		    interrupted = 1;
 		else{
 		    if(teclator.next_write == TCIRC_SIZE)
+		    /* Implementación del teclado circular */
 			teclator.next_write = 0;
 	
 		    teclator.tcircular[teclator.next_write] = c;
@@ -35,6 +46,9 @@ void leoteclado (int k){
 
 byte ktoa(int c){
 	static int shift = 0;
+	/* matriz que contiene en la primer fila los ascii soportados por Kooter sin "shiftear"
+	 * y en la segunda fila los ascii soportados por Kooter "shifteados".
+	 * El scancode que se recibe al presionar una tecla sirve de índice para cada fila. */
 	int const keystroke[2][83]={
         {0x00/*Esc*/,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39
         ,0x30,0x2D,0x3D,0x08,0x00/*Tab*/,0x71,0x77,0x65,0x72
@@ -62,16 +76,22 @@ byte ktoa(int c){
         ,0x00,0x00,0x00,0x00,0x00,0x00,0x00
         ,0x00,0x00,0x00}};
 
+    /* Setea el shift a partir del scancode recibido */
     if( c == 0x2A || c == 0x36)
 	shift = 1;
     if( c == 0x2A+0x80 || c == 0x36+0x80)
 	shift = 0;
 
+    /* Si el scancode corresponde a soltar una tecla retorno 0 */
     if(c>=0x81)
       return (byte)0x00;
     return (byte)keystroke[shift][c-1];
 }
 
+/* 
+ * Función que devuelve el siguiente caracter del buffer de teclado.
+ * Si esta vacío el buffer, devuelve 0xFF como código de error.
+ */
 byte next_char (){
 	byte a;
 	if(teclator.qty_used != 0) {
@@ -87,6 +107,9 @@ byte next_char (){
 	return a;
 }
 
+/*
+ * Función que escribe en el buffer de teclado el byte c.
+ */
 void 
 writeToKeyboard(byte c)
 {

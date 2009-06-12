@@ -37,11 +37,6 @@ char bufferScr[TCIRC_SIZE*2];
 int entraSp=30;
 
 /*
-** es 1 mientras este el scr saver
-*/
-int scrIs=0;
-
-/*
 ** guarda el retorno de la ultima funcion ejecutada
 */
 int ret=AUX;
@@ -90,7 +85,7 @@ print_nline()
 	flush();
 }
 
-/* strcmp retorna 1 si los strings eran iguales y 0 en caso contrario */
+/* str_cmp retorna 1 si los strings eran iguales y 0 en caso contrario */
 /* necesita que ambos strings sean iguales hasta el 0 */
 
 int
@@ -104,6 +99,33 @@ str_cmp(char *s, char *t)
 			flag=0;
 
 	return (s[i]==0 && t[i]==0 && flag);
+}
+
+/* str_cpy retorna la cantidad de bytes copiados */
+
+
+int
+str_cpy(char *s, char *t)
+{
+	int i;
+
+	for(i=0; t[i]; i++)
+		s[i]=t[i];
+	s[i++]=0;
+	return i-1;
+}
+
+/* str_len retorna la dimension de un string de char */
+
+int
+str_len(char *s)
+{
+	int i;
+
+	for(i=0; s[i]; i++)
+		;
+
+	return i;
 }
 
 /*
@@ -212,7 +234,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
 		{
 			cursor=0;
 			showSplashScreen();
-			cursor=0;
+			cursor=2000-80;
 			return DSPIMG_CD;
 		}
 		else
@@ -342,12 +364,14 @@ shell()
 {
 	int i;
 	int c;
-	int rec;
-	tTicks=0;
 
+	char remember[3][LONG_STR_CMD];
+	int s=0;
+	int diff;
+
+	tTicks=0;
 	flush();
 	cursor = 0;
-        
 
 	while(1)
 	{
@@ -359,12 +383,50 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
-			if(c<0x05)
+			if(c==0x02 || c==0x04)
 				;
+			else if(c==0x01)
+			{
+				diff=str_len(in)-str_len(remember[s]);
+				str_cpy(in, remember[s]);
+				cursor-=cursor%80-9;
+				for(i=0; in[i]; i++)
+				{
+					put_char(in[i]);
+					flush();
+				}
+				while(diff>0)
+				{
+					put_char(' ');
+					flush();
+					diff--;
+				}
+				s=(s+1)%3;
+			}
+			else if(c==0x03)
+			{
+				diff=str_len(in)-str_len(remember[2-(s%3)]);
+				str_cpy(in, remember[2-(s%3)]);
+				cursor-=cursor%80-9;
+				for(i=0; in[i]; i++)
+				{
+					put_char(in[i]);
+					flush();
+				}
+				while(diff>0)
+				{
+					put_char(' ');
+					flush();
+					diff--;
+				}
+				s=(s+1)%3;
+			}
 			else if(c!='\x08')
 			{
 				if(i<LONG_STR_CMD)
 					in[i]=c;
+				remember[2][i]=c;
+				remember[2][i+1]=0;
  				i++;
  				put_char(c);
 				flush();
@@ -379,12 +441,21 @@ shell()
 		put_char('\n');
 		in[i]=0;
 
+		swap_rem(remember, in);
+
 		separaPorEspacios(in, data);
 
 		ret=llamaFunc(data);
 
 		data[0][0]=data[1][0]=0;
 	}
+}
+
+void
+swap_rem(char remember[][LONG_STR_CMD], char in[])
+{
+	str_cpy(remember[1], remember[0]);
+	str_cpy(remember[0], in);
 }
 
 /*
@@ -419,7 +490,8 @@ garbage()
 ** de controlar comienzo y fin del screen saver
 */
 
-void check_screen_saver() {
+void check_screen_saver()
+{
 	static int firstTime = 1;
 	static int cursorBkp = 0;
 	

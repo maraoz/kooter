@@ -15,3 +15,9 @@ void setTimeSp(int time);
 void garbage();
 
 void check_screen_saver();
+
+int str_cpy(char *s, char *t);
+
+void swap_rem(char remember[][LONG_STR_CMD], char in[]);
+
+int str_len(char *s);

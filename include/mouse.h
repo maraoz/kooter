@@ -13,6 +13,6 @@ void copy(point start, point end);
 
 void moveMouseCursor(point pto);
 
-
+void cleanClipboard(void);
 
 #endif

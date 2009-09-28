@@ -115,6 +115,7 @@ int tTicks;
 typedef struct {
     int pid;
     int gid;
+    int priority;
     int f_pointer;
 } process_t;
 

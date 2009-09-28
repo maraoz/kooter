@@ -121,6 +121,19 @@ typedef struct {
 typedef struct {
     int pid;
     process_t process;
+    dword EDI;
+    dword ESI;
+    dword EBP;
+    dword SS;
+    dword EBX
+    dword EDX;
+    dword ECX;
+    dword EAX;
+    dword ES;
+    dword DS;
+    dword CS;
+    dword IP;
+    dword CFLAGS;
 } context_t;
 
 

@@ -109,10 +109,22 @@ typedef struct {
 	point	pos;
 } mouseSt;
 
-//typedef byte[TCIRC_SIZE*2] vbuff;
-
-
 int tTicks;
+
+
+typedef struct {
+    int pid;
+    int gid;
+    int f_pointer;
+} process_t;
+
+typedef struct {
+    int pid;
+    process_t process;
+} context_t;
+
+
+
 
 
 #endif

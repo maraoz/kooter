@@ -14,7 +14,7 @@ int interrupted = 1;
 
 void int_08()
 {
- 	check_screen_saver();
+	check_screen_saver();
 	return;
 }
 

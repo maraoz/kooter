@@ -9,6 +9,10 @@
 
 
 
+typedef struct process_context {
+    
+    
+} pcontext_t;
 
 /* Tiempo de espera */
 void wait(int time);

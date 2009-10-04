@@ -1,25 +1,9 @@
-
-
-
-#define MAX_QTY_FILES 1000
-#define MAX_QTY_TAGS 31 /* es la cantidad de bits disponibles */
-dword cwd = 0;
-
-typedef struct {
-    files_t file;
-    boolean used = FALSE;
-    int references = 0; /* referencias a este fd */
-} files_entry;
-
-typedef struct {
-    char name[100];
-    char * data;
-    int index = 0;
-    dword tags; /* los tags van a ser bits */
-} files_t;
+#include "../include/files.h"
+#include "../include/stdio.h"
 
 files_entry opened_files[MAX_QTY_FILES];
-char tag_list[MAX_QTY_TAGS][100];
+tag_list_t tag_list[MAX_QTY_TAGS];
+cwd = 0;
 
 /*
  * Funcion que crea un archivo en caso de no existir
@@ -27,10 +11,10 @@ char tag_list[MAX_QTY_TAGS][100];
 
 int
 open(char * name){
-    int index;
+    int index,i,j;
     files_t file;
     strncpy(file.name,name,100);
-    file.tags = get_actual_tags(); /* esto esta mal pero cuando definamos la funcion get_actual_tags() lo corrijo */
+    file.tags = cwd;
     file.data = malloc(100); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
     if(index == -1){
@@ -39,7 +23,12 @@ open(char * name){
     open_files[index].file = file;
     open_files[index].used = TRUE;
     open_files[index].references++;
-    return i;
+    for(i=file.tags,j=0;i>=0;i>>=2,j++){
+        if(i%2 != 0){
+           tag_list[j].references++;
+        }
+    }
+    return index;
 }
 
 /*
@@ -96,6 +85,20 @@ unlink(char * name){
     if(index == -1)
         return -1;
     opened_files[index].used = FALSE;
+    for(i=opened_files[index].tags,j=0;i>=0;i>>=2,j++){
+        if(i%2 != 0){
+           tag_list[j].references--;
+        }
+    }
+}
+
+/*
+ * Funcion que devuelve el fd de un archivo
+ */
+
+int
+get_fd(char * name){
+    //TODO: Implementar, hoy me quede sin tiempo
 }
 
 /*
@@ -151,7 +154,7 @@ mkdir(char * directory){
         return -1;
     }
     i = log2(tag);
-    strncopy(tag_list[i],directory,100);
+    strncopy(tag_list[i].name,directory,100);
 }
 
 /*
@@ -164,7 +167,7 @@ rmdir(char * directory){
     tag = get_numeric_tag(directory);
     if(tag == -1)
         return -1;
-    tag_list[log2(tag)][0]=0;
+    tag_list[log2(tag)].name[0]=0;
     return tag;
 }
 
@@ -174,7 +177,7 @@ rmdir(char * directory){
 dword
 get_next_available_tag(){
     int i;
-    for(i = 0; i<MAX_QTY_TAGS && tag_list[i][0]!=0 ; i++);
+    for(i = 0; i<MAX_QTY_TAGS && tag_list[i].name[0]!=0 ; i++);
     if(i == MAX_QTY_TAGS){
         return -1;
     }
@@ -188,7 +191,7 @@ get_next_available_tag(){
 dword
 get_numeric_tag(char * name){
     int i;
-    for(i = 0; i<MAX_QTY_TAGS && !strcmp(tag_list[i],name) ; i++);
+    for(i = 0; i<MAX_QTY_TAGS && !strcmp(tag_list[i].name,name) ; i++);
     if(i == MAX_QTY_TAGS){
         return -1;
     }

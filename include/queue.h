@@ -7,7 +7,7 @@
 
 typedef int T;
 
-#define MAX_ELEM = 100
+#define MAX_ELEM 10
 
 typedef struct {
     int head;
@@ -18,13 +18,13 @@ typedef struct {
 
 /**
  * is_empty
- * devuelve TRUE si la cola está vacia y FALSE si tiene elementos
+ * devuelve TRUE si la cola estï¿½ vacia y FALSE si tiene elementos
  */
 int is_empty(queue_t * q);
 
 /**
  * is_full
- * devuelve TRUE si la cola está llena y no acepta más elementos
+ * devuelve TRUE si la cola estï¿½ llena y no acepta mï¿½s elementos
  */
 int is_full(queue_t * q);
 
@@ -38,7 +38,7 @@ void queue_init(queue_t * q);
 /**
  * enqueue
  * Agrega el dato "data" al final de la cola
- * Devuelve -1 si no se pudo realizar la operación
+ * Devuelve -1 si no se pudo realizar la operaciï¿½n
  * o 0 si no hubo problema.
  */
 int enqueue(queue_t * q, T data);

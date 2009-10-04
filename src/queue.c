@@ -2,6 +2,10 @@
  * queue.c
  */
 
+#include <stdio.h>
+
+#include "../include/queue.h"
+
 
 void queue_init(queue_t * q) {
     q->head = 0;
@@ -13,14 +17,14 @@ int is_empty(queue_t * q){
 }
 
 int is_full(queue_t * q) {
-    return q->tail == q->head - 1;
+    return ((q->tail + 1) % MAX_ELEM) == q->head;
 }
 
-int enqueue(queue_t * q, T data) {
+int enqueue(queue_t * q, T elem) {
     if (is_full(q))
         return -1;
+    q->data[q->tail] = elem;
     q->tail = (q->tail + 1) % MAX_ELEM;
-    q->data[q->tail] = data;
     return 0;
 }
 
@@ -40,3 +44,5 @@ T peek(queue_t * q) {
     }
     return q->data[q->head];
 }
+
+

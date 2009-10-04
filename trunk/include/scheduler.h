@@ -6,13 +6,13 @@
 #ifndef _scheduler_h
 #define _scheduler_h
 
-void block(int pid);
+int init_scheduler(void);
 
-void unblock(int pid);
+int block(int pid);
 
-int pid next_process(void);
+int unblock(int pid);
 
-int pid create_process(void);
+int next_process(void);
 
 void desalojate(int pid);
 

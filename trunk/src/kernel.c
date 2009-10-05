@@ -14,7 +14,7 @@ int interrupted = 1;
 
 process_t current_process; /* proceso actual que esta corriendo */
 pid_t focus;
-context_t bcp[MAX_CANT_PROCESS]; /* BCP para todos los procesos que van a estar para switchear */
+context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
 
 
 void int_08(dword ESP, dword SS)

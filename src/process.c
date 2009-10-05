@@ -1,16 +1,49 @@
-/*
+#include "../include/allocator.h"
+#include "../include/defs.h"
+
+
+queue_t available_pids;
+queue_t * available_pids_q;
+
+/**
+ * init_pids
+ * inicializa las estructuras generadoras de pids
+ */
+int init_pids(void) {
+    available_pids_q = &available_pids;
+    q_init(available_pids_q);
+    int i;
+    for (i=0; i<MAX_PROCESSES; i++) {
+        enqueue(available_pids_q, i);
+    }
+    return 0;
+}
+
+/**
+ * get_new_pid
+ * devuelve el siguiente pid sin usar
+ */
+pid_t get_new_pid(void) {
+    return dequeue(available_pids_q);
+}
+
+/**
  * Funcion que destruye los procesos
  */
 void
 end_process()
 {
-    setStatus(current_process, FREE);     /* designo a la tarea como libre */
+    // TODO: faltan cosas para terminar de matar al proceso
+    enqueue(available_pids_q, current_process.pid);
+
+    // TODO: falta meter el nuevo proceso
+
+
 }
 
-/*
+/**
  * Funcion que crea un nuevo proceso
  */
-
 process_t
 create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv, int gid, int priority, int background)
 {
@@ -27,7 +60,6 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
 
     /* inicializar stack */
 
-    
     new_proc.page = new_proc.ESP = palloc(pages_qty);
     new_proc.ESP += pages_qty*(1024*pages_qty)-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_proc);
@@ -52,3 +84,5 @@ create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, vo
     frame->argv=argv;
     return (dword)frame;
 }
+
+

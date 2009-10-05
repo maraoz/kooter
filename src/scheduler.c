@@ -42,15 +42,15 @@ int unblock(int pid) {
     return enqueue(ready_processes_q, pid);
 }
 
-int pid next_process(void){
+pid_t next_process(void){
     return dequeue(ready_processes_q);
 }
 
 
 int desalojate(int pid) {
-    if (enqueue(ready_processes_q) == -1) {
+    if (enqueue(ready_processes_q, pid) == -1) {
         // no hay lugar en la cola
-        return -1
+        return -1;
     }
     return 0;
 }

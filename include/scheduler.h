@@ -37,7 +37,7 @@ pid_t next_process(void);
  * desalojate
  * vuelve a poner el proceso en la cola de readys
  */
-void desalojate(int pid);
+int desalojate(int pid);
 
 
 #endif

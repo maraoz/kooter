@@ -6,6 +6,7 @@
 #include "../include/defs.h"
 #include "../include/scheduler.h"
 #include "../include/queue.h"
+#include "../include/kc.h"
 
 // cola de procesos en estado READY y su puntero (para manejo)
 queue_t ready_processes;
@@ -36,7 +37,7 @@ int block(int pid) {
     return 0;
 }
 
-void unblock(int pid) {
+int unblock(int pid) {
     is_blocked[pid] = FALSE;
     return enqueue(ready_processes_q, pid);
 }

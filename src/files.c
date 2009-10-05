@@ -5,7 +5,7 @@ files_entry opened_files[MAX_QTY_FILES];
 tag_list_t tag_list[MAX_QTY_TAGS];
 dword cwd = 0;
 
-/*
+/**
  * Funcion que crea un archivo en caso de no existir
  */
 
@@ -31,7 +31,7 @@ open(char * name){
     return index;
 }
 
-/*
+/**
  * Funcion que cierra un archivo abierto
  */
 int
@@ -43,7 +43,7 @@ close(int index){
 }
 
 
-/*
+/**
  * Funcion que lee un archivo abierto
  * Hay que ver si mergeamos las dos funciones de write y read que tenemos (la de stdio y la de files)
  */
@@ -59,7 +59,7 @@ fread(char * name,char * buffer){
     }
 }
 
-/*
+/**
  * Funcion que escribe un archivo un archivo abierto
  */
 int
@@ -75,7 +75,7 @@ fwrite(char * name, char * input){
     return i;
 }
 
-/*
+/**
  * Funcion que borra un archivo
  */
 int
@@ -92,7 +92,7 @@ unlink(char * name){
     }
 }
 
-/*
+/**
  * Funcion que devuelve el fd de un archivo
  */
 
@@ -111,7 +111,7 @@ is_valid_fd(int index){
     return true;
 }
 
-/*
+/**
  * Funcion que cambia de directorio
  */
 int
@@ -124,7 +124,7 @@ chdir(char * directory){
     cwd |= tag;
 }
 
-/*
+/**
  * Funcion que lista el contenido de un directorio
  */
 int
@@ -142,7 +142,7 @@ ls(char * directory){
     }
 }
 
-/*
+/**
  * Funcion que crea directorios
  */
 int
@@ -157,7 +157,7 @@ mkdir(char * directory){
     strncopy(tag_list[i].name,directory,100);
 }
 
-/*
+/**
  * Funcion que elimina directorios
  */
 int
@@ -171,7 +171,7 @@ rmdir(char * directory){
     return tag;
 }
 
-/*
+/**
  * Funcion que devuelve le proximo tag posible;
  */ 
 dword
@@ -184,7 +184,7 @@ get_next_available_tag(){
     return 1<<i /*lo mismo que pow(2,i)*/;
 }
 
-/*
+/**
  * Funcion que devuelve un tag numerico a partir de un nombre de directorio
  */
 

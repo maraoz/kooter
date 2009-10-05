@@ -19,7 +19,7 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
 
 
     _Cli();
-    new_proc.process.pid = get_next_pid();
+    new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
 
@@ -35,11 +35,11 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
 
     set_status(new_proc.process, READY);
     _Sti();
-    return task;
+    return new_proc.process;
 }
 
 dword
-create_new_stack(dword(*proceso)(int,char**),int argc,char** argv,dword bottom, void(*end_proc)())
+create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, void(*end_proc)())
 {
     STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME);
     frame->EBP=0;

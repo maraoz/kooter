@@ -3,7 +3,7 @@
 
 files_entry opened_files[MAX_QTY_FILES];
 tag_list_t tag_list[MAX_QTY_TAGS];
-cwd = 0;
+dword cwd = 0;
 
 /*
  * Funcion que crea un archivo en caso de no existir
@@ -48,7 +48,7 @@ close(int index){
  * Hay que ver si mergeamos las dos funciones de write y read que tenemos (la de stdio y la de files)
  */
 int
-read(char * name,char * buffer){
+fread(char * name,char * buffer){
     int i;
     int index;
     index = get_fd(name);
@@ -63,7 +63,7 @@ read(char * name,char * buffer){
  * Funcion que escribe un archivo un archivo abierto
  */
 int
-write(char * name, char * input){
+fwrite(char * name, char * input){
     int index;
     index = get_fd(name);
     if(!is_valid_fd(index) || opened_files[index].used == FALSE)
@@ -121,7 +121,7 @@ chdir(char * directory){
     if(tag == -1){
         return -1;
     }
-    cwd = cwd|tag;
+    cwd |= tag;
 }
 
 /*
@@ -134,10 +134,10 @@ ls(char * directory){
     if(directory[0] == 0){
         tag = cwd;
     } else {
-        tag = get_numeric_tag(directory);
+        tag = get_numeric_tag(directory)|cwd;
     }
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
-        if(opened_files[i].used == TRUE && opened_files[i].file.tag == tag){
+        if(opened_files[i].used == TRUE && opened_files[i].file.tag&tag == tag){
             putln(opened_files[i].file.name);
     }
 }

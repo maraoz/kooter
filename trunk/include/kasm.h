@@ -34,3 +34,7 @@ void		mouse_reset(void);
 void		wpantalla(word c, int offset);
 
 void		disable_text_cursor(void);
+
+void        Disable();
+
+void        Enable();

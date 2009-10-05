@@ -9,6 +9,8 @@
 #define byte unsigned char
 #define word short int
 #define dword int
+#define boolean byte
+
 
 /* Flags para derechos de acceso de los segmentos */
 #define ACS_PRESENT     0x80            /* segmento presente en memoria */
@@ -117,29 +119,36 @@ typedef struct {
     int gid;
     int priority;
     int f_pointer;
+    int background;
 } process_t;
 
 typedef struct {
-    int pid;
     process_t process;
+    dword ESP;
+    dword SS;
+    dword page;
+} context_t;
+
+typedef struct {
+    dword DS;
+    dword ES;
     dword EDI;
     dword ESI;
     dword EBP;
-    dword SS;
-    dword EBX
+    dword ESP;
+    dword EBX;
     dword EDX;
     dword ECX;
     dword EAX;
-    dword ES;
-    dword DS;
+    dword EIP;
     dword CS;
-    dword IP;
     dword CFLAGS;
-} context_t;
+    void * retaddr;
+    int argc;
+    char ** argv;
+} STACK_FRAME;
 
-
-
-
+typedef int pid_t;
 
 #endif
 

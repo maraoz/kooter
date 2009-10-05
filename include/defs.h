@@ -133,19 +133,9 @@ typedef struct {
 } context_t;
 
 typedef struct {
-    dword DS;
-    dword ES;
-    dword EDI;
-    dword ESI;
-    dword EBP;
-    dword ESP;
-    dword EBX;
-    dword EDX;
-    dword ECX;
-    dword EAX;
-    dword EIP;
-    dword CS;
-    dword EFLAGS;
+//     dword DS;
+//     dword ES;
+    dword EDI, ESI, EBP, ESP, EBX, EDX, ECX, EAX, EIP, CS, EFLAGS;
     void * retaddr;
     int argc;
     char ** argv;

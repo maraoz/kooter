@@ -1,6 +1,6 @@
 
-#ifndef _video_h_
-#define _video_h_
+#ifndef _game_h_
+#define _game_h_
 
 #define K_UP 1
 #define K_RIGHT 2

@@ -16,4 +16,8 @@ void * malloc(int size);
 
 void free(void * mem);
 
+void down_p(PAGE * page);
+
+void up_p(PAGE * page);
+
 #endif

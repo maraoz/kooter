@@ -1,10 +1,14 @@
 #include "../include/allocator.h"
 #include "../include/queue.h"
 #include "../include/defs.h"
+#include "../include/kc.h"
 
 
 queue_t available_pids;
 queue_t * available_pids_q;
+extern process_t current_process; /* proceso actual que esta corriendo */
+extern pid_t focus;
+
 
 /**
  * init_pids
@@ -12,7 +16,7 @@ queue_t * available_pids_q;
  */
 int init_pids(void) {
     available_pids_q = &available_pids;
-    q_init(available_pids_q);
+    queue_init(available_pids_q);
     int i;
     for (i=0; i<MAX_PROCESSES; i++) {
         enqueue(available_pids_q, i);
@@ -57,16 +61,16 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
     new_proc.process.gid = gid;
     new_proc.process.background = background;
 
-    set_status(new_proc.process, SUSPENDED);
+    block(new_proc.process.pid);
 
     /* inicializar stack */
 
-    new_proc.page = new_proc.ESP = palloc(pages_qty);
+    new_proc.page = new_proc.ESP = (dword)palloc(pages_qty);
     new_proc.ESP += pages_qty*(1024*pages_qty)-1;
-    new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_proc);
+    new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
     new_proc.SS = 0x10;
 
-    set_status(new_proc.process, READY);
+    unblock(new_proc.process.pid);
     _Sti();
     return new_proc.process;
 }
@@ -74,7 +78,7 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
 dword
 create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, void(*end_proc)())
 {
-    STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME);
+    STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME));
     frame->EBP=0;
     frame->EIP=(dword)proceso;
     frame->CS=0x08;

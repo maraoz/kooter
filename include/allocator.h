@@ -8,6 +8,8 @@
 
 #define PAGE int
 
+void allocator_init();
+
 PAGE * palloc(int n);
 
 void pfree(PAGE * page);

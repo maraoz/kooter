@@ -21,7 +21,8 @@ context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar par
 
 void int_08(dword ESP, dword SS)
 {
-//     putln("Hola manuuuuuuuuuuu");
+    put_char(current_process.pid+'0');
+    flush();
     bcp[current_process.pid].ESP = ESP;
     bcp[current_process.pid].SS = SS;
 
@@ -38,8 +39,9 @@ void int_08(dword ESP, dword SS)
     ESP = bcp[current_process.pid].ESP;
     SS = bcp[current_process.pid].SS;
 //     wait(3);
+    put_char(current_process.pid+'0');
 //     putln("Chau matiiiiiiiiiiiii");
-//     flush();
+    flush();
 	return;
 }
 

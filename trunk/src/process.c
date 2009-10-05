@@ -67,7 +67,7 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
     /* inicializar stack */
 
     new_proc.page = new_proc.ESP = (dword)palloc(pages_qty);
-    new_proc.ESP += pages_qty*(1024*pages_qty)-1;
+    new_proc.ESP += pages_qty*4096-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
     new_proc.SS = 0x10;
 

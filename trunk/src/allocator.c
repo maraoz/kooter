@@ -7,7 +7,7 @@ extern void * eokl;
 char * mem;
 
 void allocator_init() {
-    char * mem = (char*)eokl + 4096;
+    mem = (char*)eokl + 4096;
 }
 
 void * malloc(int size){

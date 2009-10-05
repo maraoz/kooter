@@ -50,7 +50,7 @@ end_process()
  * Funcion que crea un nuevo proceso
  */
 process_t
-create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv, int gid, int priority, int background)
+create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv, int gid, int priority, int background)
 {
     int i;
     context_t new_proc;
@@ -65,7 +65,6 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
     block(new_proc.process.pid);
 
     /* inicializar stack */
-
     new_proc.page = new_proc.ESP = (dword)palloc(pages_qty);
     new_proc.ESP += pages_qty*4096-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);

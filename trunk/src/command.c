@@ -1,10 +1,11 @@
 
 #include "../include/stdio.h"
 
-int A(int argc, char ** argv) {
+int Asd(int argc, char ** argv) {
+    put_char('g'); flush();
     while(1) {put_char('a'); flush();}
 }
 
-int B(int argc, char ** argv) {
+int Bnm(int argc, char ** argv) {
    while(1) {put_char('b'); flush();}
 }

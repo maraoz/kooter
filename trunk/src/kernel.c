@@ -19,10 +19,8 @@ pid_t focus;
 context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
 
 
-void int_08(dword ESP, dword SS)
+dword int_08(dword ESP, dword SS)
 {
-    put_char(current_process.pid+'0');
-    flush();
     bcp[current_process.pid].ESP = ESP;
     bcp[current_process.pid].SS = SS;
 
@@ -38,11 +36,7 @@ void int_08(dword ESP, dword SS)
 
     ESP = bcp[current_process.pid].ESP;
     SS = bcp[current_process.pid].SS;
-//     wait(3);
-    put_char(current_process.pid+'0');
-//     putln("Chau matiiiiiiiiiiiii");
-    flush();
-	return;
+	return ESP;
 }
 
 /**********************************************
@@ -95,15 +89,15 @@ kmain()
 
 // muestra la splashScreen
 
-        showSplashScreen();
-
-/* espero a que la pueda ver */
-
-        wait(5);
-
-/* Borra la pantalla. */ 
-        k_clear_screen();
-        
+//         showSplashScreen();
+// 
+// /* espero a que la pueda ver */
+// 
+//         wait(5);
+// 
+// /* Borra la pantalla. */ 
+//         k_clear_screen();
+//         
 
    
 	
@@ -115,9 +109,9 @@ kmain()
     init_scheduler();
     
     
-    create_process(A,1,1,(char**)0,1,1,FALSE);
+    create_process(Asd,1,1,(char**)0,1,1,FALSE);
     
-    create_process(B,1,1,(char**)0,1,1,FALSE);
+    create_process(Bnm,1,1,(char**)0,1,1,FALSE);
     _Sti();
     
     while(1);

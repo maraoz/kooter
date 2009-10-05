@@ -6,6 +6,9 @@
 #ifndef _defs_
 #define _defs_
 
+#define TRUE 1
+#define FALSE 0
+
 #define byte unsigned char
 #define word short int
 #define dword int

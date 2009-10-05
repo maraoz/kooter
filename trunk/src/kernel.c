@@ -39,16 +39,6 @@ void int_08(dword ESP, dword SS)
 	return;
 }
 
-extern void * eokl;
-char * mem = (char*)eokl + 4096;
-
-void * malloc(int size){
-    return mem+=size;
-}
-
-void free(void * mem){
-}
-
 /**********************************************
 kmain()
 Punto de entrada de código C.

@@ -6,7 +6,7 @@
 #ifndef _kc_
 #define _kc_
 
-#define MAX_PROCESS_QTY 42
+#define MAX_PROCESSES 42
 
 
 /* Tiempo de espera */

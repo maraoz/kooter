@@ -1,4 +1,5 @@
 #include "../include/allocator.h"
+#include "../include/queue.h"
 #include "../include/defs.h"
 
 

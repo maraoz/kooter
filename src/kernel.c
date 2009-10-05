@@ -5,7 +5,9 @@
 #include "../include/util.h"
 #include "../include/keyboard.h"
 #include "../include/shell.h"
-#include "../include/video.h"	
+#include "../include/video.h"
+#include "../include/command.h"
+#include "../include/allocator.h"     
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
@@ -23,7 +25,7 @@ void int_08(dword ESP, dword SS)
     bcp[current_process.pid].ESP = ESP;
     bcp[current_process.pid].SS = SS;
 
-    down_p(bcp[current_process.pid].page);
+    down_p((PAGE*)bcp[current_process.pid].page);
 
     desalojate(current_process.pid);
     
@@ -31,7 +33,7 @@ void int_08(dword ESP, dword SS)
 
     current_process = bcp[current_process.pid].process;
 
-    up_p(bcp[current_process.pid].page);
+    up_p((PAGE*)bcp[current_process.pid].page);
 
     ESP = bcp[current_process.pid].ESP;
     SS = bcp[current_process.pid].SS;
@@ -84,7 +86,7 @@ kmain()
 	_mascaraPIC2(0xEF);
     /*          1110 1111   */
 	
-	_Sti();
+
 
 
 // muestra la splashScreen
@@ -99,8 +101,15 @@ kmain()
         k_clear_screen();
         
 
+    _Sti();
+	
 
-	shell();
+//     shell();
+
+
+    create_process(A,1,1,(char**)0,1,1,FALSE);
+    create_process(B,1,1,(char**)0,1,1,FALSE);
+
 
 }
 

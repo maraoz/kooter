@@ -145,7 +145,7 @@ typedef struct {
     dword EAX;
     dword EIP;
     dword CS;
-    dword CFLAGS;
+    dword EFLAGS;
     void * retaddr;
     int argc;
     char ** argv;

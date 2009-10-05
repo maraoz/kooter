@@ -18,7 +18,7 @@ boolean is_blocked[MAX_PROCESSES];
 
 int init_scheduler(void) {
     ready_processes_q = &ready_processes;
-    q_init(ready_processes_q);
+    queue_init(ready_processes_q);
 
     int i;
     for (i=0; i<MAX_PROCESSES; i++) {

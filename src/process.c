@@ -8,7 +8,7 @@ queue_t available_pids;
 queue_t * available_pids_q;
 extern process_t current_process; /* proceso actual que esta corriendo */
 extern pid_t focus;
-
+extern context_t bcp[MAX_PROCESSES];
 
 /**
  * init_pids
@@ -56,11 +56,12 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
     context_t new_proc;
 
 
-    _Cli();
+//     _Cli();
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
 
+    desalojate(new_proc.process.pid);
     block(new_proc.process.pid);
 
     /* inicializar stack */
@@ -70,8 +71,9 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, void **argv,
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
     new_proc.SS = 0x10;
 
+    bcp[new_proc.process.pid] = new_proc;
     unblock(new_proc.process.pid);
-    _Sti();
+//     _Sti();
     return new_proc.process;
 }
 

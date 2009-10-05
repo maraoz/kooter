@@ -21,11 +21,11 @@ context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar par
 
 void int_08(dword ESP, dword SS)
 {
-
+//     putln("Hola manuuuuuuuuuuu");
     bcp[current_process.pid].ESP = ESP;
     bcp[current_process.pid].SS = SS;
 
-    down_p((PAGE*)bcp[current_process.pid].page);
+//     down_p((PAGE*)bcp[current_process.pid].page);
 
     desalojate(current_process.pid);
     
@@ -33,11 +33,13 @@ void int_08(dword ESP, dword SS)
 
     current_process = bcp[current_process.pid].process;
 
-    up_p((PAGE*)bcp[current_process.pid].page);
+//     up_p((PAGE*)bcp[current_process.pid].page);
 
     ESP = bcp[current_process.pid].ESP;
     SS = bcp[current_process.pid].SS;
-    
+//     wait(3);
+//     putln("Chau matiiiiiiiiiiiii");
+//     flush();
 	return;
 }
 
@@ -95,21 +97,28 @@ kmain()
 
 /* espero a que la pueda ver */
 
-        wait(10);
+        wait(5);
 
 /* Borra la pantalla. */ 
         k_clear_screen();
         
 
-    _Sti();
+   
 	
 
 //     shell();
 
-
+    init_pids();
+    allocator_init();
+    init_scheduler();
+    
+    
     create_process(A,1,1,(char**)0,1,1,FALSE);
+    
     create_process(B,1,1,(char**)0,1,1,FALSE);
-
+    _Sti();
+    
+    while(1);
 
 }
 

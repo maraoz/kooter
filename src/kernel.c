@@ -13,50 +13,41 @@ IDTR idtr;				/* IDTR */
 int interrupted = 1;
 
 process_t current_process; /* proceso actual que esta corriendo */
+pid_t focus;
 context_t bcp[MAX_CANT_PROCESS]; /* BCP para todos los procesos que van a estar para switchear */
 
-void int_08(dword EDI,dword ESI, dword EBP, dword SS_interrupt, dword EBX, dword EDX, dword ECX, dword EAX, dword ES, dword DS, dword SS, dword ret_value, dword CS, dword IP, dword CFLAGS)
+
+void int_08(dword ESP, dword SS)
 {
-    
-    bcp[current_process.pid].pid = current_process.pid;
-    bcp[current_process.pid].process = current_process;
-    bcp[current_process.pid].EDI = EDI;
-    bcp[current_process.pid].ESI = ESI;
-    bcp[current_process.pid].EBP = EBP;
+
+    bcp[current_process.pid].ESP = ESP;
     bcp[current_process.pid].SS = SS;
-    bcp[current_process.pid].EBX = EBX;
-    bcp[current_process.pid].EDX = EDX;
-    bcp[current_process.pid].ECX = ECX;
-    bcp[current_process.pid].EAX = EAX;
-    bcp[current_process.pid].ES = ES;
-    bcp[current_process.pid].DS = DS;
-    bcp[current_process.pid].CS = CS;
-    bcp[current_process.pid].IP = IP;
-    bcp[current_process.pid].CFLAGS = CFLAGS;
+
+    down_p(bcp[current_process.pid].page);
 
     desalojate(current_process.pid);
     
     current_process.pid = next_process();
 
-    current_process = bcp[current_process].process;
+    current_process = bcp[current_process.pid].process;
 
-    EDI = bcp[current_process.pid].EDI;
-    ESI = bcp[current_process.pid].ESI;
-    EBP = bcp[current_process.pid].EBP;
+    up_p(bcp[current_process.pid].page);
+
+    ESP = bcp[current_process.pid].ESP;
     SS = bcp[current_process.pid].SS;
-    EBX = bcp[current_process.pid].EBX;
-    EDX = bcp[current_process.pid].EDX;
-    ECX = bcp[current_process.pid].ECX;
-    EAX = bcp[current_process.pid].EAX;
-    ES = bcp[current_process.pid].ES;
-    DS = bcp[current_process.pid].DS;
-    CS = bcp[current_process.pid].CS;
-    IP = bcp[current_process.pid].IP;
-    CFLAGS = bcp[current_process.pid].CFLAGS;
     
 	return;
 }
 
+extern void * eokl;
+char * mem = (char*)eokl + 4096;
+
+void * malloc(int size){
+    return mem+=size;
+}
+
+void free(void * mem){
+}
 
 /**********************************************
 kmain()

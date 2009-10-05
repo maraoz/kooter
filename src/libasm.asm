@@ -86,23 +86,32 @@ _lidt:				; Carga el IDTR
 
 ; Version vieja del int 08
 _int_08_hand:               ; Handler de INT 8 ( Timer tick)
-        push    ss
+
         push    ds
         push    es                      ; Se salvan los registros
         pushad                           ; Carga en DS y ES el valor del selector
-        mov     ax, 10h         ; a utilizar.
+                                        ; a utilizar.
+        mov     ax, 10h         
         mov     ds, ax
         mov     es, ax
+        
+        push    ss
+        push    esp
 
         call    int_08
 
-        mov al,20h          ; Envio de EOI generico al PIC
-        out 20h,al
+        pop     esp
+        pop     ss
+
         popad
         pop     es
         pop     ds
-        pop     ss
-        
+
+        push    eax
+        mov     al,20h          ; Envio de EOI generico al PIC
+        out     20h,al
+        pop     eax
+
         iret
 
 

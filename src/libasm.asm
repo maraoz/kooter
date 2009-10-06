@@ -92,7 +92,7 @@ _int_08_hand:               ; Handler de INT 8 ( Timer tick)
         cli
 ;         push    ds
 ;         push    es                      ; Se salvan los registros
-;         pushad                           ; Carga en DS y ES el valor del selector
+        pushad                           ; Carga en DS y ES el valor del selector
                                         ; a utilizar.
         mov     ax, 10h         
         mov     ds, ax
@@ -111,7 +111,7 @@ _int_08_hand:               ; Handler de INT 8 ( Timer tick)
         call    getactualESP
 
         mov     esp,eax
-;         popad
+        popad
 
 
 ;         pop     es

@@ -43,6 +43,8 @@ dword int_08()
 
 dword
 getactualESP(){
+     put_char(current_process+'0');
+     flush();
     return  bcp[current_process].ESP;
 }
 

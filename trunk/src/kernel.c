@@ -20,11 +20,11 @@ pid_t focus;
 context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
 
 
-dword int_08()
+dword int_08(dword ESP)
 {
         pid_t aux;
 //     down_p((PAGE*)bcp[current_process.pid].page);
-
+        bcp[current_process].ESP = ESP;
         if(desalojate(current_process) == -1){
             put_char('g');
             flush();
@@ -33,26 +33,15 @@ dword int_08()
             current_process = aux;
         }
         
-        put_char(current_process+'0');
-        flush();
+//         put_char(current_process+'0');
+//         flush();
 
 //     up_p((PAGE*)bcp[current_process.pid].page);
 
-	return;
+        return  bcp[current_process].ESP;
 }
 
-dword
-getactualESP(){
-     put_char(current_process+'0');
-     flush();
-    return  bcp[current_process].ESP;
-}
 
-void
-setactualESP(dword ESP){
-    bcp[current_process].ESP = ESP;
-    return;
-}
 
 /**********************************************
 kmain()

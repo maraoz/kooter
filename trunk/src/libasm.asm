@@ -99,16 +99,13 @@ _int_08_hand:               ; Handler de INT 8 ( Timer tick)
         mov     es, ax
         
         mov     eax,esp
+        
         push    eax
-        
-        call    setactualESP
-        
+        call    int_08
         pop     eax
 
 ;         call    _debug  
-        call    int_08
-        
-        call    getactualESP
+
 
         mov     esp,eax
         popad

@@ -18,7 +18,7 @@ int init_pids(void) {
     available_pids_q = &available_pids;
     queue_init(available_pids_q);
     int i;
-    for (i=0; i<MAX_PROCESSES; i++) {
+    for (i=1; i<MAX_PROCESSES; i++) {
         enqueue(available_pids_q, i);
     }
     return 0;
@@ -55,13 +55,14 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
     int i;
     context_t new_proc;
 
-
+    put_char('0'+(char)funcion);
+    flush();
 //     _Cli();
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
 
-    desalojate(new_proc.process.pid);
+
 
 
     /* inicializar stack */
@@ -72,6 +73,8 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
 
     bcp[new_proc.process.pid] = new_proc;
 
+
+    desalojate(new_proc.process.pid);
 //     _Sti();
     return new_proc.process;
 }
@@ -82,10 +85,11 @@ create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, vo
 {
     STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME));
     frame->EBP=0;
+    frame->ESP=(dword)&(frame->EIP);
     frame->EIP=(dword)proceso;
     frame->CS=0x08;
 
-    frame->EFLAGS=0;
+    frame->EFLAGS=0x200;
     frame->retaddr=end_proc;
     frame->argc=argc;
     frame->argv=argv;

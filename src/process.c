@@ -62,7 +62,7 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
     new_proc.process.background = background;
 
     desalojate(new_proc.process.pid);
-    block(new_proc.process.pid);
+
 
     /* inicializar stack */
     new_proc.page = new_proc.ESP = (dword)palloc(pages_qty);
@@ -71,7 +71,7 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
     new_proc.SS = 0x10;
 
     bcp[new_proc.process.pid] = new_proc;
-    unblock(new_proc.process.pid);
+
 //     _Sti();
     return new_proc.process;
 }

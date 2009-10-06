@@ -14,29 +14,42 @@ IDTR idtr;				/* IDTR */
 
 int interrupted = 1;
 
-process_t current_process; /* proceso actual que esta corriendo */
+/*process_t current_process;*/ /* proceso actual que esta corriendo */
+pid_t current_process = 1;
 pid_t focus;
 context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
 
 
-dword int_08(dword ESP, dword SS)
+dword int_08()
 {
-    bcp[current_process.pid].ESP = ESP;
-    bcp[current_process.pid].SS = SS;
-
+        pid_t aux;
 //     down_p((PAGE*)bcp[current_process.pid].page);
 
-    desalojate(current_process.pid);
-    
-    current_process.pid = next_process();
-
-    current_process = bcp[current_process.pid].process;
+        if(desalojate(current_process) == -1){
+            put_char('g');
+            flush();
+        }
+        if((aux = next_process())!=-1){
+            current_process = aux;
+        }
+        
+        put_char(current_process+'0');
+        flush();
 
 //     up_p((PAGE*)bcp[current_process.pid].page);
 
-    ESP = bcp[current_process.pid].ESP;
-    SS = bcp[current_process.pid].SS;
-	return ESP;
+	return;
+}
+
+dword
+getactualESP(){
+    return  bcp[current_process].ESP;
+}
+
+void
+setactualESP(dword ESP){
+    bcp[current_process].ESP = ESP;
+    return;
 }
 
 /**********************************************
@@ -95,9 +108,9 @@ kmain()
 // 
 //         wait(5);
 // 
-// /* Borra la pantalla. */ 
-//         k_clear_screen();
-//         
+/* Borra la pantalla. */ 
+        k_clear_screen();
+        
 
    
 	
@@ -111,6 +124,12 @@ kmain()
     
     create_process(Asd,1,1,(char**)0,1,1,FALSE);
     
+    create_process(Bnm,1,1,(char**)0,1,1,FALSE);
+
+    create_process(Bnm,1,1,(char**)0,1,1,FALSE);
+
+    create_process(Bnm,1,1,(char**)0,1,1,FALSE);
+
     create_process(Bnm,1,1,(char**)0,1,1,FALSE);
     _Sti();
     

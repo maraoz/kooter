@@ -12,6 +12,8 @@ GLOBAL 	disable_text_cursor
 
 
 EXTERN  int_08
+EXTERN  getactualESP
+EXTERN  setactualESP
 EXTERN	leoteclado
 EXTERN 	leomouse
 EXTERN	next_char
@@ -84,29 +86,32 @@ _lidt:				; Carga el IDTR
 ;         pop     ds
 ;         iret
 
-; Version vieja del int 08
+
 _int_08_hand:               ; Handler de INT 8 ( Timer tick)
 
         cli
 ;         push    ds
 ;         push    es                      ; Se salvan los registros
-        pushad                           ; Carga en DS y ES el valor del selector
+;         pushad                           ; Carga en DS y ES el valor del selector
                                         ; a utilizar.
         mov     ax, 10h         
         mov     ds, ax
         mov     es, ax
         
-        push    ss
-        push    esp
+        mov     eax,esp
+        push    eax
         
+        call    setactualESP
+        
+        pop     eax
+
 ;         call    _debug  
         call    int_08
         
-              
-        pop     esp
+        call    getactualESP
+
         mov     esp,eax
-        pop     ss
-        popad
+;         popad
 
 
 ;         pop     es

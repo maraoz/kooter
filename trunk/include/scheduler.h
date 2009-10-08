@@ -3,6 +3,8 @@
  * scheduler.h
  */
 
+#include "../include/defs.h"
+
 #ifndef _scheduler_h
 #define _scheduler_h
 
@@ -27,11 +29,17 @@ int block(int pid);
 int unblock(int pid);
 
 /**
- * next_process
- * devuelve el pid del siguiente proceso a ejecutar
- * (segun el algoritmo del scheduler)
+ * scheduler
+ * cambia el proceso actual si es necesario
+ * (segun el algoritmo del scheduler implementado)
  */
-pid_t next_process(void);
+void scheduler(void);
+
+/**
+ * is_blocked
+ * devuelve true si el proceso está bloqueado o false en caso contrario
+ */
+boolean is_blocked(pid_t pid);
 
 /**
  * desalojate

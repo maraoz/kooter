@@ -2,8 +2,10 @@
 #include "../include/queue.h"
 #include "../include/defs.h"
 #include "../include/kc.h"
-// #include "../include/command.h"
+#include "../include/command.h"
 #include "../include/kasm.h"
+#include "../include/process.h"
+
 
 queue_t available_pids;
 queue_t * available_pids_q;
@@ -51,7 +53,7 @@ end_process()
  * Funcion que crea un nuevo proceso
  */
 process_t
-create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv, int gid, int priority, int background)
+create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background)
 {
     int i;
     context_t new_proc;
@@ -80,23 +82,22 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
     return new_proc.process;
 }
 
-int asd(int argc, char ** argv) {
-    while(1) 
-    {put_char('a'); flush();}
+// int asd(int argc, char ** argv) {
+//     put_char('a'); flush();
+//     while(1) 
+//     {put_char('a'); flush();}
+// 
+// }
 
-}
 
-int bnm(int argc, char ** argv) {
-   while(1) {put_char('b'); flush();}
-}
 
 dword
-create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, void(*end_proc)())
+create_new_stack(int(*funcion)(),int argc,char** argv,dword bottom, void(*end_proc)())
 {
     STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME));
     frame->EBP=0;
     frame->ESP=(dword)&(frame->EIP);
-    frame->EIP=(dword)_mifunc;/*(dword)proceso;*/
+    frame->EIP=(dword)funcion;
     frame->CS=0x08;
 
     frame->EFLAGS=0x200;
@@ -106,4 +107,43 @@ create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, vo
     return (dword)frame;
 }
 
+void
+process_creator(){
+    
+    create_process(pepe,1,1,(char**)0,1,1,FALSE);
+
+    create_process(pepe2,1,1,(char**)0,1,1,FALSE);
+
+//     create_process(pepe3,1,1,(char**)0,1,1,FALSE);
+    
+//     create_process(bnm,1,1,(char**)0,1,1,FALSE);
+
+}
+
+int pepe() {
+    while(1){
+    put_char('a'); 
+    }
+
+}
+
+int pepe2() {
+    while(1){
+    put_char('c'); 
+    }
+
+}
+
+int pepe3() {
+    while(1){
+    put_char('d'); 
+   }
+
+}
+
+int bnm() {
+   while(1) 
+    {put_char('b'); 
+    }
+}
 

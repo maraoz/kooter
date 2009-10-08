@@ -5,8 +5,12 @@
 
 #ifndef _command_h
 #define _command_h
-int asd(int argc, char ** argv);
+int pepe();
 
-int bnm(int argc, char ** argv);
+int pepe2();
+
+int pepe3();
+
+int bnm();
 
 #endif

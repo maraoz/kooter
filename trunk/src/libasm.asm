@@ -12,8 +12,9 @@ GLOBAL 	disable_text_cursor
 GLOBAL _mifunc
 
 EXTERN  int_08
-EXTERN  getactualESP
-EXTERN  setactualESP
+EXTERN  SaveESP
+EXTERN  GetTemporaryESP
+EXTERN  LoadESP
 EXTERN	leoteclado
 EXTERN 	leomouse
 EXTERN	next_char
@@ -26,8 +27,8 @@ EXTERN	fetch
 SECTION .text
 
 _mifunc:
-    mov eax,0
-    mov [0B8000h],eax
+    mov eax,'0'
+    mov [0B8002h],eax
     ret
 
 _Cli:
@@ -99,21 +100,24 @@ _int_08_hand:               ; Handler de INT 8 ( Timer tick)
         cli;
         pushad                           ; Carga en DS y ES el valor del selector
                                         ; a utilizar.
-        mov     ax, 10h         
-        mov     ds, ax
-        mov     es, ax
-     
+;         mov     ax, 10h         
+;         mov     ds, ax
+;         mov     es, ax
+   
         mov     eax,esp
 
 ;         call    _debug
         
         push    eax
+        call    SaveESP
+        pop     eax
+        call    GetTemporaryESP
+        mov     esp, eax
+        
         call    int_08
-        pop     ebx
-
+        
+        call    LoadESP
         mov     esp,eax
-
-
 
         popad
         
@@ -122,10 +126,10 @@ _int_08_hand:               ; Handler de INT 8 ( Timer tick)
 ;         pop     es
 ;         pop     ds
 
-;         push    eax
+        push    eax
         mov     al,20h          ; Envio de EOI generico al PIC
         out     20h,al
-;         pop     eax
+        pop     eax
         
 ;         sti
         iret

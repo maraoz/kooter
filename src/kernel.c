@@ -8,6 +8,7 @@
 #include "../include/video.h"
 #include "../include/command.h"
 #include "../include/allocator.h"     
+#include "../include/process.h"     
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
 IDTR idtr;				/* IDTR */
@@ -16,12 +17,32 @@ int interrupted = 1;
 
 /*process_t current_process;*/ /* proceso actual que esta corriendo */
 pid_t current_process = 0;
-pid_t focus;
+pid_t focused_process;
 context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
+int ticks = 0;
+
+
+void
+SaveESP(dword ESP){
+    bcp[current_process].ESP = ESP;
+}
+
+dword
+GetTemporaryESP(){
+    return bcp[0].ESP;
+}
+
+dword
+LoadESP(){
+    dword ESP = bcp[current_process].ESP;
+    return ESP;
+}
+
 
 dword int_08(dword ESP)
 {
-
+//         put_char(current_process+'0');
+//         flush();
 //     down_p((PAGE*)bcp[current_process.pid].page);
         if (!is_blocked(current_process)) {
             if(desalojate(current_process) == -1){
@@ -29,14 +50,11 @@ dword int_08(dword ESP)
                 flush();
             }
         }
-        bcp[current_process].ESP = ESP;
         scheduler();
+        
 
-//         put_char(current_process+'0');
-//         flush();
 
 //     up_p((PAGE*)bcp[current_process.pid].page);
-
         return  bcp[current_process].ESP;
 }
 
@@ -46,7 +64,6 @@ dword int_08(dword ESP)
 kmain()
 Punto de entrada de código C.
 *************************************************/
-
 kmain() 
 {
 
@@ -111,15 +128,13 @@ kmain()
     allocator_init();
     init_scheduler();
     
-
-    create_process(asd,1,1,(char**)0,1,1,FALSE);
-    
-//     create_process(bnm,1,1,(char**)0,1,1,FALSE);
+    process_creator();
 
     _Sti();
     focused_process = current_process;
     while(1){
-        __asm__("int $0x08");
+//         __asm__("int $0x08");   
+//            _mifunc();
     }
 }
 

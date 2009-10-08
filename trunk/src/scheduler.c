@@ -11,12 +11,12 @@
 // cola de procesos en estado READY y su puntero (para manejo)
 queue_t ready_processes;
 queue_t * ready_processes_q;
-
+extern pid_t current_process;
 // vector que almacena si el proceso esta bloqueado o no
-boolean is_blocked_t[MAX_PROCESSES];
+boolean is_blocked_t[MAX_PROCESSES]={0};
 
 void context_switch(void) {
-    __asm__("int $08");
+    __asm__("int $0x08");
 }
 
 int init_scheduler(void) {

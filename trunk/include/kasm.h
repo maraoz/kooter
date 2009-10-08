@@ -38,3 +38,5 @@ void		disable_text_cursor(void);
 void        Disable();
 
 void        Enable();
+
+void        _mifunc();

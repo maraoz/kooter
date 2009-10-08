@@ -1,12 +1,12 @@
 
 #include "../include/stdio.h"
 
-// int Asd(int argc, char ** argv) {
+// int asd(int argc, char ** argv) {
 //     while(1) 
 //     {put_char('a'); flush();}
 // 
 // }
 // 
-// int Bnm(int argc, char ** argv) {
+// int bnm(int argc, char ** argv) {
 //    while(1) {put_char('b'); flush();}
 // }

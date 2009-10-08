@@ -6,7 +6,7 @@
 #include "../include/keyboard.h"
 #include "../include/shell.h"
 #include "../include/video.h"
-// #include "../include/command.h"
+#include "../include/command.h"
 #include "../include/allocator.h"     
 
 DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
@@ -18,20 +18,6 @@ int interrupted = 1;
 pid_t current_process = 0;
 pid_t focus;
 context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
-
-
-int asd(int argc, char ** argv) {
-    while(1) 
-    {put_char('a'); flush();}
-
-}
-
-int bnm(int argc, char ** argv) {
-   while(1) {put_char('b'); flush();}
-}
-
-
-
 
 dword int_08(dword ESP)
 {
@@ -46,8 +32,8 @@ dword int_08(dword ESP)
             current_process = aux;
         }
         
-        put_char(current_process+'0');
-        flush();
+//         put_char(current_process+'0');
+//         flush();
 
 //     up_p((PAGE*)bcp[current_process.pid].page);
 
@@ -128,10 +114,12 @@ kmain()
 
     create_process(asd,1,1,(char**)0,1,1,FALSE);
     
-    create_process(bnm,1,1,(char**)0,1,1,FALSE);
+//     create_process(bnm,1,1,(char**)0,1,1,FALSE);
 
     _Sti();
-    __asm__("int $0x08");
-    while(1);
+    
+    while(1){
+        __asm__("int $0x08");
+    }
 }
 

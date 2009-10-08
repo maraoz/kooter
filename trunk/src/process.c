@@ -2,7 +2,7 @@
 #include "../include/queue.h"
 #include "../include/defs.h"
 #include "../include/kc.h"
-
+// #include "../include/command.h"
 
 queue_t available_pids;
 queue_t * available_pids_q;
@@ -55,8 +55,8 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
     int i;
     context_t new_proc;
 
-    put_char('0'+(char)funcion);
-    flush();
+//     put_char('0'+(char)funcion);
+//     flush();
 //     _Cli();
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
@@ -79,6 +79,15 @@ create_process(int (*funcion)(int,char**), int pages_qty, int argc, char **argv,
     return new_proc.process;
 }
 
+int asd(int argc, char ** argv) {
+    while(1) 
+    {put_char('a'); flush();}
+
+}
+
+int bnm(int argc, char ** argv) {
+   while(1) {put_char('b'); flush();}
+}
 
 dword
 create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, void(*end_proc)())
@@ -86,7 +95,7 @@ create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, vo
     STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME));
     frame->EBP=0;
     frame->ESP=(dword)&(frame->EIP);
-    frame->EIP=(dword)proceso;
+    frame->EIP=(dword)asd;/*(dword)proceso;*/
     frame->CS=0x08;
 
     frame->EFLAGS=0x200;

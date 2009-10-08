@@ -21,6 +21,8 @@ int init_scheduler(void);
  */
 int block(int pid);
 
+#define block_me() block(current_process)
+
 /**
  * unblock
  * despierta al proceso y lo pone en la lista de ready

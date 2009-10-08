@@ -9,7 +9,7 @@ GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
 GLOBAL	wpantalla
 GLOBAL 	disable_text_cursor
-
+GLOBAL _mifunc
 
 EXTERN  int_08
 EXTERN  getactualESP
@@ -25,6 +25,10 @@ EXTERN	fetch
 
 SECTION .text
 
+_mifunc:
+    mov eax,0
+    mov [0B8000h],eax
+    ret
 
 _Cli:
 	cli			; limpia flag de interrupciones
@@ -101,7 +105,7 @@ _int_08_hand:               ; Handler de INT 8 ( Timer tick)
      
         mov     eax,esp
 
-        call    _debug
+;         call    _debug
         
         push    eax
         call    int_08
@@ -456,6 +460,7 @@ vuelve:	mov     ax, 1
         cmp	ax, 0
 	jne	vuelve
 	pop	ax
+;     mov     sp,bp
 	pop     bp
         retn
 

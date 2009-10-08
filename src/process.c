@@ -3,6 +3,7 @@
 #include "../include/defs.h"
 #include "../include/kc.h"
 // #include "../include/command.h"
+#include "../include/kasm.h"
 
 queue_t available_pids;
 queue_t * available_pids_q;
@@ -95,7 +96,7 @@ create_new_stack(int(*proceso)(int,char**),int argc,char** argv,dword bottom, vo
     STACK_FRAME* frame= (STACK_FRAME*)(bottom-sizeof(STACK_FRAME));
     frame->EBP=0;
     frame->ESP=(dword)&(frame->EIP);
-    frame->EIP=(dword)asd;/*(dword)proceso;*/
+    frame->EIP=(dword)_mifunc;/*(dword)proceso;*/
     frame->CS=0x08;
 
     frame->EFLAGS=0x200;

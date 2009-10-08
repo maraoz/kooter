@@ -13,8 +13,11 @@ queue_t ready_processes;
 queue_t * ready_processes_q;
 
 // vector que almacena si el proceso esta bloqueado o no
-boolean is_blocked[MAX_PROCESSES];
+boolean is_blocked_t[MAX_PROCESSES];
 
+void context_switch(void) {
+    __asm__("int $08");
+}
 
 int init_scheduler(void) {
     ready_processes_q = &ready_processes;
@@ -22,30 +25,43 @@ int init_scheduler(void) {
 
     int i;
     for (i=0; i<MAX_PROCESSES; i++) {
-        is_blocked[i] = FALSE;
+        is_blocked_t[i] = FALSE;
     }
 
     return 0;
 }
 
 int block(int pid) {
-    if (is_blocked[pid]) {
+    if (is_blocked_t[pid]) {
         //un proceso bloqueado no puede bloquearse nuevamente
         return -1;
     }
-    is_blocked[pid] = TRUE;
+    is_blocked_t[pid] = TRUE;
+    context_switch();
     return 0;
 }
 
 int unblock(int pid) {
-    is_blocked[pid] = FALSE;
+    if (!is_blocked_t[pid]) {
+        // si no está bloqueado da error intentar desbloquearlo
+        return -1;
+    }
+    is_blocked_t[pid] = FALSE;
     return enqueue(ready_processes_q, pid);
 }
 
-pid_t next_process(void){
-    return dequeue(ready_processes_q);
+void scheduler(void){
+
+    pid_t np = dequeue(ready_processes_q);
+    current_process = np;
+
+    return;
 }
 
+
+boolean is_blocked(pid_t pid) {
+    return is_blocked_t[pid];
+}
 
 int desalojate(int pid) {
     if (enqueue(ready_processes_q, pid) == -1) {

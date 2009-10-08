@@ -117,7 +117,7 @@ kmain()
 //     create_process(bnm,1,1,(char**)0,1,1,FALSE);
 
     _Sti();
-    
+    focused_process = current_process;
     while(1){
         __asm__("int $0x08");
     }

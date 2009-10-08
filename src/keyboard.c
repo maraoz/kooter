@@ -3,6 +3,10 @@
 #include "../include/kasm.h"
 #include "../include/stdio.h"
 #include "../include/keyboard.h"
+#include "../include/scheduler.h"
+
+extern pid_t current_process;
+extern pid_t focused_process;
 
 extern int cursor;
 extern int interrupted;
@@ -10,38 +14,41 @@ extern int tTicks;
 
 tcirc teclator={0,0,0,{0}};
 
-/* 
- * Funci贸n que recibe un scancode k y lo 
+/*
+ * Funci髇 que recibe un scancode k y lo 
  * decodifica en ascii.
  */
 void leoteclado (int k){
-	byte c;
+    byte c;
 
-	tTicks=0;
-	
-	if (!(teclator.qty_used >= TCIRC_SIZE)){
-	/* Si le buffer de teclado no est谩 lleno entonces procedo
-	a decodificar el scancode en ascii */
-		c = ktoa(k);
+    tTicks=0;
 
-	   if(c != 0xFF) {
-	   /* Si no es un car谩cter no soportado por Kooter,
-	   lo agrego al buffer de teclado */
-		if(interrupted==0)
-		/* Si estaba en el salva pantallas, vuelvo 
-		y no dejo el ascii en el buffer de teclado */
-		    interrupted = 1;
-		else if(c != 0x00){
-		    if(teclator.next_write == TCIRC_SIZE)
-		    /* Implementaci贸n del teclado circular */
-			teclator.next_write = 0;
-	
-		    teclator.tcircular[teclator.next_write] = c;
-		    teclator.next_write++;
-		    teclator.qty_used++;
-		}
-	    }
-	}
+    if (!(teclator.qty_used >= TCIRC_SIZE)){
+    /* Si le buffer de teclado no est谩 lleno entonces procedo
+    a decodificar el scancode en ascii */
+        c = ktoa(k);
+
+        if(c != 0xFF) {
+        /* Si es un caracter soportado por Kooter,
+        lo agrego al buffer de teclado */
+            if(interrupted==0)
+            /* Si estaba en el salva pantallas, vuelvo 
+            y no dejo el ascii en el buffer de teclado */
+                interrupted = 1;
+            else if(c != 0x00){
+                if(teclator.next_write == TCIRC_SIZE)
+                /* Implementaci贸n del teclado circular */
+                teclator.next_write = 0;
+
+                teclator.tcircular[teclator.next_write] = c;
+                teclator.next_write++;
+                teclator.qty_used++;
+                // agregado para primitivas bloqueantes (manu)
+                if (is_blocked(focused_process))
+                    unblock(focused_process);
+            }
+        }
+    }
 }
 
 byte ktoa(int c){
@@ -93,18 +100,20 @@ byte ktoa(int c){
  * Si esta vac铆o el buffer, devuelve 0xFF como c贸digo de error.
  */
 byte next_char (){
-	byte a;
-	if(teclator.qty_used > 0) {
-		a=teclator.tcircular[teclator.next_read];
-		teclator.next_read++;
-		teclator.qty_used--;
+    byte a;
+    if(teclator.qty_used > 0) {
+        a=teclator.tcircular[teclator.next_read];
+        teclator.next_read++;
+        teclator.qty_used--;
 
-		if(teclator.next_read >= TCIRC_SIZE)
-			teclator.next_read = 0;
-	}
-	else
-		a = 0xFF;
-	return a;
+        if(teclator.next_read >= TCIRC_SIZE)
+            teclator.next_read = 0;
+    }
+    else {
+        a = 0xFF;
+        block_me();
+    }
+    return a;
 }
 
 /*

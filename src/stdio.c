@@ -120,7 +120,7 @@ static int vb_counter = 0;
 
 void put_char( byte c) {
     check_screen_scroll(0);
-    
+
     /* ENTER */
     if (c == '\n') {
         check_offset('1',vb_counter);
@@ -187,10 +187,11 @@ int n_read = K_BUFFER_LENGTH;
 
 byte get_char() {
     if ( kb_counter == n_read ) {
-        do {
-	    n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
+        // si no quedan caracteres sin leer del buffer
+        n_read = 0;
+        while (n_read == 0) {
+            n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
         }
-        while (n_read == 0);
 
         kb_counter = 0;
     }

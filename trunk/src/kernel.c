@@ -44,12 +44,7 @@ dword int_08(dword ESP)
 //         put_char(current_process+'0');
 //         flush();
 //     down_p((PAGE*)bcp[current_process.pid].page);
-        if (!is_blocked(current_process)) {
-            if(desalojate(current_process) == -1){
-                put_char('g');
-                flush();
-            }
-        }
+
         scheduler();
         
 

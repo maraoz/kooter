@@ -134,7 +134,6 @@ kmain()
     focused_process = current_process;
     while(1){
 //         __asm__("int $0x08");   
-//            _mifunc();
     }
 }
 

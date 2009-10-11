@@ -9,7 +9,6 @@ GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
 GLOBAL	wpantalla
 GLOBAL 	disable_text_cursor
-GLOBAL _mifunc
 
 EXTERN  int_08
 EXTERN  SaveESP
@@ -26,10 +25,6 @@ EXTERN	fetch
 
 SECTION .text
 
-_mifunc:
-    mov eax,'0'
-    mov [0B8002h],eax
-    ret
 
 _Cli:
 	cli			; limpia flag de interrupciones

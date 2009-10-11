@@ -112,38 +112,59 @@ process_creator(){
     
     create_process(pepe,1,1,(char**)0,1,1,FALSE);
 
-    create_process(pepe2,1,1,(char**)0,1,1,FALSE);
+    create_process(pepe,1,1,(char**)0,1,1,FALSE);
 
-//     create_process(pepe3,1,1,(char**)0,1,1,FALSE);
+    create_process(pepe,1,1,(char**)0,1,1,FALSE);
     
-//     create_process(bnm,1,1,(char**)0,1,1,FALSE);
+    create_process(pepe,1,1,(char**)0,1,1,FALSE);
 
 }
 
 int pepe() {
-    while(1){
-    put_char('a'); 
-    }
-
+//     int a=0;
+//     while(1){
+//         a++;
+//         if(a%500000){
+//             put_char('a'); 
+//             a=a%500000;
+//         }
+//     }
+    int a=0;
+    put_char('a');
+    flush();
+    while(1);
 }
 
 int pepe2() {
+    int a=0;
     while(1){
-    put_char('c'); 
+        a++;
+        if(a%50000){
+            put_char('b'); 
+            a=a%50000;
+        }
     }
-
 }
 
 int pepe3() {
+    int a=0;
     while(1){
-    put_char('d'); 
-   }
-
+        a++;
+        if(a%50000){
+            put_char('c'); 
+            a=a%50000;
+        }
+    }
 }
 
 int bnm() {
-   while(1) 
-    {put_char('b'); 
+    int a=0;
+    while(1){
+        a++;
+        if(a%50000){
+            put_char('d'); 
+            a=a%50000;
+        }
     }
 }
 

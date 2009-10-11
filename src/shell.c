@@ -11,8 +11,10 @@
 extern int interrupted;
 /* variable con la cantidad de timerTicks que llegaron desde el ultimo reinicio */
 extern int tTicks;
-/* variable que contiene el valor del cursor del teclado en pantalla */
-extern int cursor;
+
+
+extern TTY tty[8];
+extern int currentTTY;
 
 /*
 ** matriz de dos filas, en las que se van a guardar:
@@ -46,7 +48,7 @@ int ret=AUX;
 */
 
 char * screenSaverImg[25] = {
-"      x                                                                         ",
+"       x                                                                        ",
 "                                                                          x     ",
 "                                                    x                           ",
 "                                                                                ",
@@ -241,9 +243,9 @@ llamaFunc(char s[2][LONG_STR_TKN])
 	{
 		if(s[1][0]==0)
 		{
-			cursor=0;
+			tty[currentTTY].cursor=0;
 			showSplashScreen();
-			cursor=2000-80;
+			tty[currentTTY].cursor=2000-80;
 			return DSPIMG_CD;
 		}
 		else
@@ -372,7 +374,7 @@ shell()
 
 	tTicks=0;
 	flush();
-	cursor = 0;
+	tty[currentTTY].cursor = 0;
 
 	while(1)
 	{
@@ -462,7 +464,7 @@ void check_screen_saver()
 	{
 		hideMouseCursor();
 		read(PANTALLA_FD, bufferScr, 4000);
-		cursorBkp = cursor;
+		cursorBkp = tty[currentTTY].cursor;
 		k_clear_screen();
 		firstTime = 0;
 		interrupted=0;
@@ -479,10 +481,10 @@ void check_screen_saver()
 	if (interrupted == 1 && firstTime == 0)
 	{
                 borra_buffer();
-                cursor = 0;
+                tty[currentTTY].cursor = 0;
 	        check_offset('p',4000);
 	        write(PANTALLA_FD, bufferScr, 4000);
-        	cursor = cursorBkp;
+        	tty[currentTTY].cursor = cursorBkp;
         	tTicks = 0;
         	firstTime = 1;
 	}

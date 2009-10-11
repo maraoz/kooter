@@ -53,7 +53,7 @@ end_process()
  * Funcion que crea un nuevo proceso
  */
 process_t
-create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background)
+create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
 {
     int i;
     context_t new_proc;
@@ -64,8 +64,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
-
-
+     new_proc.tty = tty;
 
 
     /* inicializar stack */
@@ -73,7 +72,8 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     new_proc.ESP += pages_qty*4096-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
     new_proc.SS = 0x10;
-
+   
+    
     bcp[new_proc.process.pid] = new_proc;
 
 
@@ -81,15 +81,6 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
 //     _Sti();
     return new_proc.process;
 }
-
-// int asd(int argc, char ** argv) {
-//     put_char('a'); flush();
-//     while(1) 
-//     {put_char('a'); flush();}
-// 
-// }
-
-
 
 dword
 create_new_stack(int(*funcion)(),int argc,char** argv,dword bottom, void(*end_proc)())
@@ -110,13 +101,13 @@ create_new_stack(int(*funcion)(),int argc,char** argv,dword bottom, void(*end_pr
 void
 process_creator(){
     
-    create_process(pepe,1,1,(char**)0,1,1,FALSE);
+    create_process(pepe,1,1,(char**)0,1,1,FALSE,0);
 
-    create_process(pepe2,1,1,(char**)0,1,1,FALSE);
+    create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
 // 
-//     create_process(pepe2,1,1,(char**)0,1,1,FALSE);
+//     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
 //     
-//     create_process(pepe2,1,1,(char**)0,1,1,FALSE);
+//     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
 
 }
 

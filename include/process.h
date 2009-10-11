@@ -5,5 +5,5 @@ void process_creator();
 
 int init_pids(void);
 
-process_t create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background);
+process_t create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background, int tty);
 #endif

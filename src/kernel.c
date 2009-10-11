@@ -53,7 +53,7 @@ dword int_08(dword ESP)
 //     down_p((PAGE*)bcp[current_process.pid].page);
 
         scheduler();
-        
+        currentTTY=bcp[current_process].tty;
 
 
 //     up_p((PAGE*)bcp[current_process.pid].page);

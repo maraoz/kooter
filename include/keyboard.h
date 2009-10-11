@@ -9,4 +9,6 @@ byte next_char ();
 
 void writeToKeyboard(byte c);
 
+int isNotFs(int c);
+
 #endif

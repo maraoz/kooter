@@ -14,7 +14,6 @@ int cursor = 0;
 * 
 ****************************************************************/
 void str_ncpy(byte * dest, byte * src, size_t size) {
-    
     int i;
     for (i=0; i<size && src[i]; i++)  {
         dest[i] = src[i];
@@ -26,8 +25,8 @@ void str_ncpy(byte * dest, byte * src, size_t size) {
 /***************************************************************
 * page_roll
 *
-* scrollea la pantalla hacia arriba para dar lugar a más caracteres.
-* deja el cursor en la posición correspondiente para seguir escribiendo
+* scrollea la pantalla hacia arriba para dar lugar a mï¿½s caracteres.
+* deja el cursor en la posiciï¿½n correspondiente para seguir escribiendo
 * sin notar el cambio.
 * 
 ****************************************************************/

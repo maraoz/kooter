@@ -146,7 +146,7 @@ typedef struct {
 #pragma pack (1)
 typedef struct
 {
-    char view[4000];
+    char view[4160];
     int cursor;
     queue_t * kb_buffer;
 } TTY;

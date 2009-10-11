@@ -8,6 +8,7 @@
 
 TTY tty[8];
 int currentTTY = 0;
+int focusedTTY = 0;
 
 queue_t tty_kb_queues[8];
 
@@ -50,7 +51,7 @@ void str_ncpy(byte * dest, byte * src, size_t size) {
 * sin notar el cambio.
 * 
 ****************************************************************/
-byte screen_buffer[4160] = {};
+// byte screen_buffer[4160] = {};
 byte blank_screen_buffer[4000] = {' ', DEFAULT_TXT, ' ', DEFAULT_TXT, ' ', DEFAULT_TXT};
 
 void page_roll(int backwards) {
@@ -59,7 +60,7 @@ void page_roll(int backwards) {
     tty[currentTTY].cursor = 0;
 
     check_offset('0',4000);
-    write(PANTALLA_FD, screen_buffer+160,4000);
+    write(PANTALLA_FD, tty[currentTTY].view+160,4000);
     tty[currentTTY].cursor -= 80;
     tty[currentTTY].cursor -= backwards;
 
@@ -268,8 +269,9 @@ size_t write(int fd, const void* buffer, size_t count) {
 		offset = i + tty[currentTTY].cursor*2;
 		data = *((byte *)buffer+i);
 
-		_int_80_caller(WRITE, fd, offset, data);
-		screen_buffer[offset] = data;
+		if (currentTTY == focusedTTY)
+            _int_80_caller(WRITE, fd, offset, data);
+		tty[currentTTY].view[offset] = data;
 
 	}
 	tty[currentTTY].cursor+=count/2;

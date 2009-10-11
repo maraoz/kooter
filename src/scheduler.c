@@ -46,7 +46,7 @@ int block(int pid) {
 
 int unblock(int pid) {
     if (!is_blocked_t[pid]) {
-        // si no está bloqueado da error intentar desbloquearlo
+        // si no estï¿½ bloqueado da error intentar desbloquearlo
         return -1;
     }
     is_blocked_t[pid] = FALSE;
@@ -55,6 +55,9 @@ int unblock(int pid) {
 
 void scheduler(void){
 
+    if (!is_blocked(current_process)) {
+        desalojate(current_process);
+    }
     pid_t np = dequeue(ready_processes_q);
     current_process = np;
 

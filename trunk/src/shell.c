@@ -15,7 +15,7 @@ extern int tTicks;
 
 extern TTY tty[8];
 extern int currentTTY;
-
+extern int focusedTTY; 
 /*
 ** matriz de dos filas, en las que se van a guardar:
 ** en la primera el comando ingresado
@@ -85,6 +85,12 @@ print_nline()
 {
 	puts("kooter > ");
 	flush();
+}
+
+int
+switch_tty(int new_tty){
+    focusedTTY=new_tty;
+    update_screen(); /*cambia lo que se esta viendo */
 }
 
 /* str_cmp retorna 1 si los strings eran iguales y 0 en caso contrario */
@@ -386,22 +392,27 @@ shell()
 		i=0;
 		while((c=get_char())!='\n')
 		{
-			if(c<0x05)
-				;
-			else if(c!='\x08')
-			{
-				if(i<LONG_STR_CMD)
-					in[i]=c;
-				i++;
-				put_char(c);
-				flush();
-			}
-			else if(i>0)
-			{
-				i--;
-				put_char(c);
-				flush();
-			}
+            if(!isNotFs(c)){
+                flush();
+                switch_tty(c&0x0F); /*le paso como parametro la terminal a la que quiero switchear */
+            } else {
+                if(c<0x05)
+                    ;
+                else if(c!='\x08')
+                {
+                    if(i<LONG_STR_CMD)
+                        in[i]=c;
+                    i++;
+                    put_char(c);
+                    flush();
+                }
+                else if(i>0)
+                {
+                    i--;
+                    put_char(c);
+                    flush();
+                }
+            }
 		}
 		put_char('\n');
 		if(i>=LONG_STR_CMD)

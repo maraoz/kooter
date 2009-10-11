@@ -7,7 +7,8 @@
 
 
 
-extern int cursor;
+extern TTY tty[8];
+extern int currentTTY;
 
 
 /*
@@ -143,7 +144,7 @@ int game() {
 
         if (flag) {
             k_clear_screen();
-            cursor = 1000;
+            tty[currentTTY].cursor = 1000;
             puts("FELICITACIONES, GANASTE!!!");
             flush();
             wait(10);
@@ -186,10 +187,10 @@ void updateView() {
 
 void showView(void) {
 
-    cursor = 0;
+    tty[currentTTY].cursor = 0;
     check_offset('m', 4000);
     write(PANTALLA_FD, view, 4000);
-    cursor = 0;
+    tty[currentTTY].cursor = 0;
 }
 
 

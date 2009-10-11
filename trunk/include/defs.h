@@ -3,6 +3,8 @@
 	
 ****************************************************/
 
+#include "../include/queue.h"
+
 #ifndef _defs_
 #define _defs_
 
@@ -142,6 +144,14 @@ typedef struct {
 } STACK_FRAME;
 
 #pragma pack (1)
+typedef struct
+{
+    char view[4000];
+    int cursor;
+    queue_t * kb_buffer;
+} TTY;
+
+
 typedef int pid_t;
 
 #endif

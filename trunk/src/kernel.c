@@ -10,14 +10,21 @@
 #include "../include/allocator.h"     
 #include "../include/process.h"     
 
-DESCR_INT idt[0x81];			/* IDT de 129 entradas*/
-IDTR idtr;				/* IDTR */
+DESCR_INT idt[0x81];            /* IDT de 129 entradas*/
+IDTR idtr;                      /* IDTR */
 
 int interrupted = 1;
 
-/*process_t current_process;*/ /* proceso actual que esta corriendo */
+/* proceso actual que esta corriendo */
 pid_t current_process = 0;
+/* proceso que tiene el foco del usuario y del I/O*/
 pid_t focused_process;
+
+/* la terminal actual que muestra Kooter */
+extern int currentTTY;
+
+extern TTY tty[8]; // vector con las 8 terminales
+
 context_t bcp[MAX_PROCESSES]; /* BCP para todos los procesos que van a estar para switchear */
 int ticks = 0;
 
@@ -63,72 +70,55 @@ kmain()
 {
 
 /* Habilito el mouse */
-	enable_mouse();
+    enable_mouse();
 
 /* Deshabilito el cursor de texto */
-	disable_text_cursor();
-	
+    disable_text_cursor();
+    
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
-	setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
-	
+    setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
+    
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA INT80h   */
-	setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
-	
+    setup_IDT_entry (&idt[0x80], 0x08, (dword)&_int_80_hand, ACS_INT, 0);
+    
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ1   */
-	setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
-	
+    setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
+    
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ12   */
-	setup_IDT_entry (&idt[0x74], 0x08, (dword)&_int_74_hand, ACS_INT, 0);
+    setup_IDT_entry (&idt[0x74], 0x08, (dword)&_int_74_hand, ACS_INT, 0);
 
 
 /* Carga de IDTR    */
-	idtr.base = 0;  
-	idtr.base +=(dword) &idt;
-	idtr.limit = sizeof(idt)-1;
-	
-	_lidt (&idtr);	
+    idtr.base = 0;  
+    idtr.base +=(dword) &idt;
+    idtr.limit = sizeof(idt)-1;
+    
+    _lidt (&idtr);    
 
-	_Cli();
+    _Cli();
 
 // seteo las interrupciones en 1
-	interrupted=1;
-        tTicks = 0;
-/* Habilito interrupcion de timer tick y del teclado y del mouse*/
-	_mascaraPIC1(0xF8);
-    /*          1111 1000   */
-	_mascaraPIC2(0xEF);
-    /*          1110 1111   */
-	
+    interrupted=1;
+    tTicks = 0;
+/* Habilito interrupcion de timer tick y del teclado y del mouse en el PIC*/
+    _mascaraPIC1(0xF8);
+    _mascaraPIC2(0xEF);
 
-
-
-// muestra la splashScreen
-
-//         showSplashScreen();
-// 
-// /* espero a que la pueda ver */
-// 
-//         wait(5);
-// 
-/* Borra la pantalla. */ 
-        k_clear_screen();
-        
-
-   
-	
-
-//     shell();
+    k_clear_screen();
 
     init_pids();
     allocator_init();
     init_scheduler();
-    
+
+
+    init_ttys();
+
     process_creator();
 
     _Sti();
     focused_process = current_process;
     while(1){
-//         __asm__("int $0x08");   
+
     }
 }
 

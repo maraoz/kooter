@@ -1,8 +1,10 @@
 
+#include "../include/defs.h"
 #include "../include/stdio.h"
 
 
-extern int cursor;
+extern TTY tty[8];
+extern int currentTTY;
 
 /* En este archivo se encuentran funciones varias que sirven de utilitarios */
 
@@ -60,7 +62,7 @@ char * err_str = "                  ERROR FATAL!!! CODIGO:                      
 
 void check_offset(char label, int count) {
     
-    if (cursor*2 +count-1 >= 4000) {
+    if (tty[currentTTY].cursor * 2 + count - 1 >= 4000) {
                 while (1) {
                     int H;
                     char * p = (char * ) 0xB8000;
@@ -72,7 +74,7 @@ void check_offset(char label, int count) {
                         else if (H>=240 && H <320)
                             *(p+H*2)=label;
                         else if (H>=320 && H <324)
-                            *(p+H*2)= digit(H-320, cursor)+'0';
+                            *(p+H*2)= digit(H-320, tty[currentTTY].cursor)+'0';
                         else if (H>=330 && H <334)
                             *(p+H*2)= digit(H-330, count)+'0';
                         else

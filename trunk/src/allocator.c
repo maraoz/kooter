@@ -1,13 +1,117 @@
-#include "../include/kasm.h"
-#include "../include/defs.h"
 #include "../include/kc.h"
-#include "../include/allocator.h"
 
-extern void * eokl;
-char * mem;
+/*
+** esta funcion carga en las tablas de pagina los valores
+** de memoria en los que se encuentran las paginas.
+*/
+void
+allocator_init(void) {
+    PAGE * index;
+    PAGE page;
+    int i;
 
-void allocator_init() {
-    mem = (char*)eokl + 4096;
+    /*
+    ** cargo las paginas del kernel entre 0MB y 4MB
+    */
+    index = dirTableSO;
+    page = 0x0; /* Cargo para que el index0 de la tabla apunte a 0MB */
+    for(i = 0; i < 1024 ; i++ index++ page += PAGE_SIZE) {
+	* index = page; /* cargo la tabla de paginas del SO con las paginas */
+	* index = (* index) | 0x01; /* pongo las paginas como P = 1*/
+    }
+
+    /*
+    ** cargo las paginas de los procesos entre 6MB y 10MB
+    */
+    index = dirTableAPP; /* Cargo la direccion de la primer tabla de procesos */
+    page = 0x00C00000 /* Cargo para que el primer indice de la tabla apunte a 6MB */
+    for(i = 0; i < 1024; i++, index++, page += PAGE_SIZE) {
+	    * index = page; /* referencio cada index de la tabla de paginas del proceso a una pagina */
+    }
+}
+
+/*
+** devuelve un puntero a una pagina que este libre.
+** con el parametro se pide la cantidad de paginas contiguas que se reservan.
+** si no las hay retorna NULL.
+*/
+
+int
+hayContiguos(PAGE* dir, int cant) {
+    while(cant--) {
+        if(p_isLibre(dir))
+            return 0;
+    }
+    return 1;
+}
+
+PAGE *
+palloc(int cant) {
+    PAGE * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+    int i;
+
+    for(i = 0; i < 1024 - cant; i++, index += cant) {
+        if(hayContiguos(index,cant)) {
+            while(cant--) {
+                * index = (*index) | 0x01; /* pongo P en 1 */
+                * index = (*index) | 0x00000000; /* pongo el bit de usado en 1*/
+            }
+            return *index; /* retorno un puntero a una pagina */
+        }
+    }
+    return NULL;
+}
+
+/*
+** recibe un puntero a una pagina y la libera.
+** tambien recibe la cantidad de paginas que se habian pedido para hacer alloc
+*/
+void
+pfree(PAGE * page, int cant) {
+    int * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+    int i = 0;
+
+    while(i < 1024) {
+	if( (*index) == page ) { /* busco el index */
+            while(cant--) {
+                *index = (*index) & 0xFFFFFFFE; /* pongo su P en 0 */
+                *index = (*index) 
+                index++; /* paso al siguiente indice de la tabla */
+            }
+            return;
+        }
+    }
+}
+
+
+/*
+** recibe un puntero a una pagina y le pone en 1 su bit P.
+*/
+void
+up_p(PAGE * page) {
+    PAGE * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+
+    while(i < 1024) {
+	if( (*index) == page ) { /* busco el index */
+                *index = (*index) | 0x01; /* pongo su P en 1 */
+            }
+            return;
+    }
+}
+
+/*
+** recibe un puntero a una pagina y le pone en 0 su bit P.
+*/
+void
+up_p(PAGE * page) {
+    PAGE * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+
+    while(i < 1024) {
+	if( (*index) == page ) { /* busco el index */
+                *index = (*index) & 0xFFFFFFFE; /* pongo su P en 0 */
+            }
+            return;
+    }
 }
 
 void * malloc(int size){
@@ -17,14 +121,4 @@ void * malloc(int size){
 void free(void * mem){
 }
 
-PAGE * palloc(int size){
-    return malloc(4096*size);
-}
 
-void down_p(PAGE * page){
-    return;
-}
-
-void up_p(PAGE * page){
-    return;
-}

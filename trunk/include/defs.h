@@ -65,6 +65,17 @@
 #define MARIO_CD 9
 #define CODE_CD 10
 
+
+/* defines para las funciones de allocator */
+#define dirTableSO 00802000h
+        /* 4MB+4KB*/
+#define dirTableAPP 00804000h
+        /* 4MB+8KB */
+#define PAGE_SIZE 4192
+        /* 4KB */
+#define p_isLibre(p) ( ((p) & 512) != 0 )
+        /* con el bit 9 marco si la pagina esta usada (1) o no (0) */
+
 /* Descriptor de segmento */
 typedef struct {
   word limit,

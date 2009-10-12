@@ -50,13 +50,12 @@ dword int_08(dword ESP)
 {
 //         put_char(current_process+'0');
 //         flush();
-//     down_p((PAGE*)bcp[current_process.pid].page);
+//     down_p(bcp[current_process].page);
 
         scheduler();
         currentTTY=bcp[current_process].tty;
 
-
-//     up_p((PAGE*)bcp[current_process.pid].page);
+//     up_p(bcp[current_process].page);
         return  bcp[current_process].ESP;
 }
 
@@ -107,7 +106,6 @@ kmain()
     k_clear_screen();
 
     init_pids();
-    allocator_init();
     init_scheduler();
 
 

@@ -48,16 +48,16 @@ hayContiguos(PAGE* dir, int cant) {
 
 PAGE *
 palloc(int cant) {
-    PAGE * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
     int i;
 
     for(i = 0; i < 1024 - cant; i++, index += cant) {
-        if(hayContiguos(index,cant)) {
+        if(hayContiguos(*index,cant)) {
             while(cant--) {
-                * index = (*index) | 0x01; /* pongo P en 1 */
-                * index = (*index) | 0x00000400; /* pongo el bit de usado en 1*/
+                * index = (PAGE*)((int)(*index) | 0x01); /* pongo P en 1 */
+                * index = (PAGE*)((int)(*index) | 0x00000400); /* pongo el bit de usado en 1*/
             }
-            return index; /* retorno un puntero a una pagina */
+            return *index; /* retorno un puntero a una pagina */
         }
     }
     return (PAGE*)0;
@@ -69,14 +69,14 @@ palloc(int cant) {
 */
 void
 pfree(PAGE * page, int cant) {
-    int * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
     int i = 0;
 
     while(i < 1024) {
-	if( index == page ) { /* busco el index */
+	if( *index == page ) { /* busco el index */
             while(cant--) {
-                *index = (*index) & 0xFFFFFFFE; /* pongo su P en 0 */
-                *index = (*index) & 0xFFFFFDFF; /* pongo el bit de usado en 0 */
+                *index = (PAGE*)((int)(*index) & 0xFFFFFFFE); /* pongo su P en 0 */
+                *index = (PAGE*)((int)(*index) & 0xFFFFFDFF); /* pongo el bit de usado en 0 */
                 index++; /* paso al siguiente indice de la tabla */
             }
             return;
@@ -90,12 +90,12 @@ pfree(PAGE * page, int cant) {
 */
 void
 up_p(PAGE * page) {
-    PAGE * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
     int i = 0;
 
     while(i < 1024) {
-	if( index == page ) { /* busco el index */
-                *index = (*index) | 0x01; /* pongo su P en 1 */
+	if( *index == page ) { /* busco el index */
+                *index = (PAGE*)((int)(*index) | 0x01); /* pongo su P en 1 */
             }
             return;
     }
@@ -106,12 +106,12 @@ up_p(PAGE * page) {
 */
 void
 down_p(PAGE * page) {
-    PAGE * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
     int i = 0;
 
     while(i < 1024) {
-	if( index == page ) { /* busco el index */
-                *index = (*index) & 0xFFFFFFFE; /* pongo su P en 0 */
+	if( *index == page ) { /* busco el index */
+                *index = (PAGE*)((int)(*index) & 0xFFFFFFFE); /* pongo su P en 0 */
             }
             return;
     }

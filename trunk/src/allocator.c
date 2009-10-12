@@ -38,22 +38,24 @@ allocator_init(void) {
 */
 
 int
-hayContiguos(PAGE* dir, int cant) {
-    while(cant--) {
-        if(p_isLibre((int)dir))
-            return 0;
+hayContiguos(PAGE** dir, int cant, int desde) {
+    int i;
+
+    for(i = 0; i < cant; i++) {
+        if(p_isLibre((int)*dir + desde + i))
+            return -1;
     }
-    return 1;
+    return desde;
 }
 
 PAGE *
 palloc(int cant) {
     PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
-    int i;
+    int i, j;
 
-    for(i = 0; i < 1024 - cant; i++, index += cant) {
-        if(hayContiguos(*index,cant)) {
-            while(cant--) {
+    for(i = 0; i < 1024 - cant; i++, index++) {
+        if(hayContiguos(index,cant,i)) {
+            for(j = 0; j < cant; j++, index++) {
                 * index = (PAGE*)((int)(*index) | 0x01); /* pongo P en 1 */
                 * index = (PAGE*)((int)(*index) | 0x00000400); /* pongo el bit de usado en 1*/
             }

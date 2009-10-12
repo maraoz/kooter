@@ -1,4 +1,5 @@
 #include "../include/kc.h"
+#include "../include/defs.h"
 
 /*
 ** esta funcion carga en las tablas de pagina los valores
@@ -13,9 +14,9 @@ allocator_init(void) {
     /*
     ** cargo las paginas del kernel entre 0MB y 4MB
     */
-    index = dirTableSO;
+    index = (PAGE*)dirTableSO;
     page = 0x0; /* Cargo para que el index0 de la tabla apunte a 0MB */
-    for(i = 0; i < 1024 ; i++ index++ page += PAGE_SIZE) {
+    for(i = 0; i < 1024 ; i++, index++, page += PAGE_SIZE) {
 	* index = page; /* cargo la tabla de paginas del SO con las paginas */
 	* index = (* index) | 0x01; /* pongo las paginas como P = 1*/
     }
@@ -23,8 +24,8 @@ allocator_init(void) {
     /*
     ** cargo las paginas de los procesos entre 6MB y 10MB
     */
-    index = dirTableAPP; /* Cargo la direccion de la primer tabla de procesos */
-    page = 0x00C00000 /* Cargo para que el primer indice de la tabla apunte a 6MB */
+    index = (PAGE*)dirTableAPP; /* Cargo la direccion de la primer tabla de procesos */
+    page = 0x00C00000; /* Cargo para que el primer indice de la tabla apunte a 6MB */
     for(i = 0; i < 1024; i++, index++, page += PAGE_SIZE) {
 	    * index = page; /* referencio cada index de la tabla de paginas del proceso a una pagina */
     }
@@ -39,7 +40,7 @@ allocator_init(void) {
 int
 hayContiguos(PAGE* dir, int cant) {
     while(cant--) {
-        if(p_isLibre(dir))
+        if(p_isLibre((int)dir))
             return 0;
     }
     return 1;
@@ -47,19 +48,19 @@ hayContiguos(PAGE* dir, int cant) {
 
 PAGE *
 palloc(int cant) {
-    PAGE * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+    PAGE * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
     int i;
 
     for(i = 0; i < 1024 - cant; i++, index += cant) {
         if(hayContiguos(index,cant)) {
             while(cant--) {
                 * index = (*index) | 0x01; /* pongo P en 1 */
-                * index = (*index) | 0x00000000; /* pongo el bit de usado en 1*/
+                * index = (*index) | 0x00000400; /* pongo el bit de usado en 1*/
             }
-            return *index; /* retorno un puntero a una pagina */
+            return index; /* retorno un puntero a una pagina */
         }
     }
-    return NULL;
+    return (PAGE*)0;
 }
 
 /*
@@ -68,14 +69,14 @@ palloc(int cant) {
 */
 void
 pfree(PAGE * page, int cant) {
-    int * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+    int * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
     int i = 0;
 
     while(i < 1024) {
-	if( (*index) == page ) { /* busco el index */
+	if( index == page ) { /* busco el index */
             while(cant--) {
                 *index = (*index) & 0xFFFFFFFE; /* pongo su P en 0 */
-                *index = (*index) 
+                *index = (*index) & 0xFFFFFDFF; /* pongo el bit de usado en 0 */
                 index++; /* paso al siguiente indice de la tabla */
             }
             return;
@@ -89,10 +90,11 @@ pfree(PAGE * page, int cant) {
 */
 void
 up_p(PAGE * page) {
-    PAGE * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+    PAGE * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    int i = 0;
 
     while(i < 1024) {
-	if( (*index) == page ) { /* busco el index */
+	if( index == page ) { /* busco el index */
                 *index = (*index) | 0x01; /* pongo su P en 1 */
             }
             return;
@@ -103,16 +105,20 @@ up_p(PAGE * page) {
 ** recibe un puntero a una pagina y le pone en 0 su bit P.
 */
 void
-up_p(PAGE * page) {
-    PAGE * index = dirTableAPP; /* voy a recorrer la tabla de procesos */
+down_p(PAGE * page) {
+    PAGE * index = (PAGE*)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    int i = 0;
 
     while(i < 1024) {
-	if( (*index) == page ) { /* busco el index */
+	if( index == page ) { /* busco el index */
                 *index = (*index) & 0xFFFFFFFE; /* pongo su P en 0 */
             }
             return;
     }
 }
+
+extern void * eokl;
+char * mem;
 
 void * malloc(int size){
     return mem+=size;

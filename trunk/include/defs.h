@@ -67,14 +67,16 @@
 
 
 /* defines para las funciones de allocator */
-#define dirTableSO 00802000h
+#define dirTableSO 0x00802000
         /* 4MB+4KB*/
-#define dirTableAPP 00804000h
+#define dirTableAPP 0x00804000
         /* 4MB+8KB */
 #define PAGE_SIZE 4192
         /* 4KB */
 #define p_isLibre(p) ( ((p) & 512) != 0 )
         /* con el bit 9 marco si la pagina esta usada (1) o no (0) */
+
+typedef int PAGE;
 
 /* Descriptor de segmento */
 typedef struct {

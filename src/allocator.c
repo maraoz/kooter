@@ -1,6 +1,6 @@
 #include "../include/kc.h"
 #include "../include/defs.h"
-
+#include "../include/allocator.h"
 /*
 ** esta funcion carga en las tablas de pagina los valores
 ** de memoria en los que se encuentran las paginas.

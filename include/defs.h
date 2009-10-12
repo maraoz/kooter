@@ -145,7 +145,8 @@ typedef struct {
     process_t process;
     dword ESP;
     dword SS;
-    dword page;
+    PAGE * page;
+    int tty;
 } context_t;
 
 #pragma pack (1)

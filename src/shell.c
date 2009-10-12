@@ -87,11 +87,16 @@ print_nline()
 	flush();
 }
 
+void
+update_screen(){
+}
+
 int
 switch_tty(int new_tty){
     focusedTTY=new_tty;
     update_screen(); /*cambia lo que se esta viendo */
 }
+
 
 /* str_cmp retorna 1 si los strings eran iguales y 0 en caso contrario */
 /* necesita que ambos strings sean iguales hasta el 0 */

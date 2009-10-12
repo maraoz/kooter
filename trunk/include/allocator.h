@@ -6,8 +6,6 @@
 #ifndef _allocator_h
 #define _allocator_h
 
-#define PAGE int
-
 void allocator_init();
 
 PAGE * palloc(int n);

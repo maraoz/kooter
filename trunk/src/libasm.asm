@@ -20,6 +20,7 @@ EXTERN	next_char
 EXTERN	mouse_now
 EXTERN	screenShow
 EXTERN	fetch
+EXTERN  allocator_init
 
 
 
@@ -454,27 +455,35 @@ disable_text_cursor:
 init_pagination:
 	push ebp			; armo el stack frame
         mov ebp, esp			;
-	pop ebx				; salvo EBX
-	pop ecx				; salvo ECX
+	push edx			; salvo EDX
+	push ecx			; salvo ECX
+        push ds                         ; salvo DS
 
-        or  cr0, -1			; pongo el bit31 de CR0, que es PG en 1.
+        mov eax, cr0
+        or  eax, -1			; pongo el bit31 de CR0, que es PG en 1.
+        mov cr0, eax
         mov eax, 00800000h		; cargo EAX con 4MB que es donde voy a meter el directorio.
         and eax, 0FFFFF000h		; pongo los ultimos 12 bits de CR3 en 0 (ya estan igual)
         mov cr3, eax			; cargo CR3 con este valor.
+
+        mov ax, 10h
+        mov ds, ax
+
 	mov eax, cr3			; cargo EAX con el valor de CR3.
 
-	mov ebx, 00802000h		; cargo en EBX el valor izquierdo de dirTableSO.
-	add ebx, 1h			; pongo el P = 1 de la tabla de paginas del SO.
-        mov [10h:eax], ebx		; cargo en lo que apunta CR3 (index0) 4MB+4KB (dirTableSO).
+	mov edx, 00802000h		; cargo en EDX el valor izquierdo de dirTableSO.
+	add edx, 1h			; pongo el P = 1 de la tabla de paginas del SO.
+        mov [ds:eax], ebx		; cargo en lo que apunta CR3 (index0) 4MB+4KB (dirTableSO).
 
 	add eax, 010h      		; sumo 4 bytes a EAX para cargar el index1.
-	add ebx, 02000h                 ; sumo 4KB a ebx para que ahora apunte a dirTableAPP.
-	add ebx, 1h			; pongo el P = 1 de la tabla de paginas de los procesos.
-        mov [10h:eax], ebx		; cargo en lo que apunta CR3 (index1) 4MB+8KB (dirTableAPP).
+	add edx, 02000h                 ; sumo 4KB a edx para que ahora apunte a dirTableAPP.
+	add edx, 1h			; pongo el P = 1 de la tabla de paginas de los procesos.
+        mov [ds:eax], ebx		; cargo en lo que apunta CR3 (index1) 4MB+8KB (dirTableAPP).
         call allocator_init             ; llamo a la funcion que carga las tablas.
 
-	push ecx			; recupero ECX
-	push ebx			; recupero EBX
+        pop ds                          ; recupero DS
+	pop ecx                         ; recupero ECX
+	pop edx			        ; recupero EDX
 	mov esp, ebp			; desarmo el stack frame
 	pop ebp				;
 	ret				; retorno.

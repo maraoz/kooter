@@ -6,11 +6,13 @@
 #ifndef _allocator_h
 #define _allocator_h
 
+#include "./defs.h"
+
 void allocator_init();
 
-PAGE * palloc(int n);
+PAGE * palloc(int cant);
 
-void pfree(PAGE * page);
+void pfree(PAGE * page, int cant);
 
 void * malloc(int size);
 

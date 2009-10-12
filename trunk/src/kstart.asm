@@ -12,6 +12,7 @@
 
 [global start]
 [extern kmain] ; en kernel.c
+[extern init_pagination]
 
 start:
 

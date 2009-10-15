@@ -61,7 +61,7 @@ void itoa(int num, char v[]){
 char * err_str = "                  ERROR FATAL!!! CODIGO:                                        ";
 
 void check_offset(char label, int count) {
-    
+    int currentTTY = get_current_tty();
     if (tty[currentTTY].cursor * 2 + count - 1 >= 4000) {
                 while (1) {
                     int H;

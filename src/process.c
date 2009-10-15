@@ -10,9 +10,9 @@
 queue_t available_pids;
 queue_t * available_pids_q;
 extern process_t current_process; /* proceso actual que esta corriendo */
-extern pid_t focus;
 extern context_t bcp[MAX_PROCESSES];
 
+extern TTY tty[8];
 /**
  * init_pids
  * inicializa las estructuras generadoras de pids
@@ -36,6 +36,7 @@ pid_t get_new_pid(void) {
 }
 
 /**
+ * end_process
  * Funcion que destruye los procesos
  */
 void
@@ -47,6 +48,13 @@ end_process()
     // TODO: falta meter el nuevo proceso
 
 
+}
+
+/**
+ * get_current_tty()
+ */
+int get_current_tty() {
+    return bcp[current_process.pid].tty;
 }
 
 /**

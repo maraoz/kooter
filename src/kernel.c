@@ -17,11 +17,9 @@ int interrupted = 1;
 
 /* proceso actual que esta corriendo */
 pid_t current_process = 0;
-/* proceso que tiene el foco del usuario y del I/O*/
-pid_t focused_process;
 
 /* la terminal actual que muestra Kooter */
-extern int currentTTY;
+extern int focusedTTY;
 
 extern TTY tty[8]; // vector con las 8 terminales
 
@@ -53,7 +51,6 @@ dword int_08(dword ESP)
 //     down_p(bcp[current_process].page);
 
         scheduler();
-        currentTTY=bcp[current_process].tty;
 
 //     up_p(bcp[current_process].page);
         return  bcp[current_process].ESP;
@@ -82,7 +79,7 @@ kmain()
     
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ1   */
     setup_IDT_entry (&idt[0x09], 0x08, (dword)&_int_09_hand, ACS_INT, 0);
-    
+
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE LA IRQ12   */
     setup_IDT_entry (&idt[0x74], 0x08, (dword)&_int_74_hand, ACS_INT, 0);
 
@@ -103,7 +100,8 @@ kmain()
     _mascaraPIC1(0xF8);
     _mascaraPIC2(0xEF);
 
-    k_clear_screen();
+    //TODO: volver a poner
+//     k_clear_screen();
 
     init_pids();
     init_scheduler();
@@ -114,7 +112,6 @@ kmain()
     process_creator();
 
     _Sti();
-    focused_process = current_process;
     while(1){
 
     }

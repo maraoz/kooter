@@ -14,7 +14,6 @@ extern int tTicks;
 
 
 extern TTY tty[8];
-extern int currentTTY;
 extern int focusedTTY; 
 /*
 ** matriz de dos filas, en las que se van a guardar:
@@ -83,12 +82,8 @@ char * screenSaverImg[25] = {
 void
 print_nline()
 {
-	puts("kooter > ");
-	flush();
-}
-
-void
-update_screen(){
+    puts("kooter > ");
+    flush();
 }
 
 int
@@ -104,14 +99,14 @@ switch_tty(int new_tty){
 int
 str_cmp(char *s, char *t)
 {
-	int i;
-	int flag=1;
+    int i;
+    int flag=1;
 
-	for(i=0; s[i] && t[i] && flag; i++)
-		if( s[i] != t[i] )
-			flag=0;
+    for(i=0; s[i] && t[i] && flag; i++)
+        if( s[i] != t[i] )
+            flag=0;
 
-	return (s[i]==0 && t[i]==0 && flag);
+    return (s[i]==0 && t[i]==0 && flag);
 }
 
 /* str_cpy retorna la cantidad de bytes copiados */
@@ -120,12 +115,12 @@ str_cmp(char *s, char *t)
 int
 str_cpy(char *s, char *t)
 {
-	int i;
+    int i;
 
-	for(i=0; t[i]; i++)
-		s[i]=t[i];
-	s[i++]=0;
-	return i-1;
+    for(i=0; t[i]; i++)
+        s[i]=t[i];
+    s[i++]=0;
+    return i-1;
 }
 
 /* str_len retorna la dimension de un string de char */
@@ -133,12 +128,12 @@ str_cpy(char *s, char *t)
 int
 str_len(char *s)
 {
-	int i;
+    int i;
 
-	for(i=0; s[i]; i++)
-		;
+    for(i=0; s[i]; i++)
+        ;
 
-	return i;
+    return i;
 }
 
 /*
@@ -148,18 +143,18 @@ str_len(char *s)
 int
 atoi(char *s)
 {
-	int num=0;
+    int num=0;
 
-	if(isdigit(*s)==0)
-		return -1;
+    if(isdigit(*s)==0)
+        return -1;
 
-	while(isdigit(*s))
-		num=num*10+(*(s++)-'0');
+    while(isdigit(*s))
+        num=num*10+(*(s++)-'0');
 
-	if(num>10000 || num<=0 || *s!=0)
-		num = -1;
+    if(num>10000 || num<=0 || *s!=0)
+        num = -1;
 
-	return num;
+    return num;
 }
 
 /*
@@ -172,29 +167,29 @@ atoi(char *s)
 void
 separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 {
-	int i, j;
+    int i, j;
 
-	/* out[0]= direccion para guardar comando */
-	/* out[1]= direccion para guardar parametro */
+    /* out[0]= direccion para guardar comando */
+    /* out[1]= direccion para guardar parametro */
 
-	while( *s == ' ' )
-		s++;
+    while( *s == ' ' )
+        s++;
 
-	for(i=0, j=0; s[i] != ' ' && s[i] != 0 && j<LONG_STR_TKN; i++, j++)
-		out[0][j] = s[i];
-	out[0][j]=0;
+    for(i=0, j=0; s[i] != ' ' && s[i] != 0 && j<LONG_STR_TKN; i++, j++)
+        out[0][j] = s[i];
+    out[0][j]=0;
 
-	while( s[i] == ' ' )
-		i++;
+    while( s[i] == ' ' )
+        i++;
 
-	if( s[i] == 0 )
-		return;
+    if( s[i] == 0 )
+        return;
 
-	for(j=0; s[i] != 0 && j<LONG_STR_TKN; i++, j++)
-		out[1][j] = s[i];
-	out[1][j]=0;
+    for(j=0; s[i] != 0 && j<LONG_STR_TKN; i++, j++)
+        out[1][j] = s[i];
+    out[1][j]=0;
 
-	return;
+    return;
 }
 
 /*
@@ -206,171 +201,172 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 int
 llamaFunc(char s[2][LONG_STR_TKN])
 {
-	int cursorBkp;
-	int arg_extra=0;
+    int cursorBkp;
+    int arg_extra=0;
 
-	if(s[0][0]==0)
-		return NO_CD;
-	else if(str_cmp(s[0], "echo"))
-	{
-		puts(s[1]);
-		flush();
-		return ECHO_CD;
-	}
-	else if(str_cmp(s[0], "clear"))
-	{
-		if(s[1][0]==0)
-		{
-			k_clear_screen();
-			return CLEAR_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "setTimeSp"))
-	{
-		if(atoi(s[1])<0)
-		{
-			puts("tiempo no valido");
-			return SETTIME_CD;
-		}
-		setTimeSp((atoi(s[1])));
-		puts("tiempo seteado = ");
-		puts(s[1]);
-		puts(" segundos");
-		return SETTIME_CD;
-	}
-	else if(str_cmp(s[0], "activaSp"))
-	{
-		if(s[1][0]==0)
-		{
-        	        tTicks = entraSp * 18 +1;
-			return ACTSP_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "dispImg"))
-	{
-		if(s[1][0]==0)
-		{
-			tty[currentTTY].cursor=0;
-			showSplashScreen();
-			tty[currentTTY].cursor=2000-80;
-			return DSPIMG_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "garbage"))
-	{
-		if(s[1][0]==0)
-		{
-			garbage();
-			return GBG_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "mario"))
-	{
-		if(s[1][0]==0)
-		{
-			
-			game(); 
+    if(s[0][0]==0)
+        return NO_CD;
+    else if(str_cmp(s[0], "echo"))
+    {
+        puts(s[1]);
+        flush();
+        return ECHO_CD;
+    }
+    else if(str_cmp(s[0], "clear"))
+    {
+        if(s[1][0]==0)
+        {
+            k_clear_screen();
+            return CLEAR_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "setTimeSp"))
+    {
+        if(atoi(s[1])<0)
+        {
+            puts("tiempo no valido");
+            return SETTIME_CD;
+        }
+        setTimeSp((atoi(s[1])));
+        puts("tiempo seteado = ");
+        puts(s[1]);
+        puts(" segundos");
+        return SETTIME_CD;
+    }
+    else if(str_cmp(s[0], "activaSp"))
+    {
+        if(s[1][0]==0)
+        {
+                    tTicks = entraSp * 18 +1;
+            return ACTSP_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "dispImg"))
+    {
+        if(s[1][0]==0)
+        {
+            int currentTTY = get_current_tty();
+            tty[currentTTY].cursor=0;
+            showSplashScreen();
+            tty[currentTTY].cursor=2000-80;
+            return DSPIMG_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "garbage"))
+    {
+        if(s[1][0]==0)
+        {
+            garbage();
+            return GBG_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "mario"))
+    {
+        if(s[1][0]==0)
+        {
+            
+            game(); 
                         k_clear_screen();
-			return MARIO_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "uname"))
-	{
-		if(s[1][0]==0)
-		{
-			puts("Kooter v 1.0");
-			flush();
-			return CODE_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "pwd"))
-	{
-		if(s[1][0]==0)
-		{
-			puts("/");
-			flush();
-			return CODE_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "ls"))
-	{
-		if(s[1][0]==0)
-		{
-			puts("dev      root     home");
-			put_char('\n');
-			puts("bin      mnt      boot" );
-			put_char('\n');
-			puts("usr      etc      media");
-			return CODE_CD;
-		}
-		else
-			arg_extra=1;
-	}
-	else if(str_cmp(s[0], "help"))
-	{
-		if(s[1][0]==0)
-		{
-			puts("Kooter kernel version 1.0");
-			put_char('\n');
-			put_char('\n');
-			puts("echo [string arguments]");
-			put_char('\n');
-			puts("clear");
-			put_char('\n');
-			puts("setTimeSp [numeric argument]");
-			put_char('\n');
-			puts("activaSp");
-			put_char('\n');
-			puts("dispImg");
-			put_char('\n');
-			puts("garbage");
-			put_char('\n');
-			puts("mario");
-			put_char('\n');
-			puts("uname");
-			put_char('\n');
-			puts("pwd");
-			put_char('\n');
-			puts("ls");
-			put_char('\n');
-			puts("help");
-			put_char('\n');
-			return CODE_CD;
-		}
-		else
-			arg_extra=1;
-	}
+            return MARIO_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "uname"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Kooter v 1.0");
+            flush();
+            return CODE_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "pwd"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("/");
+            flush();
+            return CODE_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "ls"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("dev      root     home");
+            put_char('\n');
+            puts("bin      mnt      boot" );
+            put_char('\n');
+            puts("usr      etc      media");
+            return CODE_CD;
+        }
+        else
+            arg_extra=1;
+    }
+    else if(str_cmp(s[0], "help"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Kooter kernel version 1.0");
+            put_char('\n');
+            put_char('\n');
+            puts("echo [string arguments]");
+            put_char('\n');
+            puts("clear");
+            put_char('\n');
+            puts("setTimeSp [numeric argument]");
+            put_char('\n');
+            puts("activaSp");
+            put_char('\n');
+            puts("dispImg");
+            put_char('\n');
+            puts("garbage");
+            put_char('\n');
+            puts("mario");
+            put_char('\n');
+            puts("uname");
+            put_char('\n');
+            puts("pwd");
+            put_char('\n');
+            puts("ls");
+            put_char('\n');
+            puts("help");
+            put_char('\n');
+            return CODE_CD;
+        }
+        else
+            arg_extra=1;
+    }
 
-	if(arg_extra==0)
-	{
-		puts(s[0]);
-		put_char(':');
-		puts(" command not found");
-		flush();
-		return CNF_CD;
-	}
-	else
-	{
-		puts(s[0]);
-		put_char(':');
-		puts(" does not receive arguments");
-		flush();
-		return CNF_CD;
-	}
+    if(arg_extra==0)
+    {
+        puts(s[0]);
+        put_char(':');
+        puts(" command not found");
+        flush();
+        return CNF_CD;
+    }
+    else
+    {
+        puts(s[0]);
+        put_char(':');
+        puts(" does not receive arguments");
+        flush();
+        return CNF_CD;
+    }
 }
 
 /*
@@ -380,24 +376,25 @@ llamaFunc(char s[2][LONG_STR_TKN])
 void
 shell()
 {
-	int i;
-	int c;
+    int i;
+    int c;
 
-	tTicks=0;
-	flush();
-	tty[currentTTY].cursor = 0;
+    tTicks=0;
+    flush();
+    int currentTTY = get_current_tty();
+    tty[currentTTY].cursor = 0;
 
-	while(1)
-	{
-		if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD || ret==CODE_CD)
-			put_char('\n');
+    while(1)
+    {
+        if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD || ret==CODE_CD)
+            put_char('\n');
 
-		print_nline();
+        print_nline();
 
-		i=0;
-		while((c=get_char())!='\n')
-		{
-            if(!isNotFs(c)){
+        i=0;
+        while((c=get_char())!='\n')
+        {
+            if(isFs(c)){
                 flush();
                 switch_tty(c&0x0F); /*le paso como parametro la terminal a la que quiero switchear */
             } else {
@@ -418,18 +415,18 @@ shell()
                     flush();
                 }
             }
-		}
-		put_char('\n');
-		if(i>=LONG_STR_CMD)
-			i=LONG_STR_CMD-1;
-		in[i]=0;
+        }
+        put_char('\n');
+        if(i>=LONG_STR_CMD)
+            i=LONG_STR_CMD-1;
+        in[i]=0;
 
-		separaPorEspacios(in, data);
+        separaPorEspacios(in, data);
 
-		ret=llamaFunc(data);
+        ret=llamaFunc(data);
 
-		data[0][0]=data[1][0]=0;
-	}
+        data[0][0]=data[1][0]=0;
+    }
 }
 
 /*
@@ -439,7 +436,7 @@ shell()
 void
 setTimeSp(int time)
 {
-	entraSp=time;
+    entraSp=time;
 }
 
 /*
@@ -449,13 +446,13 @@ setTimeSp(int time)
 void
 garbage()
 {
-	char c = 'a';
+    char c = 'a';
         int i;
         for (i = 0; i<2000; i++)
         {
-		put_char(c++%50+'a');
-		flush();
-	}
+        put_char(c++%50+'a');
+        flush();
+    }
 }
 
 /*
@@ -466,42 +463,44 @@ garbage()
 
 void check_screen_saver()
 {
-	static int firstTime = 1;
-	static int cursorBkp = 0;
-	
-	static int thisLine = 0;
+    static int firstTime = 1;
+    static int cursorBkp = 0;
+    
+    static int thisLine = 0;
 
-	tTicks++;
+    tTicks++;
 
-	if(tTicks>entraSp*18 && firstTime)
-		interrupted=0;
-	
-	if (firstTime && interrupted==0)
-	{
-		hideMouseCursor();
-		read(PANTALLA_FD, bufferScr, 4000);
-		cursorBkp = tty[currentTTY].cursor;
-		k_clear_screen();
-		firstTime = 0;
-		interrupted=0;
-	}
+    if(tTicks>entraSp*18 && firstTime)
+        interrupted=0;
+    
+    if (firstTime && interrupted==0)
+    {
+        int currentTTY = get_current_tty();
+        hideMouseCursor();
+        read(PANTALLA_FD, bufferScr, 4000);
+        cursorBkp = tty[currentTTY].cursor;
+        k_clear_screen();
+        firstTime = 0;
+        interrupted=0;
+    }
 
-	if (interrupted == 0)
-		if (tTicks % 2)
-		{
-			if (thisLine == 25)
-				thisLine = 0;
-			puts(screenSaverImg[thisLine++]);
-		}
+    if (interrupted == 0)
+        if (tTicks % 2)
+        {
+            if (thisLine == 25)
+                thisLine = 0;
+            puts(screenSaverImg[thisLine++]);
+        }
 
-	if (interrupted == 1 && firstTime == 0)
-	{
-                borra_buffer();
-                tty[currentTTY].cursor = 0;
-	        check_offset('p',4000);
-	        write(PANTALLA_FD, bufferScr, 4000);
-        	tty[currentTTY].cursor = cursorBkp;
-        	tTicks = 0;
-        	firstTime = 1;
-	}
+    if (interrupted == 1 && firstTime == 0)
+    {
+            int currentTTY = get_current_tty();
+            borra_buffer();
+            tty[currentTTY].cursor = 0;
+            check_offset('p',4000);
+            write(PANTALLA_FD, bufferScr, 4000);
+            tty[currentTTY].cursor = cursorBkp;
+            tTicks = 0;
+            firstTime = 1;
+    }
 }

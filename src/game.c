@@ -8,7 +8,6 @@
 
 
 extern TTY tty[8];
-extern int currentTTY;
 
 
 /*
@@ -144,6 +143,7 @@ int game() {
 
         if (flag) {
             k_clear_screen();
+            int currentTTY = get_current_tty();
             tty[currentTTY].cursor = 1000;
             puts("FELICITACIONES, GANASTE!!!");
             flush();
@@ -186,7 +186,7 @@ void updateView() {
 }
 
 void showView(void) {
-
+    int currentTTY = get_current_tty();
     tty[currentTTY].cursor = 0;
     check_offset('m', 4000);
     write(PANTALLA_FD, view, 4000);

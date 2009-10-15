@@ -6,9 +6,10 @@
 #include "../include/scheduler.h"
 
 extern pid_t current_process;
-extern pid_t focused_process;
+extern TTY tty[8];
+extern int focusedTTY;
+extern context_t bcp[MAX_PROCESSES];
 
-extern int cursor;
 extern int interrupted;
 extern int tTicks;
 
@@ -43,9 +44,14 @@ void leoteclado (int k){
                 teclator.tcircular[teclator.next_write] = c;
                 teclator.next_write++;
                 teclator.qty_used++;
+
                 // agregado para primitivas bloqueantes (manu)
-                if (is_blocked(focused_process))
-                    unblock(focused_process);
+                enqueue(tty[focusedTTY].kb_buffer, c);
+                int pid;
+                for (pid=0;pid<MAX_PROCESSES;pid++) {
+                    if(is_blocked(pid) && bcp[pid].tty==focusedTTY)
+                        unblock(pid);
+                }
             }
         }
     }
@@ -96,10 +102,10 @@ byte ktoa(int c){
 }
 
 int
-isNotFs(int c){
-    return (c != 0xf1 && c != 0xf2 && c != 0xf3 
-        && c != 0xf4 && c != 0xf5 && c != 0xf6 
-        && c != 0xf7 && c !=0xf8);
+isFs(int c){
+    return (c == 0xf1 || c == 0xf2 || c == 0xf3
+        || c == 0xf4 || c == 0xf5 || c == 0xf6
+        || c == 0xf7 || c ==0xf8);
 }
 
 /* 
@@ -112,6 +118,12 @@ byte next_char (){
         a=teclator.tcircular[teclator.next_read];
         teclator.next_read++;
         teclator.qty_used--;
+
+        //TODO: esto es lo único q sirve, lo demás está deprecated
+        int currentTTY = get_current_tty();
+        a = dequeue(tty[currentTTY].kb_buffer);
+        //TODO: esto es lo único q sirve, lo demás está deprecated
+
 
         if(teclator.next_read >= TCIRC_SIZE)
             teclator.next_read = 0;

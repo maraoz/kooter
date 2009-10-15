@@ -50,19 +50,20 @@ hayContiguos(PAGE** dir, int cant, int desde) {
 
 PAGE *
 palloc(int cant) {
-    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
-    int i, j;
-
-    for(i = 0; i < 1024 - cant; i++, index++) {
-        if(hayContiguos(index,cant,i)) {
-            for(j = 0; j < cant; j++, index++) {
-                * index = (PAGE*)((int)(*index) | 0x01); /* pongo P en 1 */
-                * index = (PAGE*)((int)(*index) | 0x00000400); /* pongo el bit de usado en 1*/
-            }
-            return *index; /* retorno un puntero a una pagina */
-        }
-    }
-    return (PAGE*)0;
+//     PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
+//     int i, j;
+// 
+//     for(i = 0; i < 1024 - cant; i++, index++) {
+//         if(hayContiguos(index,cant,i)) {
+//             for(j = 0; j < cant; j++, index++) {
+//                 * index = (PAGE*)((int)(*index) | 0x01); /* pongo P en 1 */
+//                 * index = (PAGE*)((int)(*index) | 0x00000400); /* pongo el bit de usado en 1*/
+//             }
+//             return *index; /* retorno un puntero a una pagina */
+//         }
+//     }
+//     return (PAGE*)0;
+    return malloc(4094*cant);
 }
 
 /*

@@ -78,7 +78,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     /* inicializar stack */
     new_proc.page = palloc(pages_qty);
     new_proc.ESP = (dword)new_proc.page;
-    new_proc.ESP += pages_qty*4096-1;
+    new_proc.ESP += (pages_qty*PAGE_SIZE)-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
     new_proc.SS = 0x10;
    
@@ -110,9 +110,11 @@ create_new_stack(int(*funcion)(),int argc,char** argv,dword bottom, void(*end_pr
 void
 process_creator(){
     
+    
     create_process(pepe,1,1,(char**)0,1,1,FALSE,0);
 
     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
+
 // 
 //     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
 //     

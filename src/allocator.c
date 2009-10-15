@@ -5,6 +5,7 @@
 ** esta funcion carga en las tablas de pagina los valores
 ** de memoria en los que se encuentran las paginas.
 */
+extern void * eokl;
 void
 allocator_init(void) {
     PAGE * index;
@@ -12,22 +13,23 @@ allocator_init(void) {
     int i;
 
     /*
-    ** cargo las paginas del kernel entre 0MB y 4MB
+    ** cargo las paginas del kernel entre 4MB y 8MB
     */
     index = (PAGE*)dirTableSO;
-    page = 0x0; /* Cargo para que el index0 de la tabla apunte a 0MB */
-    for(i = 0; i < 1024 ; i++, index++, page += PAGE_SIZE) {
+    page = 0x00100000; /* Cargo para que el index0 de la tabla apunte a 4MB */
+    for(i = 0; i < 1023 ; i++, index++, page += PAGE_SIZE) {
 	* index = page; /* cargo la tabla de paginas del SO con las paginas */
 	* index = (* index) | 0x01; /* pongo las paginas como P = 1*/
     }
 
     /*
-    ** cargo las paginas de los procesos entre 6MB y 10MB
+    ** cargo las paginas de los procesos entre 10MB y 14MB
     */
     index = (PAGE*)dirTableAPP; /* Cargo la direccion de la primer tabla de procesos */
-    page = 0x00C00000; /* Cargo para que el primer indice de la tabla apunte a 6MB */
+    page = eokl+0x00800000;/*0x00A00000*/; /* Cargo para que el primer indice de la tabla apunte a 10MB */
     for(i = 0; i < 1024; i++, index++, page += PAGE_SIZE) {
 	    * index = page; /* referencio cada index de la tabla de paginas del proceso a una pagina */
+	    * index = (* index) | 0x01; /* pongo las paginas como P = 0*/
     }
 }
 
@@ -50,20 +52,24 @@ hayContiguos(PAGE** dir, int cant, int desde) {
 
 PAGE *
 palloc(int cant) {
-//     PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
-//     int i, j;
-// 
-//     for(i = 0; i < 1024 - cant; i++, index++) {
+    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
+    int i, j;
+    static int number = 0;
+
+//     for(i = number; i < 1024 - cant; i++, index++) {
 //         if(hayContiguos(index,cant,i)) {
 //             for(j = 0; j < cant; j++, index++) {
 //                 * index = (PAGE*)((int)(*index) | 0x01); /* pongo P en 1 */
-//                 * index = (PAGE*)((int)(*index) | 0x00000400); /* pongo el bit de usado en 1*/
+//                 * index = (PAGE*)((int)(*index) | 0x00000100); /* pongo el bit de usado en 1*/
+// 		number ++;
 //             }
 //             return *index; /* retorno un puntero a una pagina */
 //         }
 //     }
 //     return (PAGE*)0;
-    return malloc(4094*cant);
+//     index[number] = (int)index[number] | 0x01;
+    number++;
+    return (index+number*PAGE_SIZE);
 }
 
 /*
@@ -79,7 +85,7 @@ pfree(PAGE * page, int cant) {
 	if( *index == page ) { /* busco el index */
             while(cant--) {
                 *index = (PAGE*)((int)(*index) & 0xFFFFFFFE); /* pongo su P en 0 */
-                *index = (PAGE*)((int)(*index) & 0xFFFFFDFF); /* pongo el bit de usado en 0 */
+                *index = (PAGE*)((int)(*index) & 0xFFFFFBFF); /* pongo el bit de usado en 0 */
                 index++; /* paso al siguiente indice de la tabla */
             }
             return;
@@ -120,7 +126,7 @@ down_p(PAGE * page) {
     }
 }
 
-extern void * eokl;
+
 char * mem;
 
 void * malloc(int size){

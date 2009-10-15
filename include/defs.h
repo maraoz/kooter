@@ -67,13 +67,13 @@
 
 
 /* defines para las funciones de allocator */
-#define dirTableSO 0x00802000
+#define dirTableSO 0x00801000
         /* 4MB+4KB*/
-#define dirTableAPP 0x00804000
+#define dirTableAPP 0x00802000
         /* 4MB+8KB */
-#define PAGE_SIZE 4096
+#define PAGE_SIZE 0x00001000
         /* 4KB */
-#define p_isLibre(p) ( ((p) & 512) != 0 )
+#define p_isLibre(p) ( ((p) & 0x00000100) != 0 )
         /* con el bit 9 marco si la pagina esta usada (1) o no (0) */
 
 typedef int PAGE;

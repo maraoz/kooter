@@ -7,7 +7,6 @@
 
 
 TTY tty[8];
-int currentTTY = 0;
 int focusedTTY = 0;
 
 queue_t tty_kb_queues[8];
@@ -18,13 +17,22 @@ queue_t tty_kb_queues[8];
 * inicializa las terminales y sus estructuras de control
 *
 ****************************************************************/
-
-
 void init_ttys() {
-    currentTTY=0;
     int i;
     for(i=0;i<8;i++)
         tty[i].kb_buffer = &tty_kb_queues[i];
+}
+
+/****************************************************************
+* update_screen
+*
+* muestra la pantalla entera de la terminal
+*
+****************************************************************/
+void update_screen() {
+    int bkp_cursor = tty[focusedTTY].cursor;
+    tty[focusedTTY].cursor = 0;
+    write(PANTALLA_FD, tty[focusedTTY].view,4000);
 }
 
 
@@ -55,7 +63,7 @@ void str_ncpy(byte * dest, byte * src, size_t size) {
 byte blank_screen_buffer[4000] = {' ', DEFAULT_TXT, ' ', DEFAULT_TXT, ' ', DEFAULT_TXT};
 
 void page_roll(int backwards) {
-
+    int currentTTY = get_current_tty();
 
     tty[currentTTY].cursor = 0;
 
@@ -76,6 +84,7 @@ void page_roll(int backwards) {
 * 
 ****************************************************************/
 void check_screen_scroll(int offset) {
+    int currentTTY = get_current_tty();
     if (tty[currentTTY].cursor + offset >= 2000) {
         page_roll(2000-tty[currentTTY].cursor);
     }
@@ -140,6 +149,7 @@ static int vb_counter = 0;
 
 void put_char( byte c) {
     check_screen_scroll(0);
+    int currentTTY = get_current_tty();
 
     /* ENTER */
     if (c == '\n') {
@@ -187,9 +197,6 @@ void put_char( byte c) {
     video_buffer[vb_counter] = c;
     video_buffer[vb_counter+1] = DEFAULT_TXT ;
     vb_counter += 2 ;
-    
-
-    
 }
 
 
@@ -206,6 +213,7 @@ int kb_counter = K_BUFFER_LENGTH;
 int n_read = K_BUFFER_LENGTH;
 
 byte get_char() {
+
     if ( kb_counter == n_read ) {
         // si no quedan caracteres sin leer del buffer
         n_read = 0;
@@ -216,9 +224,7 @@ byte get_char() {
         kb_counter = 0;
     }
     return keyboard_buffer[kb_counter++];
-    
 
-    
 }
 /***************************************************************
 * flush
@@ -227,7 +233,7 @@ byte get_char() {
 * 
 ****************************************************************/
 void flush() {
-    
+    int currentTTY = get_current_tty();
     if (tty[currentTTY].cursor + vb_counter >= 2000) {
 
         check_screen_scroll(vb_counter);
@@ -248,6 +254,8 @@ void borra_buffer() {
 }
 
 
+
+
 /***************************************************************
 * write
 *
@@ -261,21 +269,24 @@ void borra_buffer() {
 ****************************************************************/
 
 size_t write(int fd, const void* buffer, size_t count) {
-	int i;
-	int offset;
-	byte data;
+    int i;
+    int offset;
+    byte data;
 
-	for ( i = 0 ; i<count; i++) {
-		offset = i + tty[currentTTY].cursor*2;
-		data = *((byte *)buffer+i);
+    int currentTTY = get_current_tty();
 
-		if (currentTTY == focusedTTY)
+    for ( i = 0 ; i<count; i++) {
+        offset = i + tty[currentTTY].cursor*2;
+        data = *((byte *)buffer+i);
+
+        if (currentTTY == focusedTTY)
             _int_80_caller(WRITE, fd, offset, data);
-		tty[currentTTY].view[offset] = data;
+        tty[currentTTY].view[offset] = data;
 
-	}
-	tty[currentTTY].cursor+=count/2;
-	return 0;
+    }
+    tty[currentTTY].cursor+=count/2;
+    while(1);
+    return 0;
 }
 
 
@@ -316,10 +327,11 @@ size_t read(int fd, void* buffer, size_t count) {
 char * BLANK_LINE = "                                                                                ";
 void k_clear_screen() 
 {
-	tty[currentTTY].cursor = 0;
+    int currentTTY = get_current_tty();
+    tty[currentTTY].cursor = 0;
         check_offset('5',4000);
-	write(PANTALLA_FD, blank_screen_buffer, 4000);
-  	tty[currentTTY].cursor = 0;
+    write(PANTALLA_FD, blank_screen_buffer, 4000);
+      tty[currentTTY].cursor = 0;
 }
 
 
@@ -362,6 +374,5 @@ void showSplashScreen() {
     for (i = 0; i < 24; i++) {
         puts(splash_screen[i]);
     }
-    
 
 }

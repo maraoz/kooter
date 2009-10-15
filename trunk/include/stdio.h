@@ -12,11 +12,15 @@
     #define RED_TXT 0x04
     #define RED_ALL 0x44
     #define YELLOW_TXT 0x02
-    
+
     #define DEFAULT_TXT BLUE_TXT // Atributo para el video por default.
     #define MOUSE_CURSOR 0x30	//  Atributo para el cursor del mouse.
-    
-    
+
+
+    /* muestra la pantalla entera de la terminal */
+    void update_screen();
+
+    /* escribe un caracter en stdout*/
     void put_char( byte c);
 
     /* borrar el buffer de put_char */

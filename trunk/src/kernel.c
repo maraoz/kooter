@@ -93,6 +93,8 @@ kmain()
 
     _Cli();
 
+//     init_pagination();
+
 // seteo las interrupciones en 1
     interrupted=1;
     tTicks = 0;

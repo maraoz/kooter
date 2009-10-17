@@ -12,11 +12,9 @@
 
 [global start]
 [extern kmain] ; en kernel.c
-[extern init_pagination]
 
 start:
 
-  call init_pagination
   call kmain
 
   jmp $ ; si retorna de kmain se detiene

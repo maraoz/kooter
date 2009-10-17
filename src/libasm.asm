@@ -9,6 +9,7 @@ GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
 GLOBAL	wpantalla
 GLOBAL 	disable_text_cursor
+GLOBAL  init_pagination
 
 EXTERN  int_08
 EXTERN  SaveESP
@@ -478,6 +479,8 @@ init_pagination:
 	mov eax, cr0
         or  eax, 80000000h		; pongo el bit31 de CR0, que es PG en 1.
         mov cr0, eax
+        call _debug
+
         call allocator_init             ; llamo a la funcion que carga las tablas.
 
         pop ds                          ; recupero DS

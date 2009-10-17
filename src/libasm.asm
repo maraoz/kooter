@@ -457,7 +457,6 @@ init_pagination:
 	push ecx			; salvo ECX
         push ds                         ; salvo DS
 
-        
         mov eax, 00800000h		; cargo EAX con 8MB que es donde voy a meter el directorio.
         and eax, 0FFFFF000h		; pongo los ultimos 12 bits de CR3 en 0 (ya estan igual)
         mov cr3, eax			; cargo CR3 con este valor.
@@ -472,7 +471,7 @@ init_pagination:
         mov [ds:eax], edx		; cargo en lo que apunta CR3 (index0) 8MB+4KB (dirTableSO).
 
 	add eax, 4h      		; sumo 4 bytes a EAX para cargar el index1.
-	add edx, 1000h                 ; sumo 4KB a edx para que ahora apunte a dirTableAPP.
+	add edx, 1000h                  ; sumo 4KB a edx para que ahora apunte a dirTableAPP.
 	or edx, 1h			; pongo el P = 1 de la tabla de paginas de los procesos.
         mov [ds:eax], edx		; cargo en lo que apunta CR3 (index1) 8MB+8KB (dirTableAPP).
 	
@@ -488,7 +487,7 @@ init_pagination:
 	pop ebp				;
 	ret				; retorno.
 
-; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
+; Debug para el BOCHS, detiene la ejecución; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
 
 _debug:

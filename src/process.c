@@ -86,6 +86,15 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     bcp[new_proc.process.pid] = new_proc;
 
 
+
+
+//     pfree(new_proc.page, pages_qty);
+
+//     palloc(1);
+
+
+
+
     desalojate(new_proc.process.pid);
 //     _Sti();
     return new_proc.process;
@@ -111,12 +120,12 @@ void
 process_creator(){
     
     
-    create_process(pepe,1,1,(char**)0,1,1,FALSE,0);
+    create_process(pepe,4,1,(char**)0,1,1,FALSE,0);
 
-    create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
+    create_process(pepe2,3,1,(char**)0,1,1,FALSE,0);
 
 // 
-//     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
+//     create_process(pepe3,1,1,(char**)0,1,1,FALSE,0);
 //     
 //     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
 
@@ -126,7 +135,7 @@ int pepe() {
     char * m = (char *) 0x0B8000;
     while (1) {
         int i;
-        for (i=0; i<4000; i++)
+        for (i=0; i<2000; i++)
             m[i] = '4';
     }
 }
@@ -135,7 +144,7 @@ int pepe2() {
     char * m = (char *) 0x0B8000;
     while (1) {
         int i;
-        for (i=0; i<4000; i++)
+        for (i=0; i<2000; i++)
             m[i] = '6';
     }
 }

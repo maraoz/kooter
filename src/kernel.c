@@ -51,11 +51,7 @@ dword int_08(dword ESP)
 //         flush();
 //     down_p(bcp[current_process].page);
         scheduler();
-<<<<<<< .mine
 //         currentTTY=bcp[current_process].tty;
-=======
-
->>>>>>> .r194
 //     up_p(bcp[current_process].page);
         return  bcp[current_process].ESP;
 }

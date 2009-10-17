@@ -73,7 +73,7 @@
         /* 4MB+8KB */
 #define PAGE_SIZE 0x00001000
         /* 4KB */
-#define p_isLibre(p) ( ((p) & 0x00000100) != 0 )
+// #define p_isLibre(p) ( ((p) & 0x00000100) != 0 )
         /* con el bit 9 marco si la pagina esta usada (1) o no (0) */
 
 typedef int PAGE;

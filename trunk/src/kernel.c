@@ -68,6 +68,9 @@ kmain()
 /* Habilito el mouse */
     enable_mouse();
 
+    init_pagination();
+
+
 /* Deshabilito el cursor de texto */
     disable_text_cursor();
     
@@ -92,8 +95,6 @@ kmain()
     _lidt (&idtr);    
 
     _Cli();
-
-//     init_pagination();
 
 // seteo las interrupciones en 1
     interrupted=1;

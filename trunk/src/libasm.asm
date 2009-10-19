@@ -478,8 +478,9 @@ init_pagination:
 	
 	mov eax, cr0
         or  eax, 80000000h		; pongo el bit31 de CR0, que es PG en 1.
-        mov cr0, eax
-        call _debug
+;         call _debug
+	mov cr0, eax
+;         call _debug
 
         call allocator_init             ; llamo a la funcion que carga las tablas.
 

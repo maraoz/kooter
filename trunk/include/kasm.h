@@ -42,3 +42,20 @@ void        Disable();
 void        Enable();
 
 void        _mifunc();
+
+void		_int_00_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_01_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_02_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_03_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_04_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_05_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_06_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_07_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_0A_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_0B_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_0C_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_0D_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_0E_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_0F_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_10_hand();      /* Subrutina de atencion de Interrupcion 80h*/
+void		_int_11_hand();      /* Subrutina de atencion de Interrupcion 80h*/

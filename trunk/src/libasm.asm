@@ -9,7 +9,8 @@ GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
 GLOBAL	wpantalla
 GLOBAL 	disable_text_cursor
-GLOBAL  init_pagination
+GLOBAL  enable_page
+GLOBAL  write_cr3
 
 EXTERN  int_08
 EXTERN  SaveESP
@@ -21,7 +22,6 @@ EXTERN	next_char
 EXTERN	mouse_now
 EXTERN	screenShow
 EXTERN	fetch
-EXTERN  allocator_init
 
 
 
@@ -448,51 +448,18 @@ disable_text_cursor:
 	ret
 
 
-;funcion que habilita paginacion.
-;ademas carga el registro CR3 y los index 0 y 1 de
-;la tabla de directorios.
-init_pagination:
-	push ebp			; armo el stack frame
-        mov ebp, esp			;
-	push edx			; salvo EDX
-	push ecx			; salvo ECX
-        push ds                         ; salvo DS
-
-        mov eax, 00800000h		; cargo EAX con 8MB que es donde voy a meter el directorio.
-        and eax, 0FFFFF000h		; pongo los ultimos 12 bits de CR3 en 0 (ya estan igual)
-        mov cr3, eax			; cargo CR3 con este valor.
-
-        mov ax, 10h
-        mov ds, ax
-
-	mov eax, cr3			; cargo EAX con el valor de CR3.
-
-	mov edx, 00801000h		; cargo en EDX el valor izquierdo de dirTableSO.
-	or edx, 1h			; pongo el P = 1 de la tabla de paginas del SO.
-        mov [ds:eax], edx		; cargo en lo que apunta CR3 (index0) 8MB+4KB (dirTableSO).
-
-	add eax, 4h      		; sumo 4 bytes a EAX para cargar el index1.
-	add edx, 1000h                  ; sumo 4KB a edx para que ahora apunte a dirTableAPP.
-	or edx, 1h			; pongo el P = 1 de la tabla de paginas de los procesos.
-        mov [ds:eax], edx		; cargo en lo que apunta CR3 (index1) 8MB+8KB (dirTableAPP).
-	
+enable_page:
+	push eax
 	mov eax, cr0
         or  eax, 80000000h		; pongo el bit31 de CR0, que es PG en 1.
-;         call _debug
 	mov cr0, eax
-;         call _debug
-
-        call allocator_init             ; llamo a la funcion que carga las tablas.
-
-        pop ds                          ; recupero DS
-	pop ecx                         ; recupero ECX
-	pop edx			        ; recupero EDX
-	mov esp, ebp			; desarmo el stack frame
-	pop ebp				;
-	ret				; retorno.
-
-; Debug para el BOCHS, detiene la ejecución; Para continuar colocar en el BOCHSDBG: set $eax=0
-;
+	pop eax
+	ret
+	
+write_cr3:
+	pop	eax
+	mov	cr3,eax
+	ret
 
 _debug:
         push    bp

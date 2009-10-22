@@ -22,9 +22,10 @@ gcc -c ../src/allocator.c -o allocator.o -fno-builtin
 gcc -c ../src/command.c -o command.o -fno-builtin
 gcc -c ../src/queue.c -o queue.o -fno-builtin
 gcc -c ../src/scheduler.c -o scheduler.o -fno-builtin
+gcc -c ../src/exceptions.c -o exceptions.o -fno-builtin
 
 
 
 echo -e "\tLinkeditando y creando el ejecutable..." 
-ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o stdio.o util.o keyboard.o mouse.o shell.o video.o game.o command.o process.o allocator.o queue.o scheduler.o
+ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o stdio.o util.o keyboard.o mouse.o shell.o video.o game.o command.o process.o allocator.o queue.o scheduler.o exceptions.o
 

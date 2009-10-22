@@ -68,7 +68,7 @@ kmain()
 /* Habilito el mouse */
     enable_mouse();
 
-    init_pagination();
+//     init_pagination();
 
     
 /* Deshabilito el cursor de texto */

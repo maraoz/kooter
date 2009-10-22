@@ -47,6 +47,11 @@ void leoteclado (int k){
 
                 // agregado para primitivas bloqueantes (manu)
                 enqueue(tty[focusedTTY].kb_buffer, c);
+                if(isFs(c)){
+                    flush();
+                    switch_tty(3-focusedTTY); /*le paso como parametro la terminal a la que quiero switchear */
+//                     while(1);
+                }
                 int pid;
                 for (pid=0;pid<MAX_PROCESSES;pid++) {
                     if(is_blocked(pid) && bcp[pid].tty==focusedTTY)
@@ -103,9 +108,10 @@ byte ktoa(int c){
 
 int
 isFs(int c){
-    return (c == 0xf1 || c == 0xf2 || c == 0xf3
-        || c == 0xf4 || c == 0xf5 || c == 0xf6
-        || c == 0xf7 || c ==0xf8);
+    return 'a' == c;
+//     return (c == 0xf1 || c == 0xf2 || c == 0xf3
+//         || c == 0xf4 || c == 0xf5 || c == 0xf6
+//         || c == 0xf7 || c ==0xf8 );
 }
 
 /* 

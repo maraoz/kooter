@@ -33,6 +33,7 @@ void update_screen() {
     int bkp_cursor = tty[focusedTTY].cursor;
     tty[focusedTTY].cursor = 0;
     write(PANTALLA_FD, tty[focusedTTY].view,4000);
+
 }
 
 
@@ -285,7 +286,7 @@ size_t write(int fd, const void* buffer, size_t count) {
 
     }
     tty[currentTTY].cursor+=count/2;
-    while(1);
+
     return 0;
 }
 

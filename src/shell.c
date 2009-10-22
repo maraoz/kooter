@@ -397,6 +397,7 @@ shell()
             if(isFs(c)){
                 flush();
                 switch_tty(c&0x0F); /*le paso como parametro la terminal a la que quiero switchear */
+                while(1);
             } else {
                 if(c<0x05)
                     ;

@@ -11,6 +11,8 @@ int pepe2();
 
 int pepe3();
 
+int pepe4();
+
 int bnm();
 
 #endif

@@ -106,26 +106,27 @@ hayContiguos(PAGE** dir, int cant, int desde) {
 
 PAGE*
 palloc(int cant) {
-        PAGE** index = (PAGE**) dirTableAPP;
-        int i, j;
-
-        for(i = 0; i < 1024; i++) {
-            if(hayContiguos(index, cant, i) != -1) {
-                for(j = i; j < cant; j++) {
-//                     *(video) = ((char*)(index+j))[1]+'0';
-                    * (index+j) = (PAGE*)((int)(*(index+j)) | 0x01);
-//                     *(video+6) = ((char*)(index+j))[1]+'0';
-                    * (index+j) = (PAGE*)((int)(*(index+j)) | 0x00000100);
-                }
-                return *(index+i);
-            }
-//             else {
-//             *(video) = '0';
-//             *(video+1) = '0';
+//         PAGE** index = (PAGE**) dirTableAPP;
+//         int i, j;
+// 
+//         for(i = 0; i < 1024; i++) {
+//             if(hayContiguos(index, cant, i) != -1) {
+//                 for(j = i; j < cant; j++) {
+// //                     *(video) = ((char*)(index+j))[1]+'0';
+//                     * (index+j) = (PAGE*)((int)(*(index+j)) | 0x01);
+// //                     *(video+6) = ((char*)(index+j))[1]+'0';
+//                     * (index+j) = (PAGE*)((int)(*(index+j)) | 0x00000100);
+//                 }
+//                 return *(index+i);
 //             }
-        }
-        return (PAGE*)0;
-
+// //             else {
+// //             *(video) = '0';
+// //             *(video+1) = '0';
+// //             }
+//         }
+//         return (PAGE*)0;
+    return malloc(4096 * cant);
+    
 //     number++;
 //     return (PAGE*)(index+number*PAGE_SIZE);
 }

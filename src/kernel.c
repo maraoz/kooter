@@ -70,9 +70,31 @@ kmain()
 
     init_pagination();
 
-
+    
 /* Deshabilito el cursor de texto */
     disable_text_cursor();
+
+/*Excepciones*/
+    setup_IDT_entry (&idt[0x00], 0x08, (dword)&_int_00_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x01], 0x08, (dword)&_int_01_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x02], 0x08, (dword)&_int_02_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x03], 0x08, (dword)&_int_03_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x04], 0x08, (dword)&_int_04_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x05], 0x08, (dword)&_int_05_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x06], 0x08, (dword)&_int_06_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x07], 0x08, (dword)&_int_07_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x0A], 0x08, (dword)&_int_0A_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x0B], 0x08, (dword)&_int_0B_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x0C], 0x08, (dword)&_int_0C_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x0D], 0x08, (dword)&_int_0D_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x0E], 0x08, (dword)&_int_0E_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x0F], 0x08, (dword)&_int_0F_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x10], 0x08, (dword)&_int_10_hand, ACS_CODE, 0);
+    setup_IDT_entry (&idt[0x11], 0x08, (dword)&_int_11_hand, ACS_CODE, 0);
+    
+    
+    
+    
     
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
     setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);

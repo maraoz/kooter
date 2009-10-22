@@ -5,39 +5,61 @@
 ** esta funcion carga en las tablas de pagina los valores
 ** de memoria en los que se encuentran las paginas.
 */
+#define FOURTH_MB_MARK 0x00400000
 extern void * eokl;
 
 void
-allocator_init(void) {
-    PAGE * index;
-    PAGE page;
-    int i;
+init_pagination(void) {
+    PAGE * dirT;
+    PAGE * mapStart;
+    
+    unsigned long address=0; // holds the physical address of where a page is
+    unsigned int i,j;
+    /*Directory Table*/
+    dirT = (PAGE*)((char*)FOURTH_MB_MARK - PAGE_SIZE);
+    /*Mapping start*/
+    mapStart = (PAGE*)FOURTH_MB_MARK;
 
-//     char* video = (char*)0x0B8000+2004;
-//     *(video) = '0';
-//     *(video+1) = '0';
+    /*Map the kernel (first 4MB)*/
+    dirT[0] = (PAGE)mapStart;
+    dirT[0] = dirT[0] | 3;
+    for(i=0; i<1024; i++)
+    {
+	    /*Attribute set to: supervisor level, read/write, present(011 in
+		* binary)*/
+	    mapStart[i] = address | 3;
+	    address = address + 4096; // 4096 = 4kb
+    }
+    mapStart += PAGE_SIZE/sizeof(PAGE);
 
-    /*
-    ** cargo las paginas del kernel entre 4MB y 8MB
-    */
-    index = (PAGE*)dirTableSO;
-    page = 0x00100000; /* Cargo para que el index0 de la tabla apunte a 4MB */
-    for(i = 0; i < 1023 ; i++, index++, page += PAGE_SIZE) {
-	* index = page; /* cargo la tabla de paginas del SO con las paginas */
-	* index = (* index) | 0x01; /* pongo las paginas como P = 1*/
-        * index = (* index) | 0x00000100; /* pongo el bit de usado en 1 */
+    /*Map the pages that map the rest of the memory (second 4MB)*/
+    dirT[1] = (PAGE)mapStart;
+    dirT[1] = dirT[1] | 3;
+    for(i=0; i<1024; i++)
+    {
+	    /*Attribute set to: supervisor level, read/write, not present(010 in
+		* binary)*/
+	    mapStart[i] = address | 3;
+	    address = address + 4096; // 4096 = 4kb
+    }
+    mapStart += PAGE_SIZE/sizeof(PAGE);
+
+    /*We have mapped the first 8MB of the memory, now we'll use the pages in
+	* the second 4MB to set them in dirT to enable easy idMapping*/
+    for (i=2; i<1024; i++)
+    {
+	    /*Clean al the pages*/
+	    for (j=0; j<1024; j++)
+		    mapStart[j] = 2;
+
+	    /*Set the page in the dir table*/
+	    dirT[i] = ((PAGE)mapStart) | 3;
+	    mapStart += PAGE_SIZE/sizeof(PAGE);
     }
 
-    /*
-    ** cargo las paginas de los procesos entre 10MB y 14MB
-    */
-    index = (PAGE*)dirTableAPP; /* Cargo la direccion de la primer tabla de procesos */
-    page = (PAGE)(eokl + 0x00800000);/*0x00A00000*/ /* Cargo para que el primer indice de la tabla apunte a 10MB */
-    for(i = 0; i < 1024; i++, index++, page += PAGE_SIZE) {
-        * index = page; /* referencio cada index de la tabla de paginas del proceso a una pagina */
-	* index = (* index) & 0xFFFFFFFE; /* pongo las paginas como P = 0*/
-        * index = (* index) & 0xFFFFFEFF; /* pongo el bit de usado en 0 */
-    }
+    write_cr3(dirT); // put that page directory address into CR3
+    enable_page(); // set the paging bit in CR0 to 1
+
 }
 
 /*

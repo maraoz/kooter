@@ -8,7 +8,7 @@
 
 #include "./defs.h"
 
-void allocator_init();
+void init_pagination();
 
 PAGE * palloc(int cant);
 

@@ -49,7 +49,8 @@ void leoteclado (int k){
                 enqueue(tty[focusedTTY].kb_buffer, c);
                 if(isFs(c)){
                     flush();
-                    switch_tty(3-focusedTTY); /*le paso como parametro la terminal a la que quiero switchear */
+                    int new_tty = (focusedTTY + 1) % 4;
+                    switch_tty(new_tty); /*le paso como parametro la terminal a la que quiero switchear */
 //                     while(1);
                 }
                 int pid;

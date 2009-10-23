@@ -22,5 +22,6 @@ void deshabilitar_int_mouse (void);
 void itoa(int num, char v[]);
 
 void check_offset(char label, int count);
+void panic(char label, int n);
 
 #endif

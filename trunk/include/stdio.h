@@ -17,6 +17,8 @@
     #define MOUSE_CURSOR 0x30	//  Atributo para el cursor del mouse.
 
 
+    int switch_tty(int new_tty);
+
     /* muestra la pantalla entera de la terminal */
     void update_screen();
 

@@ -19,8 +19,17 @@ queue_t tty_kb_queues[8];
 ****************************************************************/
 void init_ttys() {
     int i;
-    for(i=0;i<8;i++)
+
+    for(i=0;i<8;i++) {
         tty[i].kb_buffer = &tty_kb_queues[i];
+        tty[i].cursor = 0;
+    }
+}
+
+int
+switch_tty(int new_tty){
+    focusedTTY=new_tty;
+    update_screen();
 }
 
 /****************************************************************
@@ -31,8 +40,9 @@ void init_ttys() {
 ****************************************************************/
 void update_screen() {
     int bkp_cursor = tty[focusedTTY].cursor;
-    tty[focusedTTY].cursor = 0;
-    write(PANTALLA_FD, tty[focusedTTY].view,4000);
+//     tty[focusedTTY].cursor = 0;
+//     write(PANTALLA_FD, tty[focusedTTY].view,4000);
+    tty[focusedTTY].cursor = bkp_cursor;
 
 }
 

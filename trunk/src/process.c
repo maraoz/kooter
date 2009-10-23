@@ -126,7 +126,7 @@ process_creator(){
 
     create_process(pepe3,4,1,(char**)0,1,1,FALSE,2);
 
-    create_process(pepe4,4,1,(char**)0,1,1,FALSE,6);
+    create_process(pepe4,4,1,(char**)0,1,1,FALSE,3);
 //     
 //     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
 
@@ -134,14 +134,16 @@ process_creator(){
 
 int pepe() {
     
-    while (1) {put_char('1');
+    while (1) {
+        put_char('1');
         flush();
     }
 }
 
 int pepe2() {
     
-    while (1) {put_char('2');
+    while (1) {
+    put_char('2');
     flush();
     }
 }

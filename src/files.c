@@ -1,9 +1,28 @@
+#include "../include/defs.h"
 #include "../include/files.h"
 #include "../include/stdio.h"
+#include "../include/shell.h"
 
-files_entry opened_files[MAX_QTY_FILES];
-tag_list_t tag_list[MAX_QTY_TAGS];
+files_entry opened_files[MAX_QTY_FILES] = {{{0,0},FALSE,0}};
+tag_list_t tag_list[MAX_QTY_TAGS] = {{{0},0}};
 dword cwd = 0;
+
+/**
+ * Funcion que inicializa el fs
+ *
+ */
+
+int
+fs_init(){
+    int i;
+    for(i = 0; i<MAX_QTY_FILES ; i++){
+        opened_files[i].used = FALSE;
+        opened_files[i].references = 0;
+    }
+    for(i = 0; i<MAX_QTY_TAGS ; i++){
+        tag_list[i].references = 0;
+    }
+}
 
 /**
  * Funcion que crea un archivo en caso de no existir
@@ -13,16 +32,17 @@ int
 open(char * name){
     int index,i,j;
     files_t file;
+    file.index = 0;
     strncpy(file.name,name,100);
     file.tags = cwd;
-    file.data = malloc(100); /* numero magico, poner una valor mejor */
+    file.data = (char*)palloc(1); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
     if(index == -1){
         return -1;
     }
-    open_files[index].file = file;
-    open_files[index].used = TRUE;
-    open_files[index].references++;
+    opened_files[index].file = file;
+    opened_files[index].used = TRUE;
+    opened_files[index].references++;
     for(i=file.tags,j=0;i>=0;i>>=2,j++){
         if(i%2 != 0){
            tag_list[j].references++;
@@ -36,9 +56,9 @@ open(char * name){
  */
 int
 close(int index){
-    if(!is_valid_fd(index) || opened_files[index] == 0 || opened_files[index].used == FALSE)
+    if(!is_valid_fd(index) || opened_files[index].references == 0 || opened_files[index].used == FALSE)
         return -1;
-    opened_files[index]--;
+    opened_files[index].references--;
     return index;
 }
 
@@ -54,7 +74,7 @@ fread(char * name,char * buffer){
     index = get_fd(name);
     if(!is_valid_fd(index) || opened_files[index].used == FALSE)
         return -1;
-    for(i=0;i<MAX_BUFFER_SIZE && opened_files[index]!=0;i++){
+    for(i=0;opened_files[index].file.data[i]!=0;i++){
        buffer[i] = opened_files[index].file.data[i];
     }
 }
@@ -62,9 +82,10 @@ fread(char * name,char * buffer){
 /**
  * Funcion que escribe un archivo un archivo abierto
  */
+
 int
 fwrite(char * name, char * input){
-    int index;
+    int index,i;
     index = get_fd(name);
     if(!is_valid_fd(index) || opened_files[index].used == FALSE)
         return -1;
@@ -80,12 +101,12 @@ fwrite(char * name, char * input){
  */
 int
 unlink(char * name){
-    int index;
+    int index,i,j;
     index = get_fd(name);
     if(index == -1)
         return -1;
     opened_files[index].used = FALSE;
-    for(i=opened_files[index].tags,j=0;i>=0;i>>=2,j++){
+    for(i=opened_files[index].file.tags,j=0;i>=0;i>>=2,j++){
         if(i%2 != 0){
            tag_list[j].references--;
         }
@@ -107,8 +128,8 @@ get_fd(char * name){
 boolean
 is_valid_fd(int index){
     if(index < 0 || index > MAX_QTY_FILES)
-        return false;
-    return true;
+        return FALSE;
+    return TRUE;
 }
 
 /**
@@ -137,9 +158,11 @@ ls(char * directory){
         tag = get_numeric_tag(directory)|cwd;
     }
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
-        if(opened_files[i].used == TRUE && opened_files[i].file.tag&tag == tag){
+        if(opened_files[i].used == TRUE && opened_files[i].file.tags&tag == tag){
             putln(opened_files[i].file.name);
+        }  
     }
+     return 1;
 }
 
 /**
@@ -154,7 +177,7 @@ mkdir(char * directory){
         return -1;
     }
     i = log2(tag);
-    strncopy(tag_list[i].name,directory,100);
+    strncpy(tag_list[i].name,directory,100);
 }
 
 /**
@@ -171,8 +194,9 @@ rmdir(char * directory){
     return tag;
 }
 
+
 /**
- * Funcion que devuelve le proximo tag posible;
+ * Funcion que devuelve le proximo tag posible
  */ 
 dword
 get_next_available_tag(){
@@ -185,15 +209,46 @@ get_next_available_tag(){
 }
 
 /**
+ * Funcion que devuelve el proximo indice disponile
+ */
+int
+get_next_file_entry(){
+    static int index = 0;
+    if(index+1 >= MAX_QTY_FILES){
+        int i;
+        for(i =0 ; i<MAX_QTY_FILES; i++){
+            if(opened_files[i].used = FALSE){
+                return i;
+            }
+        }
+    }
+    return index++;
+}
+
+/**
  * Funcion que devuelve un tag numerico a partir de un nombre de directorio
  */
 
 dword
 get_numeric_tag(char * name){
     int i;
-    for(i = 0; i<MAX_QTY_TAGS && !strcmp(tag_list[i].name,name) ; i++);
+    for(i = 0; i<MAX_QTY_TAGS && !str_cmp(tag_list[i].name,name) ; i++);
     if(i == MAX_QTY_TAGS){
         return -1;
     }
     return 1<<i;
+}
+
+/**
+ * Funcion que desde un tag te da el indice del vector de tags donde se encuentra;
+ */
+
+int
+log2(dword num){
+    int i;
+    while(num & 0x01 == 0){
+        i++;
+        num=num>>1;
+    }
+    return i;
 }

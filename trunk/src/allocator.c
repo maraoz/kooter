@@ -5,14 +5,29 @@
 ** esta funcion carga en las tablas de pagina los valores
 ** de memoria en los que se encuentran las paginas.
 */
-#define FOURTH_MB_MARK 0x00400000
+
+static char MemMap[MAP_SIZE];
+static PAGE * dirT;
+static PAGE * mapStart;
+
+
 extern void * eokl;
+
+inline void setbits8(unsigned char * x, char p, char n, unsigned char y)
+{
+	/*Borra los bits que queremos setear*/
+	*x &= (~0u << (p+n)) | ~(~0u << p);
+	/*Setea los bits*/
+	*x |= ((y & ~(~0u << n)) << p);
+}
+
+inline unsigned int getbits8(unsigned char x, char p, char n)
+{
+	return (x >> p) & ~(~0u << n);
+}
 
 void
 init_pagination(void) {
-    PAGE * dirT;
-    PAGE * mapStart;
-    
     unsigned long address=0; // holds the physical address of where a page is
     unsigned int i,j;
     /*Directory Table*/
@@ -68,17 +83,99 @@ init_pagination(void) {
 ** si no las hay retorna NULL.
 */
 
-int
-hayContiguos(PAGE** dir, int cant, int desde) {
-    int i;
+PAGE *
+palloc(void)
+{
+	static unsigned int i;
 
-    for(i = 0; i < cant; i++) {
-            if( ( (int)( *dir + desde + i ) & 0x00000100) != 0 ) {
-                return -1;
-            }
-    }
-    return desde;
+	for( i = 0; i < (MemSize/MEM_BLOCK); i++ )
+	{
+//		printf("Mem: %X\n",MemMap[i/8]);
+//		if( MemMap[i/8]&(1<<i%8) )
+		if( !getbits8(MemMap[i/8],i%8,1) )
+		{
+//			MemMap[i/8]&= ~(1<<i%8);
+			setbits8(&(MemMap[i/8]),i%8,1,1);
+//			printf("MemSet: %X\n",MemMap[i/8]);
+			//TODO
+			return (void*)(MemStart+i*MEM_BLOCK);
+//			return NULL;
+		}
+	}
+
+	return NULL;
 }
+
+void
+pfree(PAGE * p)
+{
+	static int mempos;
+	static unsigned int i;
+
+	//TODO
+	mempos = (int) p;
+
+	mempos -= MemStart;
+	i = mempos/MEM_BLOCK;
+
+	if(mempos % MEM_BLOCK != 0)
+	{
+		/** ACA SE ROMPE TODO!!! */
+		/** Se esta liberando una direccion no valida. */
+	}
+
+//	if( MemMap[i/8]&(1<<i%8) )
+	if( !getbits8(MemMap[i/8], i % 8, 1) )
+	{
+		/** DOUBLE FREE EXCEPTION. **/
+	}
+
+	/** Todo ok, dejo libre la zona de memoria. */
+//	MemMap[i/8]|=(1<<i%8);
+	setbits8(&(MemMap[i/8]), i % 8, 1, 0);
+}
+
+
+void
+up_p(PAGE * p)
+{	unsigned int phys = (unsigned int)p;
+	unsigned int dirIndex = (phys >> 22) & 0x3FF;
+	unsigned int tabIndex = (phys >>12) & 0x3FF;
+	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
+
+	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
+	table[tabIndex] = (phys & 0xFFFFF000) | 3;
+	table[tabIndex+1] = ((phys & 0xFFFFF000) + PAGE_SIZE) | 3;
+	table[tabIndex+2] = ((phys & 0xFFFFF000) + 2 * PAGE_SIZE) | 3;
+	table[tabIndex+3] = ((phys & 0xFFFFF000) + 3 * PAGE_SIZE) | 3;
+}
+
+void
+down_p(PAGE *p)
+{
+	unsigned int phys = (unsigned int)p;
+	unsigned int dirIndex = (phys >> 22) & 0x3FF;
+	unsigned int tabIndex = (phys >>12) & 0x3FF;
+	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
+
+	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
+	table[tabIndex] = 2;
+	table[tabIndex+1] = 2;
+	table[tabIndex+2] = 2;
+	table[tabIndex+3] = 2;
+}
+
+// int
+// hayContiguos(PAGE** dir, int cant, int desde) {
+//     int i;
+// 
+//     for(i = 0; i < cant; i++) {
+//             if( ( (int)( *dir + desde + i ) & 0x00000100) != 0 ) {
+//                 return -1;
+//             }
+//     }
+//     return desde;
+// }
 
 // PAGE *
 // palloc(int cant) {
@@ -104,8 +201,8 @@ hayContiguos(PAGE** dir, int cant, int desde) {
 
 // char* video = (char*)0x0B8000+2004;
 
-PAGE*
-palloc(int cant) {
+// PAGE*
+// palloc(int cant) {
 //         PAGE** index = (PAGE**) dirTableAPP;
 //         int i, j;
 // 
@@ -125,65 +222,64 @@ palloc(int cant) {
 // //             }
 //         }
 //         return (PAGE*)0;
-    return malloc(4096 * cant);
-    
-//     number++;
-//     return (PAGE*)(index+number*PAGE_SIZE);
-}
+// 
+// //     number++;
+// //     return (PAGE*)(index+number*PAGE_SIZE);
+// }
 
 
 /*
 ** recibe un puntero a una pagina y la libera.
 ** tambien recibe la cantidad de paginas que se habian pedido para hacer alloc
 */
-void
-pfree(PAGE * page, int cant) {
-    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
-    int i, j;
-
-    for(i = 0; i < 1024; i++) {
-	if( *(index+i) == page ) { /* busco el index */
-            for(j = 0; j < cant; j++) {
-                *(index+i+j) = (PAGE*)((int)(*(index+i+j)) & 0xFFFFFFFE); /* pongo su P en 0 */
-                *(index+i+j) = (PAGE*)((int)(*(index+i+j)) & 0xFFFFFEFF); /* pongo el bit de usado en 0 */
-            }
-            return;
-        }
-    }
-}
+// void
+// pfree(PAGE * page, int cant) {
+//     PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
+//     int i, j;
+// 
+//     for(i = 0; i < 1024; i++) {
+// 	if( *(index+i) == page ) { /* busco el index */
+//             for(j = 0; j < cant; j++) {
+//                 *(index+i+j) = (PAGE*)((int)(*(index+i+j)) & 0xFFFFFFFE); /* pongo su P en 0 */
+//                 *(index+i+j) = (PAGE*)((int)(*(index+i+j)) & 0xFFFFFEFF); /* pongo el bit de usado en 0 */
+//             }
+//             return;
+//         }
+//     }
+// }
 
 
 /*
 ** recibe un puntero a una pagina y le pone en 1 su bit P.
 */
-void
-up_p(PAGE * page) {
-    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
-    int i;
-
-    for(i = 0; i < 1024; i++) {
-	if( *(index+i) == page ) { /* busco el index */
-                *(index+i) = (PAGE*)((int)(*(index+i)) | 0x01); /* pongo su P en 1 */
-            }
-            return;
-    }
-}
+// void
+// up_p(PAGE * page) {
+//     PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
+//     int i;
+// 
+//     for(i = 0; i < 1024; i++) {
+// 	if( *(index+i) == page ) { /* busco el index */
+//                 *(index+i) = (PAGE*)((int)(*(index+i)) | 0x01); /* pongo su P en 1 */
+//             }
+//             return;
+//     }
+// }
 
 /*
 ** recibe un puntero a una pagina y le pone en 0 su bit P.
 */
-void
-down_p(PAGE * page) {
-    PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
-    int i;
-
-    for(i = 0; i < 1024; i++) {
-	if( *(index+i) == page ) { /* busco el index */
-                *(index+i) = (PAGE*)((int)(*(index+i)) & 0xFFFFFFFE); /* pongo su P en 0 */
-            }
-            return;
-    }
-}
+// void
+// down_p(PAGE * page) {
+//     PAGE ** index = (PAGE**)dirTableAPP; /* voy a recorrer la tabla de procesos */
+//     int i;
+// 
+//     for(i = 0; i < 1024; i++) {
+// 	if( *(index+i) == page ) { /* busco el index */
+//                 *(index+i) = (PAGE*)((int)(*(index+i)) & 0xFFFFFFFE); /* pongo su P en 0 */
+//             }
+//             return;
+//     }
+// }
 
 
 char * mem;

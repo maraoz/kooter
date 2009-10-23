@@ -43,17 +43,18 @@ LoadESP(){
     return ESP;
 }
 
+int currentTTY;
 
 dword int_08(dword ESP)
 {
     char * m = (char *) 0x0B8000;
 //         put_char(current_process+'0');
 //         flush();
-//     down_p(bcp[current_process].page);
-        scheduler();
-//         currentTTY=bcp[current_process].tty;
+    down_p(bcp[current_process].page);
+    scheduler();
+    currentTTY=get_current_tty();
 //     up_p(bcp[current_process].page);
-        return  bcp[current_process].ESP;
+    return  bcp[current_process].ESP;
 }
 
 

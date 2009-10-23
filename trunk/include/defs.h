@@ -10,6 +10,7 @@
 
 #define TRUE 1
 #define FALSE 0
+#define NULL (void*)0
 
 #define byte unsigned char
 #define word short int
@@ -67,14 +68,18 @@
 
 
 /* defines para las funciones de allocator */
-#define dirTableSO 0x00801000
-        /* 4MB+4KB*/
-#define dirTableAPP 0x00802000
-        /* 4MB+8KB */
+#define FOURTH_MB_MARK 0x00400000
+
 #define PAGE_SIZE 0x00001000
         /* 4KB */
-// #define p_isLibre(p) ( ((p) & 0x00000100) != 0 )
-        /* con el bit 9 marco si la pagina esta usada (1) o no (0) */
+
+#define MemStart 0x0
+
+#define MemSize 0x00800000
+
+#define MEM_BLOCK 16384
+
+#define MAP_SIZE	32768
 
 typedef int PAGE;
 

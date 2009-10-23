@@ -133,7 +133,7 @@ kmain()
 
 
     init_ttys();
-
+    fs_init();
     process_creator();
 
     _Sti();

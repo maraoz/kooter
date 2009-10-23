@@ -173,5 +173,32 @@ typedef struct
 
 typedef int pid_t;
 
+
+
+/*files */
+
+#define MAX_QTY_FILES 1000
+#define MAX_QTY_TAGS 32 /* es la cantidad de bits disponibles */
+#define MAX_FILE_SIZE 100
+
+typedef struct {
+    char name[100];
+    char * data;
+    int index;
+    dword tags; /* los tags van a ser bits */
+} files_t;
+
+typedef struct {
+    files_t file;
+    boolean used;
+    int references; /* referencias a este fd */
+} files_entry;
+
+typedef struct {
+    char name[100];
+    int references;
+} tag_list_t;
+
+
 #endif
 

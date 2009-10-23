@@ -2,6 +2,7 @@
 #include "../include/files.h"
 #include "../include/stdio.h"
 #include "../include/shell.h"
+#include "../include/allocator.h"
 
 files_entry opened_files[MAX_QTY_FILES] = {{{0,0},FALSE,0}};
 tag_list_t tag_list[MAX_QTY_TAGS] = {{{0},0}};
@@ -35,12 +36,12 @@ open(char * name){
     file.index = 0;
     strncpy(file.name,name,100);
     file.tags = cwd;
-    file.data = (char*)palloc(1); /* numero magico, poner una valor mejor */
+    file.data = (char*)palloc(); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
     if(index == -1){
         return -1;
     }
-    opened_files[index].file = file;
+//     opened_files[index].file = file;
     opened_files[index].used = TRUE;
     opened_files[index].references++;
     for(i=file.tags,j=0;i>=0;i>>=2,j++){

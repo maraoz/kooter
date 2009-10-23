@@ -457,9 +457,12 @@ enable_page:
 	ret
 	
 write_cr3:
-	pop	eax
-	mov	cr3,eax
-	ret
+	push ebp
+	mov ebp, esp
+	mov eax, [ebp+8]
+	mov cr3, eax
+	pop ebp
+	retn
 
 _debug:
         push    bp

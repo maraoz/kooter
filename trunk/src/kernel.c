@@ -10,7 +10,7 @@
 #include "../include/allocator.h"     
 #include "../include/process.h"     
 #include "../include/scheduler.h"     
-#include "../include/files.h"     
+#include "../include/files.h"
 
 DESCR_INT idt[0x81];            /* IDT de 129 entradas*/
 IDTR idtr;                      /* IDTR */
@@ -45,13 +45,11 @@ LoadESP(){
     return ESP;
 }
 
-int currentTTY;
 
 dword int_08(dword ESP)
 {
     down_p(bcp[current_process].page);
     scheduler();
-    currentTTY=get_current_tty();
     up_p(bcp[current_process].page);
     return  bcp[current_process].ESP;
 }

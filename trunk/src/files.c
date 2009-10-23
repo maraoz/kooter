@@ -4,8 +4,8 @@
 #include "../include/shell.h"
 #include "../include/allocator.h"
 
-files_entry opened_files[MAX_QTY_FILES] = {{{0,0},FALSE,0}};
-tag_list_t tag_list[MAX_QTY_TAGS] = {{{0},0}};
+files_entry opened_files[MAX_QTY_FILES];
+tag_list_t tag_list[MAX_QTY_TAGS];
 dword cwd = 0;
 
 /**

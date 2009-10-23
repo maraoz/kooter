@@ -5,6 +5,7 @@
 #include "../include/command.h"
 #include "../include/kasm.h"
 #include "../include/process.h"
+#include "../include/shell.h"
 
 
 queue_t available_pids;
@@ -121,15 +122,18 @@ void
 process_creator(){
     
     //create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
-    create_process(pepe,4,1,(char**)0,1,1,FALSE,0);
+    create_process(shell,4,1,(char**)0,1,1,FALSE,0);
 
-    create_process(pepe2,4,1,(char**)0,1,1,FALSE,1);
+    create_process(shell,4,1,(char**)0,1,1,FALSE,1);
 
-    create_process(pepe3,4,1,(char**)0,1,1,FALSE,2);
-
-    create_process(pepe4,4,1,(char**)0,1,1,FALSE,3);
-//     
-//     create_process(pepe2,1,1,(char**)0,1,1,FALSE,0);
+    create_process(shell,4,1,(char**)0,1,1,FALSE,2);
+    
+    create_process(shell,1,1,(char**)0,1,1,FALSE,3);
+    create_process(shell,1,1,(char**)0,1,1,FALSE,4);
+    create_process(shell,1,1,(char**)0,1,1,FALSE,5);
+    create_process(shell,1,1,(char**)0,1,1,FALSE,6);
+    create_process(shell,1,1,(char**)0,1,1,FALSE,7);
+    
 
 }
 

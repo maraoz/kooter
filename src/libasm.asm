@@ -192,6 +192,7 @@ _int_74_hand:
 ; Recibe como cuarto parametro de stack el dato. Es de tipo byte (8 bits).
 	
 _int_80_caller:
+    cli
 	push	ebp
 	mov	ebp,esp
 	push	ebx
@@ -210,6 +211,7 @@ _int_80_caller:
 	pop	ebx
 	mov	esp,ebp
 	pop	ebp
+    sti
 	ret
 
 

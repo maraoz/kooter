@@ -326,16 +326,16 @@ llamaFunc(char s[2][LONG_STR_TKN])
             ls(s[1]);
 //             arg_extra=1;
     }
-    else if(str_cmp(s[0], "mkdir"))
-    {
-        if(s[1][0]==0)
-        {
-            puts("Not enough arguments");
-            return CODE_CD;
-        }
-        else
-            mkdir(s[1]);
-    }
+//     else if(str_cmp(s[0], "mkdir"))
+//     {
+//         if(s[1][0]==0)
+//         {
+//             puts("Not enough arguments");
+//             return CODE_CD;
+//         }
+//         else
+//             mkdir(s[1]);
+//     }
     else if(str_cmp(s[0], "help"))
     {
         if(s[1][0]==0)

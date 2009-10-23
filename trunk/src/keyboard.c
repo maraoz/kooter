@@ -24,7 +24,7 @@ void leoteclado (int k){
 
     tTicks=0;
 
-    if (!(teclator.qty_used >= TCIRC_SIZE)){
+//     if (!(teclator.qty_used >= TCIRC_SIZE)){
     /* Si le buffer de teclado no est√° lleno entonces procedo
     a decodificar el scancode en ascii */
         c = ktoa(k);
@@ -37,30 +37,35 @@ void leoteclado (int k){
             y no dejo el ascii en el buffer de teclado */
                 interrupted = 1;
             else if(c != 0x00){
-                if(teclator.next_write == TCIRC_SIZE)
-                /* Implementaci√≥n del teclado circular */
-                teclator.next_write = 0;
-
-                teclator.tcircular[teclator.next_write] = c;
-                teclator.next_write++;
-                teclator.qty_used++;
+//                 if(teclator.next_write == TCIRC_SIZE)
+//                 /* Implementaci√≥n del teclado circular */
+//                 teclator.next_write = 0;
+// 
+//                 teclator.tcircular[teclator.next_write] = c;
+//                 teclator.next_write++;
+//                 teclator.qty_used++;
 
                 // agregado para primitivas bloqueantes (manu)
-                enqueue(tty[focusedTTY].kb_buffer, c);
                 if(isFs(c)){
                     flush();
-                    int new_tty = (focusedTTY + 1) % 4;
+                    int new_tty = (c&0x0f)-1;
                     switch_tty(new_tty); /*le paso como parametro la terminal a la que quiero switchear */
 //                     while(1);
                 }
-                int pid;
-                for (pid=0;pid<MAX_PROCESSES;pid++) {
-                    if(is_blocked(pid) && bcp[pid].tty==focusedTTY)
-                        unblock(pid);
+                while(is_full(tty[focusedTTY].kb_buffer)){
+                    block_me();
+                }
+                if(!isFs(c)){
+                    int pid;
+                    enqueue(tty[focusedTTY].kb_buffer, c);                    
+                    for (pid=0;pid<MAX_PROCESSES;pid++) {
+                        if(is_blocked(pid) && bcp[pid].tty==focusedTTY)
+                            unblock(pid);
+                    }
                 }
             }
         }
-    }
+//     }
 }
 
 byte ktoa(int c){
@@ -76,7 +81,7 @@ byte ktoa(int c){
         ,0x6B,0x6C,0x3B,0x27,0x60,0x00/*Lshifht*/,0x5C
         ,0x7A,0x78,0x63,0x76,0x62,0x6E,0x6D,0x2C,0x2E
         ,0x2F,0x00/*RShift*/,0x2A,0x00/*alt*/,0x20
-        ,0x00/*caps*/,0xf1,0xf2,0xf3,0xf4
+        ,0x00/*caps*/,/*58*/0xf1,0xf2,0xf3,0xf4
         ,0xf5,0xf6,0xf7,0xf8,0x03,0x02
         ,0x00/*num*/,0x00/*scrl*/,0x00,0x01,0x00
         ,0x2D,0x04,0x00,0x02,0x2B,0x4F00,0x03
@@ -109,10 +114,10 @@ byte ktoa(int c){
 
 int
 isFs(int c){
-    return 'a' == c;
-//     return (c == 0xf1 || c == 0xf2 || c == 0xf3
-//         || c == 0xf4 || c == 0xf5 || c == 0xf6
-//         || c == 0xf7 || c ==0xf8 );
+//     return 'a' == c;
+    return (c == 0xf1 || c == 0xf2 || c == 0xf3
+        || c == 0xf4 || c == 0xf5 || c == 0xf6
+        || c == 0xf7 || c ==0xf8 );
 }
 
 /* 
@@ -121,24 +126,29 @@ isFs(int c){
  */
 byte next_char (){
     byte a;
-    if(teclator.qty_used > 0) {
-        a=teclator.tcircular[teclator.next_read];
-        teclator.next_read++;
-        teclator.qty_used--;
-
-        //TODO: esto es lo ˙nico q sirve, lo dem·s est· deprecated
-        int currentTTY = get_current_tty();
-        a = dequeue(tty[currentTTY].kb_buffer);
-        //TODO: esto es lo ˙nico q sirve, lo dem·s est· deprecated
-
-
-        if(teclator.next_read >= TCIRC_SIZE)
-            teclator.next_read = 0;
-    }
-    else {
-        a = 0xFF;
+    int currentTTY = get_current_tty();
+    while(is_empty(tty[currentTTY].kb_buffer)){
         block_me();
     }
+    a = dequeue(tty[currentTTY].kb_buffer);
+//     if(teclator.qty_used > 0) {
+//         a=teclator.tcircular[teclator.next_read];
+//         teclator.next_read++;
+//         teclator.qty_used--;
+// 
+//         //TODO: esto es lo ÔøΩnico q sirve, lo demÔøΩs estÔøΩ deprecated
+//         int currentTTY = get_current_tty();
+//         a = dequeue(tty[focusedTTY].kb_buffer);
+//         //TODO: esto es lo ÔøΩnico q sirve, lo demÔøΩs estÔøΩ deprecated
+// 
+// 
+//         if(teclator.next_read >= TCIRC_SIZE)
+//             teclator.next_read = 0;
+//     }
+//     else {
+//         a = 0xFF;
+//         block_me();
+//     }
     return a;
 }
 
@@ -148,11 +158,16 @@ byte next_char (){
 void 
 writeToKeyboard(byte c)
 {
-    if(teclator.next_write == TCIRC_SIZE)
-                teclator.next_write = 0;
-    if(!(teclator.qty_used >= TCIRC_SIZE)){
-	teclator.tcircular[teclator.next_write] = c;
-	teclator.next_write++;
-	teclator.qty_used++;
+    if(is_full(tty[focusedTTY].kb_buffer)){
+        block_me();
     }
+    enqueue(tty[focusedTTY].kb_buffer,c);
+    
+//     if(teclator.next_write == TCIRC_SIZE)
+//                 teclator.next_write = 0;
+//     if(!(teclator.qty_used >= TCIRC_SIZE)){
+// 	teclator.tcircular[teclator.next_write] = c;
+// 	teclator.next_write++;
+// 	teclator.qty_used++;
+//     }
 }

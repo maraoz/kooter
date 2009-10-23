@@ -18,11 +18,15 @@ queue_t tty_kb_queues[8];
 *
 ****************************************************************/
 void init_ttys() {
-    int i;
+    int i,j;
 
     for(i=0;i<8;i++) {
         tty[i].kb_buffer = &tty_kb_queues[i];
+        queue_init(tty[i].kb_buffer);
         tty[i].cursor = 0;
+        for(j=0;j<4160;j++){
+            tty[i].view[j]=0;
+        }
     }
 }
 
@@ -40,11 +44,29 @@ switch_tty(int new_tty){
 ****************************************************************/
 void update_screen() {
     int bkp_cursor = tty[focusedTTY].cursor;
-//     tty[focusedTTY].cursor = 0;
-//     write(PANTALLA_FD, tty[focusedTTY].view,4000);
+    tty[focusedTTY].cursor = 0;
+    write2(PANTALLA_FD, tty[focusedTTY].view,4000);
     tty[focusedTTY].cursor = bkp_cursor;
 
 }
+
+size_t write2(int fd, const void* buffer, size_t count) {
+    int i;
+    int offset;
+    byte data;
+
+    for ( i = 0 ; i<count; i++) {
+        offset = i + tty[focusedTTY].cursor*2;
+        data = *((byte *)buffer+i);
+
+        _int_80_caller(WRITE, fd, offset, data);
+
+    }
+    tty[focusedTTY].cursor+=count/2;
+
+    return 0;
+}
+
 
 
 /***************************************************************
@@ -219,24 +241,25 @@ void put_char( byte c) {
 ****************************************************************/
 #define K_BUFFER_LENGTH 1
 
-byte keyboard_buffer[K_BUFFER_LENGTH] = {0};
-int kb_counter = K_BUFFER_LENGTH;
-int n_read = K_BUFFER_LENGTH;
+byte keyboard_buffer[8][K_BUFFER_LENGTH] = {{0}};
+int kb_counter[8] = {K_BUFFER_LENGTH};
+int n_read[8] = {K_BUFFER_LENGTH};
 
 byte get_char() {
-
-    if ( kb_counter == n_read ) {
+    int currentTTY = get_current_tty();
+    if ( kb_counter[currentTTY] == n_read[currentTTY] ) {
         // si no quedan caracteres sin leer del buffer
-        n_read = 0;
-        while (n_read == 0) {
-            n_read = read(TECLADO_FD, keyboard_buffer, K_BUFFER_LENGTH);
+        n_read[currentTTY] = 0;
+        while (n_read[currentTTY] == 0) {
+            n_read[currentTTY] = read(TECLADO_FD, keyboard_buffer[currentTTY], K_BUFFER_LENGTH);
         }
 
-        kb_counter = 0;
+        kb_counter[currentTTY] = 0;
     }
-    return keyboard_buffer[kb_counter++];
+    return keyboard_buffer[currentTTY][kb_counter[currentTTY]++];
 
 }
+
 /***************************************************************
 * flush
 *
@@ -322,9 +345,9 @@ size_t read(int fd, void* buffer, size_t count) {
     byte * b = (byte *)buffer;
     for ( i = 0 ; i<count; i++) {
         b[i] = _int_80_caller(READ, fd, i, 0);
-        if (b[i] == 0xFF) { 
-            break;
-        }
+//         if (b[i] == 0xFF) { 
+//             break;
+//         }
     }
     return i;
 }

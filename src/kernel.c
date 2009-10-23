@@ -65,10 +65,10 @@ Punto de entrada de código C.
 kmain() 
 {
 
+    init_pagination();
+
 /* Habilito el mouse */
     enable_mouse();
-
-    init_pagination();
 
     
 /* Deshabilito el cursor de texto */

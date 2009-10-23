@@ -9,6 +9,7 @@
 #include "../include/command.h"
 #include "../include/allocator.h"     
 #include "../include/process.h"     
+#include "../include/scheduler.h"     
 
 DESCR_INT idt[0x81];            /* IDT de 129 entradas*/
 IDTR idtr;                      /* IDTR */

@@ -138,7 +138,8 @@ pfree(PAGE * p)
 
 void
 up_p(PAGE * p)
-{	unsigned int phys = (unsigned int)p;
+{
+	unsigned int phys = (unsigned int)p;
 	unsigned int dirIndex = (phys >> 22) & 0x3FF;
 	unsigned int tabIndex = (phys >>12) & 0x3FF;
 	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
@@ -159,10 +160,10 @@ down_p(PAGE *p)
 	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
 
 	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
-	table[tabIndex] = 2;
-	table[tabIndex+1] = 2;
-	table[tabIndex+2] = 2;
-	table[tabIndex+3] = 2;
+	table[tabIndex] = (phys & 0xFFFFF000) & 0xFFFFFFFE;
+	table[tabIndex+1] = ((phys & 0xFFFFF000) + PAGE_SIZE) & 0xFFFFFFFE;
+	table[tabIndex+2] = ((phys & 0xFFFFF000) + 2 * PAGE_SIZE) & 0xFFFFFFFE;
+	table[tabIndex+3] = ((phys & 0xFFFFF000) + 3 * PAGE_SIZE) & 0xFFFFFFFE;
 }
 
 // int

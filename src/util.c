@@ -79,10 +79,26 @@ void check_offset(char label, int count) {
                             *(p+H*2)= digit(H-330, count)+'0';
                         else
                             *(p+H*2+1)=RED_ALL;
-                            
                     }
                 }
         }
+
+}
+
+void panic(char label, int n) {
+    int currentTTY = get_current_tty();
+    _Sti();
+    while (1) {
+
+        int i= 0;
+        char * vid = (char * ) 0xB8000;
+        while (n != 0) {
+            vid[2*i]= digit(0, n)+ '0';
+            vid[2*i+1] = '0';
+            n /= 10;
+            i++;
+        }
+    }
 
 }
 

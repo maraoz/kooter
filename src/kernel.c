@@ -70,6 +70,7 @@ kmain()
 /* Habilito el mouse */
     enable_mouse();
 
+
     
 /* Deshabilito el cursor de texto */
     disable_text_cursor();
@@ -126,7 +127,7 @@ kmain()
     _mascaraPIC2(0xEF);
 
     //TODO: volver a poner
-//     k_clear_screen();
+    //     k_clear_screen();
 
     init_pids();
     init_scheduler();

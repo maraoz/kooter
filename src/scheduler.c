@@ -5,6 +5,7 @@
 
 #include "../include/defs.h"
 #include "../include/scheduler.h"
+#include "../include/stdio.h"
 #include "../include/queue.h"
 #include "../include/kc.h"
 
@@ -59,8 +60,10 @@ void scheduler(void){
         desalojate(current_process);
     }
     pid_t np = dequeue(ready_processes_q);
-    current_process = np;
-
+    if (current_process != np) {
+        flush();
+        current_process = np;
+    }
     return;
 }
 

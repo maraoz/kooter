@@ -86,11 +86,7 @@ print_nline()
     flush();
 }
 
-int
-switch_tty(int new_tty){
-    focusedTTY=new_tty;
-    update_screen(); /*cambia lo que se esta viendo */
-}
+
 
 
 /* str_cmp retorna 1 si los strings eran iguales y 0 en caso contrario */

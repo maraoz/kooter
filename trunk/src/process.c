@@ -122,17 +122,17 @@ void
 process_creator(){
     
     //create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
-    create_process(shell,4,1,(char**)0,1,1,FALSE,0);
+    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,0);
 
-    create_process(shell,4,1,(char**)0,1,1,FALSE,1);
+    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,1);
 
-    create_process(shell,4,1,(char**)0,1,1,FALSE,2);
+    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,2);
     
-    create_process(shell,1,1,(char**)0,1,1,FALSE,3);
-    create_process(shell,1,1,(char**)0,1,1,FALSE,4);
-    create_process(shell,1,1,(char**)0,1,1,FALSE,5);
-    create_process(shell,1,1,(char**)0,1,1,FALSE,6);
-    create_process(shell,1,1,(char**)0,1,1,FALSE,7);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,3);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,4);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,5);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,6);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,7);
     
 
 }

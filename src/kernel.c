@@ -48,7 +48,7 @@ int currentTTY;
 
 dword int_08(dword ESP)
 {
-    down_p(bcp[current_process].page);
+//     down_p(bcp[current_process].page);
     scheduler();
     currentTTY=get_current_tty();
 //     up_p(bcp[current_process].page);

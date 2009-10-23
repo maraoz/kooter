@@ -41,7 +41,7 @@ open(char * name){
     if(index == -1){
         return -1;
     }
-//     opened_files[index].file = file;
+    opened_files[index].file = file;
     opened_files[index].used = TRUE;
     opened_files[index].references++;
     for(i=file.tags,j=0;i>=0;i>>=2,j++){

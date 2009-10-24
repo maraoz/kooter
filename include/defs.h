@@ -65,6 +65,7 @@
 #define GBG_CD 8
 #define MARIO_CD 9
 #define CODE_CD 10
+#define MKDIR_CD 11
 
 
 /* defines para las funciones de allocator */
@@ -182,7 +183,7 @@ typedef int pid_t;
 #define MAX_FILE_SIZE 100
 
 typedef struct {
-    char name[100];
+    char name[50];
     char * data;
     int index;
     dword tags; /* los tags van a ser bits */

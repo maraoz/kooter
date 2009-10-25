@@ -125,7 +125,7 @@ kmain()
     _mascaraPIC2(0xEF);
 
     //TODO: volver a poner
-    //     k_clear_screen();
+//         k_clear_screen();
 
     init_pids();
     init_scheduler();

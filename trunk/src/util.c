@@ -45,15 +45,33 @@ void wait(int t) {
     }
 }
 
-void itoa(int num, char v[]){
-	
-	if(num == 0)
-		return;
-	else
-		itoa(num/10, v+1);
-		v[0]=num%10+'0';
+
+
+int digit_count(int n) {
+    int i;
+    if (n == 0)
+        return 1;
+    for (i=0; n != 0; i++) {
+        n /= 10;
+    }
+    return i;
 }
 
+void itoa( int n, char ret[] ) {
+    if (n == 0) {
+        ret[0] = '0';
+        return;
+    }
+    ret[0] = (n%10)+'0';
+    return;
+    int i;
+    int dc = digit_count(n);
+    for (i=0; n != 0; i++) {
+        ret[dc-i-1] = n % 10 + '0';
+        n /= 10;
+    }
+    return;
+}
 
 
 

@@ -39,7 +39,7 @@ void scheduler(void);
 
 /**
  * is_blocked
- * devuelve true si el proceso está bloqueado o false en caso contrario
+ * devuelve true si el proceso estï¿½ bloqueado o false en caso contrario
  */
 boolean is_blocked(pid_t pid);
 
@@ -49,6 +49,13 @@ boolean is_blocked(pid_t pid);
  */
 int desalojate(int pid);
 
+
+/**
+ * top
+ * display on terminal processes use of processor
+ */
+
+void top(void);
 
 #endif
 

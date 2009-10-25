@@ -44,13 +44,19 @@ void queue_init(queue_t * q);
 int enqueue(queue_t * q, T data);
 
 /**
+ * dequeue_element
+ * Devuelve y elimina el elemento indicado de la cola.
+ */
+T dequeue_element(queue_t * q, T data);
+
+/**
  * dequeue
  * Devuelve y elimina el primer elemento de la cola.
  */
 T dequeue(queue_t * q);
 
 /**
- * dequeue
+ * peek
  * Devuelve sin eliminar el primer elemento de la cola;
  */
 T peek(queue_t * q);

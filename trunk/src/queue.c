@@ -1,5 +1,6 @@
 /* 
  * queue.c
+ * ADT para colas
  */
 
 #include <stdio.h>
@@ -21,11 +22,36 @@ int is_full(queue_t * q) {
 }
 
 int enqueue(queue_t * q, T elem) {
-    if (is_full(q))
+    if (is_full(q)) {
         return -1;
+    }
     q->data[q->tail] = elem;
     q->tail = (q->tail + 1) % MAX_ELEM;
     return 0;
+}
+
+T dequeue_element(queue_t * q, T elem) {
+    T curr, first = dequeue(q);
+    if (first = -1) {
+        // empty queue
+        return -1;
+    }
+    if (first == elem) {
+        // found it on first element in queue
+        return elem;
+    }
+    enqueue(q, first);
+    while (first != (curr = peek(q))) {
+        dequeue(q);
+
+        if (curr != elem) {
+            enqueue(q, curr);
+        } else {
+            return elem;
+        }
+    }
+    // not found
+    return -1;
 }
 
 T dequeue(queue_t * q) {

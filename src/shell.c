@@ -3,6 +3,7 @@
 #include "../include/shell.h"
 #include "../include/game.h"
 #include "../include/files.h"
+#include "../include/scheduler.h"
 
 /*
 ** Variables globales:
@@ -338,6 +339,17 @@ llamaFunc(char s[2][LONG_STR_TKN])
             mkdir(s[1]);
             return MKDIR_CD;
         }
+    }
+    else if(str_cmp(s[0], "top"))
+    {
+        top();
+        return TOP_CD;
+    }
+    else if(str_cmp(s[0], "infinite"))
+    {
+        while(1)
+            garbage();
+        return TOP_CD;
     }
     else if(str_cmp(s[0], "help"))
     {

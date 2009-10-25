@@ -178,7 +178,7 @@ void gets( char str[] ) {
 
 byte video_buffer[V_BUFFER_LENGTH] = {0};
 byte clean_buffer[V_BUFFER_LENGTH] = {0};
-static int vb_counter = 0;
+int vb_counter[8] = {0};
 
 void put_char( byte c) {
     check_screen_scroll(0);
@@ -186,13 +186,13 @@ void put_char( byte c) {
 
     /* ENTER */
     if (c == '\n') {
-        check_offset('1',vb_counter);
-        write(PANTALLA_FD, video_buffer, vb_counter);
+        check_offset('1',vb_counter[currentTTY]);
+        write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
         check_screen_scroll(0);
 
         check_offset('2',V_BUFFER_LENGTH-(tty[currentTTY].cursor%80)*2);
         write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(tty[currentTTY].cursor%80)*2 );
-        vb_counter = 0;
+        vb_counter[currentTTY] = 0;
         check_screen_scroll(0);
         return;
     }
@@ -210,26 +210,26 @@ void put_char( byte c) {
     }
 
     /* OTHER CHARACTERS */
-    if (! (vb_counter < V_BUFFER_LENGTH)) {
+    if (! (vb_counter[currentTTY] < V_BUFFER_LENGTH)) {
 
-        if (tty[currentTTY].cursor + vb_counter >= 2000) {
+        if (tty[currentTTY].cursor + vb_counter[currentTTY] >= 2000) {
             int cursorBkp;
-            check_screen_scroll(vb_counter);
-            check_offset('7',vb_counter);
-            write(PANTALLA_FD, video_buffer, vb_counter);
-            vb_counter = 0;
+            check_screen_scroll(vb_counter[currentTTY]);
+            check_offset('7',vb_counter[currentTTY]);
+            write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+            vb_counter[currentTTY] = 0;
         }
         else {
             check_screen_scroll(0);
-            check_offset('3',vb_counter);
-            write(PANTALLA_FD, video_buffer, vb_counter);
-            vb_counter = 0;
+            check_offset('3',vb_counter[currentTTY]);
+            write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+            vb_counter[currentTTY] = 0;
         }
     }
 
-    video_buffer[vb_counter] = c;
-    video_buffer[vb_counter+1] = DEFAULT_TXT ;
-    vb_counter += 2 ;
+    video_buffer[vb_counter[currentTTY]] = c;
+    video_buffer[vb_counter[currentTTY]+1] = DEFAULT_TXT ;
+    vb_counter[currentTTY] += 2 ;
 }
 
 
@@ -268,22 +268,23 @@ byte get_char() {
 ****************************************************************/
 void flush() {
     int currentTTY = get_current_tty();
-    if (tty[currentTTY].cursor + vb_counter >= 2000) {
+    if (tty[currentTTY].cursor + vb_counter[currentTTY] >= 2000) {
 
-        check_screen_scroll(vb_counter);
-        check_offset('9',vb_counter);
+        check_screen_scroll(vb_counter[currentTTY]);
+        check_offset('9',vb_counter[currentTTY]);
 
-        write(PANTALLA_FD, video_buffer, vb_counter);
-        vb_counter = 0;
+        write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+        vb_counter[currentTTY] = 0;
     } else {
-        check_offset('4',vb_counter);
-        write(PANTALLA_FD, video_buffer, vb_counter);
-        vb_counter = 0;
+        check_offset('4',vb_counter[currentTTY]);
+        write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+        vb_counter[currentTTY] = 0;
     }
 }
 
 void borra_buffer() {
-    vb_counter = 0;
+    int currentTTY = get_current_tty();
+    vb_counter[currentTTY] = 0;
     return;
 }
 

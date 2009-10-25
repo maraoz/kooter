@@ -8,9 +8,10 @@
 #include "../include/shell.h"
 
 
-queue_t available_pids;
-queue_t * available_pids_q;
-extern process_t current_process; /* proceso actual que esta corriendo */
+queue_t available_pids, used_pids;
+queue_t * available_pids_q, * used_pids_q;
+
+extern pid_t current_process; /* proceso actual que esta corriendo */
 extern context_t bcp[MAX_PROCESSES];
 
 extern TTY tty[8];
@@ -20,6 +21,8 @@ extern TTY tty[8];
  */
 int init_pids(void) {
     available_pids_q = &available_pids;
+    used_pids_q = &used_pids;
+
     queue_init(available_pids_q);
     int i;
     for (i=1; i<MAX_PROCESSES; i++) {
@@ -32,8 +35,11 @@ int init_pids(void) {
  * get_new_pid
  * devuelve el siguiente pid sin usar
  */
+
 pid_t get_new_pid(void) {
-    return dequeue(available_pids_q);
+    pid_t new_pid = dequeue(available_pids_q);
+    enqueue(used_pids_q, new_pid);
+    return new_pid;
 }
 
 /**
@@ -44,7 +50,8 @@ void
 end_process()
 {
     // TODO: faltan cosas para terminar de matar al proceso
-    enqueue(available_pids_q, current_process.pid);
+    dequeue_element(used_pids_q, current_process);
+    enqueue(available_pids_q, current_process);
 
     // TODO: falta meter el nuevo proceso
 
@@ -55,7 +62,7 @@ end_process()
  * get_current_tty()
  */
 int get_current_tty() {
-    return bcp[current_process.pid].tty;
+    return bcp[current_process].tty;
 }
 
 /**
@@ -135,7 +142,6 @@ process_creator(){
 }
 
 int pepe() {
-    
     while (1) {
         put_char('1');
         flush();
@@ -143,7 +149,6 @@ int pepe() {
 }
 
 int pepe2() {
-    
     while (1) {
     put_char('2');
     flush();

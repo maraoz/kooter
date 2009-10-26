@@ -34,7 +34,7 @@ open(char * name){
     int index,i,j;
     files_t file;
     file.index = 0;
-    strncpy(file.name,name,100);
+    strncpy(file.name,name,50);
     file.tags = cwd;
     file.data = (char*)palloc(); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
@@ -178,7 +178,7 @@ mkdir(char * directory){
         return -1;
     }
     i = log2(tag);
-    strncpy(tag_list[i].name,directory,100);
+    strncpy(tag_list[i].name,directory,50);
 }
 
 /**

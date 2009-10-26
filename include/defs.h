@@ -65,9 +65,16 @@
 #define GBG_CD 8
 #define MARIO_CD 9
 #define CODE_CD 10
-#define MKDIR_CD 11
+#define OPEN_CD 11
+#define CLOSE_CD 12
+#define FREAD_CD 13
+#define FWRITE_CD 14
+#define UNLINK_CD 15
+#define CHDIR_CD 16
+#define LS_CD 17
+#define MKDIR_CD 18
+#define RMDIR_CD 19
 #define TOP_CD 12
-
 
 /* defines para las funciones de allocator */
 #define FOURTH_MB_MARK 0x00400000
@@ -81,7 +88,7 @@
 
 #define MEM_BLOCK 16384
 
-#define MAP_SIZE	32768
+#define MAP_SIZE 32768
 
 typedef int PAGE;
 

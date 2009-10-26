@@ -281,9 +281,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            
-            game(); 
-                        k_clear_screen();
+            game();
+            k_clear_screen();
             return MARIO_CD;
         }
         else
@@ -311,22 +310,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
         else
             arg_extra=1;
     }
-    else if(str_cmp(s[0], "ls"))
-    {
-        if(s[1][0]==0)
-        {
-//             puts("dev      root     home");
-//             put_char('\n');
-//             puts("bin      mnt      boot" );
-//             put_char('\n');
-//             puts("usr      etc      media");
-            ls("");
-            return CODE_CD;
-        }
-        else
-            ls(s[1]);
-//             arg_extra=1;
-    }
     else if(str_cmp(s[0], "mkdir"))
     {
         if(s[1][0]==0)
@@ -338,6 +321,110 @@ llamaFunc(char s[2][LONG_STR_TKN])
         {
             mkdir(s[1]);
             return MKDIR_CD;
+        }
+    }
+    else if(str_cmp(s[0], "open"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return OPEN_CD;
+        }
+    }
+    else if(str_cmp(s[0], "close"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return CLOSE_CD;
+        }
+    }
+    else if(str_cmp(s[0], "fread"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return FREAD_CD;
+        }
+    }
+    else if(str_cmp(s[0], "fwrite"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return FWRITE_CD;
+        }
+    }
+    else if(str_cmp(s[0], "unlink"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return UNLINK_CD;
+        }
+    }
+    else if(str_cmp(s[0], "chdir"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return CHDIR_CD;
+        }
+    }
+    else if(str_cmp(s[0], "ls"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return LS_CD;
+        }
+    }
+    else if(str_cmp(s[0], "rmdir"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            mkdir(s[1]);
+            return RMDIR_CD;
         }
     }
     else if(str_cmp(s[0], "top"))

@@ -130,9 +130,8 @@ void check_screen_scroll(int offset) {
 * Escribe el string str en pantalla.
 * 
 ****************************************************************/
-int time = 0;
-void puts( const char * str ) {
 
+void puts( const char * str ) {
     while (*str) {
         put_char(*str++);
     }
@@ -145,7 +144,6 @@ void puts( const char * str ) {
 * 
 ****************************************************************/
 void putln( const char * str ) {
-    put_char('a');
     puts(str);
     put_char('\n');
 }
@@ -177,7 +175,7 @@ void gets( char str[] ) {
 * Escribe el caracter c en pantalla
 * 
 ****************************************************************/
-#define V_BUFFER_LENGTH 160
+#define V_BUFFER_LENGTH 360
 
 byte video_buffer[8][V_BUFFER_LENGTH] = {0};
 byte clean_buffer[8][V_BUFFER_LENGTH] = {0};
@@ -193,8 +191,8 @@ void put_char( byte c) {
         write(PANTALLA_FD, video_buffer[currentTTY], vb_counter[currentTTY]);
         check_screen_scroll(0);
 
-        check_offset('2',V_BUFFER_LENGTH-(tty[currentTTY].cursor%80)*2);
-        write(PANTALLA_FD, clean_buffer, V_BUFFER_LENGTH-(tty[currentTTY].cursor%80)*2 );
+        check_offset('2',160-(tty[currentTTY].cursor%80)*2);
+        write(PANTALLA_FD, clean_buffer, 160-(tty[currentTTY].cursor%80)*2 );
         vb_counter[currentTTY] = 0;
         check_screen_scroll(0);
         return;
@@ -270,19 +268,21 @@ byte get_char() {
 * 
 ****************************************************************/
 void flush() {
-    int currentTTY = get_current_tty();
+
+   int currentTTY = get_current_tty();
     if (tty[currentTTY].cursor + vb_counter[currentTTY] >= 2000) {
 
         check_screen_scroll(vb_counter[currentTTY]);
         check_offset('9',vb_counter[currentTTY]);
 
-        write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+        write(PANTALLA_FD, video_buffer[currentTTY], vb_counter[currentTTY]);
         vb_counter[currentTTY] = 0;
     } else {
         check_offset('4',vb_counter[currentTTY]);
-        write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+        write(PANTALLA_FD, video_buffer[currentTTY], vb_counter[currentTTY]);
         vb_counter[currentTTY] = 0;
     }
+
 }
 
 void borra_buffer() {
@@ -318,9 +318,9 @@ size_t write(int fd, const void* buffer, size_t count) {
         data = *((byte *)buffer+i);
 
         if (currentTTY == focusedTTY) {
-            _Cli();
+//             _Cli();
             _int_80_caller(WRITE, fd, offset, data);
-            _Sti();
+//             _Sti();
         }
         tty[currentTTY].view[offset] = data;
 

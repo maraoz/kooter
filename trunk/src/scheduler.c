@@ -77,7 +77,8 @@ void magic_algorithm(void) {
     // roundrobin
     pid_t np = dequeue(ready_processes_q);
     if (current_process != np) {
-        flush();
+        //TODO: ojo, ver si va o no
+//         flush();
         current_process = np;
     }
 }
@@ -143,14 +144,13 @@ void print_process_use_percentage(pid_t pid) {
 
     itoa(pid, number_str);
     puts(number_str);
-    puts (" -------> ");
+    puts (" ----------> ");
 
     itoa(perc, number_str);
     puts(number_str);
     puts(" % ");
     put_char('\n');
-//     if (pid == 2)
-//         while(1);
+
 
 }
 
@@ -161,7 +161,7 @@ void top(void) {
     T curr, first = dequeue(q);
     if (first == -1) {
         // no processes (WTF?)
-    putln("           WTF            ");
+        putln("           WTF            ");
         return;
     }
     print_process_use_percentage(first);

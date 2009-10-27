@@ -49,6 +49,7 @@ LoadESP(){
 dword int_08(dword ESP)
 {
     down_p(bcp[current_process].page, bcp[current_process].page_qty);
+    while(1);
     scheduler();
     up_p(bcp[current_process].page, bcp[current_process].page_qty);
     return  bcp[current_process].ESP;
@@ -135,7 +136,7 @@ kmain()
     bcp[0].process.isAlive = TRUE;
     str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
-
+    
     _Sti();
     while(1){
         block_me();

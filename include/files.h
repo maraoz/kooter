@@ -17,7 +17,7 @@ boolean is_valid_fd(int index);
 
 int chdir(char * directory);
 
-int ls(char * directory);
+int ls(int argc, char * directory[]);
 
 int tags(void);
 

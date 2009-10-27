@@ -5,6 +5,7 @@
 #include "../include/files.h"
 #include "../include/scheduler.h"
 #include "../include/process.h"
+#include "../include/shell_proc.h"
 
 /*
 ** Variables globales:
@@ -49,6 +50,8 @@ int ret=AUX;
 /*
 ** Imagen para el protector de pantalla
 */
+
+boolean isBackground;
 
 char * screenSaverImg[25] = {
 "       x                                                                        ",
@@ -184,10 +187,10 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
     /* out[1]= direccion para guardar parametro */
 
     int ln = str_len(s);
-    if(s[ln-1] == '&' && s[ln-2] == ' ') {
-        putln("aca se pone el & en VERDADERO");
+    if(s[ln-1] == '&') {
+        isBackground = TRUE;
     } else {
-        putln("aca se pone el & en FALSO");
+        isBackground = FALSE;
     }
     
     while( *s == ' ' )
@@ -225,19 +228,22 @@ llamaFunc(char s[2][LONG_STR_TKN])
     int cursorBkp;
     int arg_extra=0;
 
+    char * str[2];
+    str[0] = s[1];
+    str[1] = (char*)0;
+    
     if(s[0][0]==0)
         return NO_CD;
     else if(str_cmp(s[0], "echo"))
     {
-        puts(s[1]);
-        flush();
+        create_process(echo, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"echo");
         return ECHO_CD;
     }
     else if(str_cmp(s[0], "clear"))
     {
         if(s[1][0]==0)
         {
-            k_clear_screen();
+            create_process(k_clear_screen, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"clear_screen");
             return CLEAR_CD;
         }
         else
@@ -245,22 +251,22 @@ llamaFunc(char s[2][LONG_STR_TKN])
     }
     else if(str_cmp(s[0], "setTimeSp"))
     {
-        if(atoi(s[1])<0)
+        if(s[1][0]==0)
         {
-            puts("tiempo no valido");
+            create_process(setTimeSp, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"setTimeSp");
             return SETTIME_CD;
         }
-        setTimeSp((atoi(s[1])));
-        puts("tiempo seteado = ");
-        puts(s[1]);
-        puts(" segundos");
-        return SETTIME_CD;
+        else
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
     }
     else if(str_cmp(s[0], "activaSp"))
     {
         if(s[1][0]==0)
         {
-                    tTicks = entraSp * 18 +1;
+            create_process(activaSp, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"activaSp");
             return ACTSP_CD;
         }
         else
@@ -270,10 +276,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            int currentTTY = get_current_tty();
-            tty[currentTTY].cursor=0;
-            showSplashScreen();
-            tty[currentTTY].cursor=2000-80;
+            create_process(activaSp, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"dispImg");
             return DSPIMG_CD;
         }
         else
@@ -283,7 +286,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            garbage();
+            create_process(garbage, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"garbage");
             return GBG_CD;
         }
         else
@@ -293,35 +296,34 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            game();
-            k_clear_screen();
+            create_process(mario, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process, "mario");
             return MARIO_CD;
         }
         else
             arg_extra=1;
     }
-    else if(str_cmp(s[0], "uname"))
-    {
-        if(s[1][0]==0)
-        {
-            puts("Kooter v 1.0");
-            flush();
-            return CODE_CD;
-        }
-        else
-            arg_extra=1;
-    }
-    else if(str_cmp(s[0], "pwd"))
-    {
-        if(s[1][0]==0)
-        {
-            puts("/");
-            flush();
-            return CODE_CD;
-        }
-        else
-            arg_extra=1;
-    }
+//     else if(str_cmp(s[0], "uname"))
+//     {
+//         if(s[1][0]==0)
+//         {
+//             puts("Kooter v 1.0");
+//             flush();
+//             return CODE_CD;
+//         }
+//         else
+//             arg_extra=1;
+//     }
+//     else if(str_cmp(s[0], "pwd"))
+//     {
+//         if(s[1][0]==0)
+//         {
+//             puts("/");
+//             flush();
+//             return CODE_CD;
+//         }
+//         else
+//             arg_extra=1;
+//     }
     else if(str_cmp(s[0], "mkdir"))
     {
         if(s[1][0]==0)
@@ -331,9 +333,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            char * str[2];
-            str[0] = s[1];
-            str[1] = (char*)0;
             create_process(mkdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"mkdir");
             block_me();
             return MKDIR_CD;
@@ -369,11 +368,12 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            puts("Not enough arguments");
+            create_process(ls,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process,"ls");
             return CODE_CD;
         }
-        else{
-            create_process(ls,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process, "ls");
+        else
+        {
+            create_process(ls,1,1,str,1,1,FALSE,focusedTTY,current_process,"ls");
             return LS_CD;
         }
     }
@@ -408,8 +408,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     }
     else if(str_cmp(s[0], "infinite"))
     {
-        while(1)
-            garbage();
+        create_process(infinite,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process, "infinite");
         return TOP_CD;
     }
     else if(str_cmp(s[0], "help"))
@@ -524,81 +523,5 @@ shell()
         ret=llamaFunc(data);
 
         data[0][0]=data[1][0]=0;
-    }
-}
-
-/*
-** funcion que setea el tiempo que tarda en entrar el screen saver
-*/
-
-void
-setTimeSp(int time)
-{
-    entraSp=time;
-}
-
-/*
-** funcion que imprime basura, para testear el scroll de la pantalla
-*/
-
-void
-garbage()
-{
-    char c = 'a';
-        int i;
-        for (i = 0; i<2000; i++)
-        {
-        put_char(c++%50+'a');
-        flush();
-    }
-}
-
-/*
-** funcion que corre el timer tick
-** aumenta en 1 el valor actual de tTicks y se encarga
-** de controlar comienzo y fin del screen saver
-*/
-
-void check_screen_saver()
-{
-    static int firstTime = 1;
-    static int cursorBkp = 0;
-    
-    static int thisLine = 0;
-
-    tTicks++;
-
-    if(tTicks>entraSp*18 && firstTime)
-        interrupted=0;
-    
-    if (firstTime && interrupted==0)
-    {
-        int currentTTY = get_current_tty();
-        hideMouseCursor();
-        read(PANTALLA_FD, bufferScr, 4000);
-        cursorBkp = tty[currentTTY].cursor;
-        k_clear_screen();
-        firstTime = 0;
-        interrupted=0;
-    }
-
-    if (interrupted == 0)
-        if (tTicks % 2)
-        {
-            if (thisLine == 25)
-                thisLine = 0;
-            puts(screenSaverImg[thisLine++]);
-        }
-
-    if (interrupted == 1 && firstTime == 0)
-    {
-            int currentTTY = get_current_tty();
-            borra_buffer();
-            tty[currentTTY].cursor = 0;
-            check_offset('p',4000);
-            write(PANTALLA_FD, bufferScr, 4000);
-            tty[currentTTY].cursor = cursorBkp;
-            tTicks = 0;
-            firstTime = 1;
     }
 }

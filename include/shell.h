@@ -1,4 +1,8 @@
+#ifndef _shell_h
+#define _shell_h
+
 #define HIST_LEN 10
+#include "./defs.h" 
 
 int switch_tty(int new_tty);
 
@@ -16,12 +20,8 @@ void shell();
 
 int atoi(char *s);
 
-void setTimeSp(int time);
-
-void garbage();
-
-void check_screen_saver();
-
 int str_cpy(char *s, char *t);
 
 int str_len(char *s);
+
+#endif

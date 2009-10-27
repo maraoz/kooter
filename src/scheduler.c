@@ -66,7 +66,6 @@ int block(int pid) {
     time_total -= time_consumed[pid];
     time_consumed[pid] = 0L;
 
-
     context_switch();
     return 0;
 }

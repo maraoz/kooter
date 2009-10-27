@@ -334,7 +334,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
             char * str[2];
             str[0] = s[1];
             str[1] = (char*)0;
-            create_process(mkdir,1,1,str,1,1,FALSE,focusedTTY,current_process);
+            create_process(mkdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"mkdir");
             block_me();
             return MKDIR_CD;
         }
@@ -373,14 +373,14 @@ llamaFunc(char s[2][LONG_STR_TKN])
             return CODE_CD;
         }
         else{
-            create_process(ls,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
+            create_process(ls,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process, "ls");
             return LS_CD;
         }
     }
     else if(str_cmp(s[0], "tags"))
     {
         if(s[1][0]==0){
-            create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
+            create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process, "tags");
             block_me();
             return CODE_CD;
         }

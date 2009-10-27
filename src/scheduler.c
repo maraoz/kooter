@@ -13,6 +13,10 @@
 
 #define not !
 
+// ttys
+extern TTY tty[8];
+extern int focusedTTY; 
+
 //contiene el pid del proceso actual
 extern pid_t current_process;
 // array de bloques de control de procesos
@@ -79,6 +83,10 @@ int unblock(int pid) {
 void magic_algorithm(void) {
     // roundrobin
     pid_t np = dequeue(ready_processes_q);
+    if (np == -1) {
+        unblock(0);
+        np = 0;
+    }
     if (current_process != np) {
         current_process = np;
     }
@@ -92,32 +100,36 @@ void magic_algorithm2(void) {
     }
     work_cycles = 1;
     pid_t np = dequeue(ready_processes_q);
-    if (current_process != np) {
-        flush();
-        current_process = np;
+    if (np == -1) {
+        unblock(0);
+        np = 0;
     }
+    current_process = np;
 }
 
 void run_next_process(void) {
-    magic_algorithm2();
+    magic_algorithm();
 }
 
 void scheduler(void){
 
 
     if (!bcp[current_process].process.isAlive || is_blocked(current_process)) {
-        
-    } else {
-	desalojate(current_process);
-    }
-    
-    
-    
 
-    magic_algorithm();
+    } else {
+        desalojate(current_process);
+    }
+
+    run_next_process();
 
     time_consumed[current_process] += 1UL;
-    time_total += 1UL;
+    time_total = (time_total % 100) + 1UL;
+    if (time_total % 100 == 0) {
+        int i;
+        for(i = 0; i<MAX_PROCESSES; i++)
+            time_consumed[i] = 0;
+    }
+
     return;
 }
 
@@ -138,49 +150,113 @@ int desalojate(int pid) {
 
 
 
-char number_str[13];
 
+
+
+
+char number_str[13];
+char view[8][25][80][2];
 
 int use_percentage(pid_t pid) {
-
     return (100*time_consumed[pid]) / time_total;
 }
 
-void print_process_use_percentage(pid_t pid) {
+void print_process_use_percentage(pid_t pid, int line) {
+    int currentTTY = get_current_tty();
+
+    line = line + 3;
 
     itoa(pid, number_str);
-    puts(number_str);
-    puts (" ----------> ");
+    int j;
+    for (j = 0; j<20; j++) {
+        view[currentTTY][line][j+3][0] = number_str[j];
+        if (!number_str[j+1]) break;
+    }
+    char * flechita = " ----------> ";
+    for (j = 0; j<20; j++) {
+        view[currentTTY][line][j+20][0] = flechita[j];
+        if (!flechita[j+1]) break;
+    }
 
+    _Cli();
     int perc = use_percentage(pid);
-
+    _Sti();
     itoa(perc, number_str);
-    puts(number_str);
-    puts (" %");
 
-    put_char('\n');
+    for (j = 0; j<20; j++) {
+        view[currentTTY][line][j+40][0] = number_str[j];
+        if (!number_str[j+1]) break;
+    }
 
+    char * porce = " % ";
+    for (j = 0; j<20; j++) {
+        view[currentTTY][line][j+43][0] = porce[j];
+        if (!porce[j+1]) break;
+    }
+
+    for (j = 0; j<20; j++) {
+        view[currentTTY][line][j+60][0] = bcp[pid].process.name[j];
+        if (!bcp[pid].process.name[j+1]) break;
+    }
 
 }
 
+void init_view(){
+    int currentTTY = get_current_tty();
+    int i,j;
+    for (i=0; i<25;i++) {
+        for (j=0; j<80;j++) {
+            view[currentTTY][i][j][0] = ' ';
+            view[currentTTY][i][j][1] = WHITE_TXT;
+        }
+    }
+}
+void showTop(void) {
+    int currentTTY = get_current_tty();
+    tty[currentTTY].cursor = 0;
+    check_offset('t', 4000);
+    write(PANTALLA_FD, view, 4000);
+    tty[currentTTY].cursor = 0;
+}
+
 void top(void) {
-    putln("--------/ TOPAZ /---------");
-    putln("  id     Use Percentage   ");
-    queue_t * q = used_pids_q;
-    T curr, first = dequeue(q);
-    if (first == -1) {
-        // no processes (WTF?)
-        putln("           WTF            ");
-        return;
+    int currentTTY = get_current_tty();
+    init_view();
+    while(1) {
+        char * header = "------------------------------------/ TOPAZ /-----------------------------------";
+        char * heade2 = "                          id     Use Percentage    name                         ";
+        char * footer = "--------------------------------------------------------------------------------";
+        char * column = "|||||||||||||||||||||||||";
+        int j;
+        for (j = 0; j<25; j++) {
+            view[currentTTY][j][0][0] = column[j];
+            view[currentTTY][j][79][0] = column[j];
+        }
+        for (j = 0; j<80; j++) {
+            view[currentTTY][0][j][0] = header[j];
+            view[currentTTY][1][j][0] = heade2[j];
+            view[currentTTY][2][j][0] = footer[j];
+            view[currentTTY][24][j][0] = footer[j];
+        }
+        int i=0;
+        int N_PROC = 20;
+
+        _Cli();
+        queue_t * q = used_pids_q;
+        T curr, first = dequeue(q);
+        if (first == -1) return;
+        print_process_use_percentage(first, ++i);
+
+        enqueue(q, first);
+        while (first != (curr = peek(q))) {
+            dequeue(q);
+            if (i++ < N_PROC)
+                print_process_use_percentage(curr,i);
+            enqueue(q, curr);
+        }
+        _Sti();
+        showTop();
+
     }
-    print_process_use_percentage(first);
-    enqueue(q, first);
-    while (first != (curr = peek(q))) {
-        dequeue(q);
-        print_process_use_percentage(curr);
-        enqueue(q, curr);
-    }
-    // finished cycling
-    putln("--------------------------");
     return;
 }

@@ -5,6 +5,10 @@
 #include "../include/queue.h"
 
 
+// bloque de control de procesos
+extern context_t bcp[];
+extern pid_t current_process;
+
 
 TTY tty[8];
 int focusedTTY = 0;
@@ -303,12 +307,12 @@ size_t write(int fd, const void* buffer, size_t count) {
         offset = i + tty[currentTTY].cursor*2;
         data = *((byte *)buffer+i);
 
-        if (currentTTY == focusedTTY) {
-//             _Cli();
-            _int_80_caller(WRITE, fd, offset, data);
-//             _Sti();
+        if (bcp[current_process].process.background == FALSE) {
+            if (currentTTY == focusedTTY) {
+                _int_80_caller(WRITE, fd, offset, data);
+            }
+            tty[currentTTY].view[offset] = data;
         }
-        tty[currentTTY].view[offset] = data;
 
     }
     tty[currentTTY].cursor+=count/2;

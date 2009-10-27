@@ -133,12 +133,12 @@ kmain()
     init_ttys();
     fs_init();
     bcp[0].process.isAlive = TRUE;
-
+    str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
 
     _Sti();
     while(1){
-
+        block_me();
     }
 }
 

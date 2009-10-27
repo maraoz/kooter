@@ -150,6 +150,7 @@ typedef struct {
     int f_pointer;
     int background;
     boolean isAlive;
+    char name[20];
 } process_t;
 
 #pragma pack (1)

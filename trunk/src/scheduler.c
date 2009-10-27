@@ -9,6 +9,7 @@
 #include "../include/queue.h"
 #include "../include/util.h"
 #include "../include/kc.h"
+#include <math.h>
 
 #define not !
 
@@ -140,18 +141,9 @@ int desalojate(int pid) {
 char number_str[13];
 
 
-double use_percentage(pid_t pid) {
-    int tc, tt;
+int use_percentage(pid_t pid) {
 
-//     itoa(pid, number_str);
-//     puts(number_str);
-//     puts (" ----------> ");
-// 
-//     itoa(perc, number_str);
-//     puts(number_str);
-//     puts(" % ");
-//     put_char('\n');
-    return time_consumed[pid] / ((double) time_total);
+    return (100*time_consumed[pid]) / time_total;
 }
 
 void print_process_use_percentage(pid_t pid) {
@@ -160,11 +152,12 @@ void print_process_use_percentage(pid_t pid) {
     puts(number_str);
     puts (" ----------> ");
 
-    int perc = use_percentage(pid) * 100;
+    int perc = use_percentage(pid);
 
-//     itoa(perc, number_str);
-//     puts(number_str);
-    puts(" % ");
+    itoa(perc, number_str);
+    puts(number_str);
+    puts (" %");
+
     put_char('\n');
 
 

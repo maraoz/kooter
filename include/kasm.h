@@ -35,7 +35,9 @@ void		wpantalla(word c, int offset);
 
 void		disable_text_cursor(void);
 
-void            init_pagination(void);
+void		enable_page();
+
+void		write_cr3(PAGE *);
 
 void        Disable();
 

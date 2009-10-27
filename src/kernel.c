@@ -48,9 +48,9 @@ LoadESP(){
 
 dword int_08(dword ESP)
 {
-//     down_p(bcp[current_process].page);
+    down_p(bcp[current_process].page);
     scheduler();
-    up_p(bcp[current_process].page);
+//     up_p(bcp[current_process].page);
     return  bcp[current_process].ESP;
 }
 

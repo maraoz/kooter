@@ -183,6 +183,13 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
     /* out[0]= direccion para guardar comando */
     /* out[1]= direccion para guardar parametro */
 
+    int ln = str_len(s);
+    if(s[ln-1] == '&' && s[ln-2] == ' ') {
+        putln("aca se pone el & en VERDADERO");
+    } else {
+        putln("aca se pone el & en FALSO");
+    }
+    
     while( *s == ' ' )
         s++;
 
@@ -192,13 +199,16 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 
     while( s[i] == ' ' )
         i++;
-
+    
     if( s[i] == 0 )
         return;
 
     for(j=0; s[i] != 0 && j<LONG_STR_TKN; i++, j++)
         out[1][j] = s[i];
     out[1][j]=0;
+    
+    while( s[i] == ' ' )
+        i++;
 
     return;
 }
@@ -368,7 +378,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0){
 	    create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
 	    block_me();
-	    
+// 	    tags();
 	    return CODE_CD;
         }
         else{

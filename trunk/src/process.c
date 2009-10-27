@@ -54,7 +54,7 @@ end_process()
     if(bcp[current_process].process.background == FALSE){
         unblock(bcp[current_process].dad_pid);
     }
-     pfree(bcp[current_process].page);//,bcp[current_process].page_qty);
+    pfree(bcp[current_process].page, bcp[current_process].page_qty);
     run_next_process();
 }
 
@@ -83,9 +83,9 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     new_proc.dad_pid = dad_pid;
     
     /* inicializar stack */
-//     new_proc.page = palloc(pages_qty);
     new_proc.page_qty = pages_qty;
-    new_proc.page = palloc();
+    new_proc.page = palloc(pages_qty);
+//     new_proc.page = palloc();
     new_proc.ESP = (dword)new_proc.page;
     new_proc.ESP += (pages_qty*PAGE_SIZE)-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);

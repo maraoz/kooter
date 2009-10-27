@@ -10,16 +10,16 @@
 
 void init_pagination();
 
-PAGE * palloc(void);
+PAGE * palloc(int cant);
 
-void pfree(PAGE * page);
+void pfree(PAGE * page, int cant);
 
 void * malloc(int size);
 
 void free(void * mem);
 
-void down_p(PAGE * page);
+void down_p(PAGE * page, int cant);
 
-void up_p(PAGE * page);
+void up_p(PAGE * page, int cant);
 
 #endif

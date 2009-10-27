@@ -36,7 +36,7 @@ open(char * name){
     file.index = 0;
     strncpy(file.name,name,50);
     file.tags = cwd;
-    file.data = (char*)palloc(); /* numero magico, poner una valor mejor */
+    file.data = (char*)palloc(1); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
     if(index == -1){
         return -1;

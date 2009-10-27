@@ -349,32 +349,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
             return CLOSE_CD;
         }
     }
-    else if(str_cmp(s[0], "fread"))
-    {
-        if(s[1][0]==0)
-        {
-            puts("Not enough arguments");
-            return CODE_CD;
-        }
-        else
-        {
-            mkdir(s[1]);
-            return FREAD_CD;
-        }
-    }
-    else if(str_cmp(s[0], "fwrite"))
-    {
-        if(s[1][0]==0)
-        {
-            puts("Not enough arguments");
-            return CODE_CD;
-        }
-        else
-        {
-            mkdir(s[1]);
-            return FWRITE_CD;
-        }
-    }
     else if(str_cmp(s[0], "unlink"))
     {
         if(s[1][0]==0)

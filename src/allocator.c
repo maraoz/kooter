@@ -87,35 +87,44 @@ init_pagination(void) {
 */
 
 PAGE *
-palloc(void)
+palloc(int cant)
 {
 	static unsigned int i;
+    static unsigned int j;
+    static unsigned int k;
+    int correct = 1;
+    
+    if(i + cant > 1023) {
+        i = 0;
+    }
 
-	for( i = 0; i < (MemSize/MEM_BLOCK); i++ )
+	for( ; i < (MemSize/MEM_BLOCK); )
 	{
-//		printf("Mem: %X\n",MemMap[i/8]);
-//		if( MemMap[i/8]&(1<<i%8) )
-		if( !getbits8(MemMap[i/8],i%8,1) )
+        for( k = i; k < cant; k++) {
+            correct *= (!getbits8(MemMap[k/8],k%8,1))? 1 : 0;
+        }
+		if( correct )
 		{
-//			MemMap[i/8]&= ~(1<<i%8);
-			setbits8(&(MemMap[i/8]),i%8,1,1);
-//			printf("MemSet: %X\n",MemMap[i/8]);
-			//TODO
+            for( j = i; j < cant; j++) {
+                setbits8(&(MemMap[j/8]),j%8,1,1);
+            }
+            up_p((PAGE*)(MemStart+i*MEM_BLOCK), cant);
+            i = i + cant;
 			return (void*)(MemStart+i*MEM_BLOCK);
-//			return NULL;
 		}
+        i++;
 	}
 
 	return NULL;
 }
 
 void
-pfree(PAGE * p)
+pfree(PAGE * p, int cant)
 {
 	static int mempos;
 	static unsigned int i;
-
-	//TODO
+    static unsigned int j;
+    
 	mempos = (int) p;
 
 	mempos -= MemStart;
@@ -127,46 +136,46 @@ pfree(PAGE * p)
 		/** Se esta liberando una direccion no valida. */
 	}
 
-//	if( MemMap[i/8]&(1<<i%8) )
 	if( !getbits8(MemMap[i/8], i % 8, 1) )
 	{
 		/** DOUBLE FREE EXCEPTION. **/
 	}
 
 	/** Todo ok, dejo libre la zona de memoria. */
-//	MemMap[i/8]|=(1<<i%8);
-	setbits8(&(MemMap[i/8]), i % 8, 1, 0);
+    for( j = i; j < cant; j++) {
+        setbits8(&(MemMap[j/8]), j % 8, 1, 0);
+    }
 }
 
 
 void
-up_p(PAGE * p)
+up_p(PAGE * p, int cant)
 {
 	unsigned int phys = (unsigned int)p;
 	unsigned int dirIndex = (phys >> 22) & 0x3FF;
-	unsigned int tabIndex = (phys >>12) & 0x3FF;
+	unsigned int tabIndex = (phys >> 12) & 0x3FF;
 	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
 
 	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
-	table[tabIndex] = (phys & 0xFFFFF000) | 3;
-	table[tabIndex+1] = ((phys & 0xFFFFF000) + PAGE_SIZE) | 3;
-	table[tabIndex+2] = ((phys & 0xFFFFF000) + 2 * PAGE_SIZE) | 3;
-	table[tabIndex+3] = ((phys & 0xFFFFF000) + 3 * PAGE_SIZE) | 3;
+    int i;
+    for(i = 0; i < cant; i++) {
+        table[tabIndex + i] = (phys & 0xFFFFF000 + i * PAGE_SIZE) | 3;
+    }
 }
 
 void
-down_p(PAGE *p)
+down_p(PAGE *p, int cant)
 {
 	unsigned int phys = (unsigned int)p;
 	unsigned int dirIndex = (phys >> 22) & 0x3FF;
-	unsigned int tabIndex = (phys >>12) & 0x3FF;
+	unsigned int tabIndex = (phys >> 12) & 0x3FF;
 	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
 
 	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
-	table[tabIndex] = (phys & 0xFFFFF000) & 0xFFFFFFFE;
-	table[tabIndex+1] = ((phys & 0xFFFFF000) + PAGE_SIZE) & 0xFFFFFFFE;
-	table[tabIndex+2] = ((phys & 0xFFFFF000) + 2 * PAGE_SIZE) & 0xFFFFFFFE;
-	table[tabIndex+3] = ((phys & 0xFFFFF000) + 3 * PAGE_SIZE) & 0xFFFFFFFE;
+    int i;
+    for(i = 0; i < cant; i++) {
+        table[tabIndex + i] = (phys & 0xFFFFF000 + i * PAGE_SIZE) & 0xFFFFFFFE;
+    }
 }
 
 // ---------------------------------------------------------------------------------------

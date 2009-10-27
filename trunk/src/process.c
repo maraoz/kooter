@@ -7,6 +7,7 @@
 #include "../include/process.h"
 #include "../include/shell.h"
 #include "../include/files.h"
+#include "../include/shell_proc.h"
 #include "../include/stdio.h"
 
 

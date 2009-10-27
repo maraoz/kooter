@@ -152,13 +152,13 @@ chdir(char * directory){
  * Funcion que lista el contenido de un directorio
  */
 int
-ls(char * directory){
+ls(int argc, char * directory[]){
     dword tag;
     int i;
-    if(directory[0] == 0){
+    if(directory[0][0] == 0){
         tag = cwd;
     } else {
-        tag = get_numeric_tag(directory)|cwd;
+        tag = get_numeric_tag(directory[0])|cwd;
     }
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
         if(opened_files[i].used == TRUE && opened_files[i].file.tags&tag == tag){

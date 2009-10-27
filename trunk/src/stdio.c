@@ -349,23 +349,7 @@ size_t read(int fd, void* buffer, size_t count) {
     return i;
 }
 
-
-/***************************************************************
-*k_clear_screen
-*
-* Borra la pantalla en modo texto color.
-****************************************************************/
 char * BLANK_LINE = "                                                                                ";
-void k_clear_screen() {
-    int currentTTY = get_current_tty();
-
-    tty[currentTTY].cursor = 0;
-    check_offset('5',4000);
-    write(PANTALLA_FD, blank_screen_buffer, 4000);
-
-    tty[currentTTY].cursor = 0;
-}
-
 
 /***************************************************************
 * showSplashScreen
@@ -401,10 +385,3 @@ char * splash_screen[24] = {
 
 };
 
-void showSplashScreen() {
-    int i;
-    for (i = 0; i < 24; i++) {
-        puts(splash_screen[i]);
-    }
-
-}

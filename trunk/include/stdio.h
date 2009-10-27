@@ -31,7 +31,7 @@
     /* lee un caracter del teclado */
     byte get_char();
 
-    /* imprime en pantalla lo que no se imprimió del buffer de put_char */
+    /* imprime en pantalla lo que no se imprimiï¿½ del buffer de put_char */
     void flush();
 
     /* imrpime en pantalla el string str */
@@ -58,14 +58,6 @@
 
     /* Copia n chars de un string a otro */
     void str_ncpy(byte * dest, byte * src, size_t size);
-
-    /* Limpia la pantalla */
-    void k_clear_screen();
-
-    /* Muestra la imagen de inicio */
-    void showSplashScreen();
-
-
     
 
 #endif

@@ -4,7 +4,7 @@ default 0
 # Tiempo de espera de 2 segundos. Si el usuario no presiona una tecla GRUB 
 # ejecuta la entrada por default.
 
-timeout 5
+timeout 1
 
 # Primera entrada
 

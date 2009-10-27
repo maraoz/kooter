@@ -28,6 +28,10 @@ int init_pids(void) {
     for (i=1; i<MAX_PROCESSES; i++) {
         enqueue(available_pids_q, i);
     }
+
+    queue_init(used_pids_q);
+    enqueue(used_pids_q, 0);
+
     return 0;
 }
 

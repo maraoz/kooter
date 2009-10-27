@@ -149,6 +149,7 @@ typedef struct {
     int priority;
     int f_pointer;
     int background;
+    boolean isAlive;
 } process_t;
 
 #pragma pack (1)

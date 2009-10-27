@@ -21,7 +21,7 @@ int ls(char * directory);
 
 int tags(void);
 
-int mkdir(char * directory);
+int mkdir(int argc, char * directory[]);
 
 int rmdir(char * directory); 
 

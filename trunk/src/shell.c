@@ -333,7 +333,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            create_process(mkdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"mkdir");
+            create_process(mkdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"mkdir");
             block_me();
             return MKDIR_CD;
         }
@@ -361,7 +361,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            create_process(chdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"chdir");
+            create_process(chdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"chdir");
             block_me();
             return MKDIR_CD;
         }
@@ -370,19 +370,19 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(ls,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process,"ls");
+            create_process(ls,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process,"ls");
             return CODE_CD;
         }
         else
         {
-            create_process(ls,1,1,str,1,1,FALSE,focusedTTY,current_process,"ls");
+            create_process(ls,1,1,str,1,1,isBackground,focusedTTY,current_process,"ls");
             return LS_CD;
         }
     }
     else if(str_cmp(s[0], "tags"))
     {
         if(s[1][0]==0){
-            create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process, "tags");
+            create_process(tags,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process, "tags");
             block_me();
             return CODE_CD;
         }
@@ -399,7 +399,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            create_process(rmdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"rmdir");
+            create_process(rmdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"rmdir");
             block_me();
             return RMDIR_CD;
         }
@@ -411,7 +411,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     }
     else if(str_cmp(s[0], "infinite"))
     {
-        create_process(infinite,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process, "infinite");
+        create_process(infinite,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process, "infinite");
         return TOP_CD;
     }
     else if(str_cmp(s[0], "help"))

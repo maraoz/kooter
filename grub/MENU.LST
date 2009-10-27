@@ -8,7 +8,7 @@ timeout 1
 
 # Primera entrada
 
-title Kooter v1.0 Mini Kernel Booter
+title Kooter v2.0 Mini Kernel Booter
 kernel /boot/kernel.bin
 
 title Ubuntu 9.04 

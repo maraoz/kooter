@@ -47,7 +47,9 @@ int init_pids(void) {
 
 pid_t get_new_pid(void) {
     pid_t new_pid = dequeue(available_pids_q);
+    _Cli();
     enqueue(used_pids_q, new_pid);
+    _Sti();
     return new_pid;
 }
 

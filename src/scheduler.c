@@ -177,17 +177,18 @@ void print_process_use_percentage(pid_t pid, int line) {
         if (!flechita[j+1]) break;
     }
 
-    _Cli();
+
     int perc = use_percentage(pid);
-    _Sti();
+
     itoa(perc, number_str);
 
     for (j = 0; j<20; j++) {
         view[currentTTY][line][j+40][0] = number_str[j];
+        view[currentTTY][line][j+41][0] = ' ';
         if (!number_str[j+1]) break;
     }
 
-    char * porce = " % ";
+    char * porce = "% ";
     for (j = 0; j<20; j++) {
         view[currentTTY][line][j+43][0] = porce[j];
         if (!porce[j+1]) break;
@@ -214,14 +215,17 @@ void showTop(void) {
     int currentTTY = get_current_tty();
     tty[currentTTY].cursor = 0;
     check_offset('t', 4000);
-    write(PANTALLA_FD, view, 4000);
+    write(PANTALLA_FD, view[currentTTY], 4000);
     tty[currentTTY].cursor = 0;
 }
 
 void top(void) {
     int currentTTY = get_current_tty();
-    init_view();
+
     while(1) {
+        init_view();
+        _Cli();
+
         char * header = "------------------------------------/ TOPAZ /-----------------------------------";
         char * heade2 = "                          id     Use Percentage    name                         ";
         char * footer = "--------------------------------------------------------------------------------";
@@ -240,9 +244,10 @@ void top(void) {
         int i=0;
         int N_PROC = 20;
 
-        _Cli();
+
         queue_t * q = used_pids_q;
-        T curr, first = dequeue(q);
+        T curr;
+        T first = dequeue(q);
         if (first == -1) return;
         print_process_use_percentage(first, ++i);
 
@@ -253,9 +258,9 @@ void top(void) {
                 print_process_use_percentage(curr,i);
             enqueue(q, curr);
         }
-        _Sti();
-        showTop();
 
+        showTop();
+        _Sti();
     }
     return;
 }

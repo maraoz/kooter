@@ -54,7 +54,7 @@ pid_t get_new_pid(void) {
 void
 end_process()
 {
-
+    char * m = (char *)0xB8000;
     dequeue_element(used_pids_q, current_process);
     enqueue(available_pids_q, current_process);
     pfree(bcp[current_process].page, bcp[current_process].page_qty);
@@ -63,6 +63,7 @@ end_process()
     }
     bcp[current_process].process.isAlive = FALSE;
     context_switch();
+    while(1);
 }
 
 /**

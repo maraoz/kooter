@@ -368,6 +368,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0){
 	    create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
 	    block_me();
+	    
 	    return CODE_CD;
         }
         else{

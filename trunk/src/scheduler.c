@@ -103,11 +103,17 @@ void run_next_process(void) {
 
 void scheduler(void){
 
-    if (!bcp[current_process].process.isAlive || !is_blocked(current_process)) {
-        desalojate(current_process);
-    }
 
-    magic_algorithm2();
+    if (!bcp[current_process].process.isAlive || is_blocked(current_process)) {
+        
+    } else {
+	desalojate(current_process);
+    }
+    
+    
+    
+
+    magic_algorithm();
 
     time_consumed[current_process] += 1UL;
     time_total += 1UL;

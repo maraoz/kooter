@@ -54,15 +54,15 @@ pid_t get_new_pid(void) {
 void
 end_process()
 {
-    
+
     dequeue_element(used_pids_q, current_process);
     enqueue(available_pids_q, current_process);
     pfree(bcp[current_process].page, bcp[current_process].page_qty);
     if(bcp[current_process].process.background == FALSE){
         unblock(bcp[current_process].dad_pid);
     }
-    bcp[current_process].process.isAlive = TRUE;
-    run_next_process();
+    bcp[current_process].process.isAlive = FALSE;
+    context_switch();
 }
 
 /**
@@ -149,7 +149,6 @@ process_creator(){
     create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,6,current_process);
     create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,7,current_process);
 
-
 }
 
 int pepe() {
@@ -168,7 +167,6 @@ int pepe2() {
 
 int pepe3() {
 
-    
     while (1) {put_char('3');
     flush();
     }

@@ -10,6 +10,8 @@
 #include "../include/util.h"
 #include "../include/kc.h"
 
+#define not !
+
 //contiene el pid del proceso actual
 extern pid_t current_process;
 // array de bloques de control de procesos
@@ -77,8 +79,6 @@ void magic_algorithm(void) {
     // roundrobin
     pid_t np = dequeue(ready_processes_q);
     if (current_process != np) {
-        //TODO: ojo, ver si va o no
-//         flush();
         current_process = np;
     }
 }
@@ -103,7 +103,7 @@ void run_next_process(void) {
 
 void scheduler(void){
 
-    if (!is_blocked(current_process)) {
+    if (!bcp[current_process].process.isAlive || !is_blocked(current_process)) {
         desalojate(current_process);
     }
 
@@ -131,23 +131,33 @@ int desalojate(int pid) {
 
 
 
+char number_str[13];
+
+
 double use_percentage(pid_t pid) {
+    int tc, tt;
+
+//     itoa(pid, number_str);
+//     puts(number_str);
+//     puts (" ----------> ");
+// 
+//     itoa(perc, number_str);
+//     puts(number_str);
+//     puts(" % ");
+//     put_char('\n');
     return time_consumed[pid] / ((double) time_total);
 }
 
-
-char number_str[13];
-
 void print_process_use_percentage(pid_t pid) {
-
-    int perc = use_percentage(pid) * 100;
 
     itoa(pid, number_str);
     puts(number_str);
     puts (" ----------> ");
 
-    itoa(perc, number_str);
-    puts(number_str);
+    int perc = use_percentage(pid) * 100;
+
+//     itoa(perc, number_str);
+//     puts(number_str);
     puts(" % ");
     put_char('\n');
 

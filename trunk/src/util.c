@@ -57,20 +57,33 @@ int digit_count(int n) {
     return i;
 }
 
-void itoa( int n, char ret[] ) {
-    if (n == 0) {
-        ret[0] = '0';
-        return;
+// void itoa( int n, char ret[] ) {
+// 
+//     int i;
+//     int dc = digit_count(n);
+//     for (i=0; n != 0; i++) {
+//         ret[dc-i-1] = n % 10 + '0';
+//         n /= 10;
+//     }
+//     return;
+// }
+
+
+void itoa (int n, char ret[]){
+    int i=0,j;
+    char s[17];
+
+    do {
+        s[i++]=(char)( n%10+48 );
+        n-=n%10;
     }
-    ret[0] = (n%10)+'0';
-    return;
-    int i;
-    int dc = digit_count(n);
-    for (i=0; n != 0; i++) {
-        ret[dc-i-1] = n % 10 + '0';
-        n /= 10;
-    }
-    return;
+    while((n/=10)>0);
+
+    for (j=0;j<i;j++)
+        ret[i-1-j]=s[j];
+
+    ret[j]='\0';
+    return ;
 }
 
 

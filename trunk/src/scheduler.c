@@ -120,7 +120,7 @@ void scheduler(void){
     }
 
     run_next_process();
-
+    
     time_consumed[current_process] += 1UL;
     time_total = (time_total % 100) + 1UL;
     if (time_total % 100 == 0) {

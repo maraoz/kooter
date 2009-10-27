@@ -172,15 +172,23 @@ ls(char * directory){
  * Funcion que crea directorios
  */
 int
-mkdir(char * directory){
+mkdir(int argc, char * directory[]){
     dword tag;
     int i;
+    for(i=0;i<MAX_QTY_TAGS;i++){
+        if(str_cmp(directory[0],tag_list[i].name)){
+            putln("No se puede crear dos directorios con el mismo nombre");
+            return -1;
+        }
+    }
+    putln(directory[0]);
     tag = get_next_available_tag();
     if(tag == -1){
+        putln("No hay mas tags disponibles");
         return -1;
     }
     i = log2(tag);
-    strncpy(tag_list[i].name,directory,50);
+    str_ncpy(tag_list[i].name,directory[0],50);
 }
 
 /**

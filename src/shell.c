@@ -331,7 +331,11 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            mkdir(s[1]);
+            char * str[2];
+            str[0] = s[1];
+            str[1] = (char*)0;
+            create_process(mkdir,1,1,str,1,1,FALSE,focusedTTY,current_process);
+            block_me();
             return MKDIR_CD;
         }
     }
@@ -369,17 +373,16 @@ llamaFunc(char s[2][LONG_STR_TKN])
             return CODE_CD;
         }
         else{
-            ls(s[1]);
+            create_process(ls,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
             return LS_CD;
         }
     }
     else if(str_cmp(s[0], "tags"))
     {
         if(s[1][0]==0){
-	    create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
-	    block_me();
-// 	    tags();
-	    return CODE_CD;
+            create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
+            block_me();
+            return CODE_CD;
         }
         else{
             arg_extra =1;
@@ -394,7 +397,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            mkdir(s[1]);
+            rmdir(s[1]);
             return RMDIR_CD;
         }
     }

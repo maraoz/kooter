@@ -102,7 +102,11 @@ int
 fread(char * name,char * buffer){
     int i;
     int index;
-    index = get_fd(name);
+    index = exists_file(name);
+    if(index == -1){
+	putln("Archivo inexistente");
+	return -1;
+    }
     if(!is_valid_fd(index) || opened_files[index].used == FALSE){
 	putln("El archivo no existe");
         return -1;
@@ -120,7 +124,11 @@ fread(char * name,char * buffer){
 int
 fwrite(char * name, char * input){
     int index,i;
-    index = get_fd(name);
+    index = exists_file(name);
+    if(index == -1){
+	putln("Archivo inexistente");
+	return -1;
+    }
     if(!is_valid_fd(index) || opened_files[index].used == FALSE){
 	putln("El archivo no existe");
         return -1;
@@ -136,11 +144,6 @@ fwrite(char * name, char * input){
 /**
  * Funcion que devuelve el indice de un nombre de archivo
  */
-
-int
-get_fd(char * name){
-}
-
 /**
  * Funcion que borra un archivo
  */

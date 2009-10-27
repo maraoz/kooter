@@ -127,6 +127,7 @@ typedef struct {
 
 } tcirc;
 
+typedef int pid_t;
 
 typedef struct {
 	int	x;
@@ -157,6 +158,8 @@ typedef struct {
     dword SS;
     PAGE * page;
     int tty;
+    int page_qty;
+    pid_t dad_pid;
 } context_t;
 
 #pragma pack (1)
@@ -175,8 +178,6 @@ typedef struct
     queue_t * kb_buffer;
 } TTY;
 
-
-typedef int pid_t;
 
 
 

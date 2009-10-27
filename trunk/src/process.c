@@ -49,13 +49,13 @@ pid_t get_new_pid(void) {
 void
 end_process()
 {
-    // TODO: faltan cosas para terminar de matar al proceso
     dequeue_element(used_pids_q, current_process);
     enqueue(available_pids_q, current_process);
-
-    // TODO: falta meter el nuevo proceso
-
-
+    if(bcp[current_process].process.background == FALSE){
+        unblock(bcp[current_process].dad_pid);
+    }
+     pfree(bcp[current_process].page);//,bcp[current_process].page_qty);
+    run_next_process();
 }
 
 /**
@@ -69,22 +69,22 @@ int get_current_tty() {
  * Funcion que crea un nuevo proceso
  */
 process_t
-create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
+create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty, pid_t dad_pid)
 {
     int i;
     context_t new_proc;
 
-//     put_char('0'+(char)funcion);
-//     flush();
 //     _Cli();
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
-     new_proc.tty = tty;
-
-
+    
+    new_proc.tty = tty;
+    new_proc.dad_pid = dad_pid;
+    
     /* inicializar stack */
 //     new_proc.page = palloc(pages_qty);
+    new_proc.page_qty = pages_qty;
     new_proc.page = palloc();
     new_proc.ESP = (dword)new_proc.page;
     new_proc.ESP += (pages_qty*PAGE_SIZE)-1;
@@ -129,14 +129,14 @@ void
 process_creator(){
     
     //create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
-    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,0);
-    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,1);
-    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,2);
-    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,3);
-    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,4);
-    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,5);
-    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,6);
-    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,7);
+    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,0,current_process);
+    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,1,current_process);
+    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,2,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,3,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,4,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,5,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,6,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,7,current_process);
     
 
 }

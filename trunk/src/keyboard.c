@@ -51,7 +51,7 @@ void leoteclado (int k){
                 }
                 if(!isFs(c)){
                     int pid;
-                    enqueue(tty[focusedTTY].kb_buffer, c);                    
+                    enqueue(tty[focusedTTY].kb_buffer, c);
                     for (pid=0;pid<MAX_PROCESSES;pid++) {
                         if(is_blocked(pid) && bcp[pid].tty==focusedTTY
                           && !bcp[current_process].process.background )
@@ -129,6 +129,16 @@ byte next_char (){
     }
     a = dequeue(tty[currentTTY].kb_buffer);
 
+    return a;
+}
+
+int non_blocking_next_char (){
+    int a;
+    int currentTTY = get_current_tty();
+    if (bcp[current_process].process.background == TRUE)
+        block_me();
+
+    a = dequeue(tty[currentTTY].kb_buffer);
     return a;
 }
 

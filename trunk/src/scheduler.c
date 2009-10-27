@@ -9,6 +9,7 @@
 #include "../include/queue.h"
 #include "../include/util.h"
 #include "../include/kc.h"
+#include "../include/keyboard.h"
 #include <math.h>
 
 #define not !
@@ -227,7 +228,7 @@ void top(void) {
         _Cli();
 
         char * header = "------------------------------------/ TOPAZ /-----------------------------------";
-        char * heade2 = "                          id     Use Percentage    name                         ";
+        char * heade2 = "|                         id     Use Percentage    name                        |";
         char * footer = "--------------------------------------------------------------------------------";
         char * column = "|||||||||||||||||||||||||";
         int j;
@@ -260,6 +261,12 @@ void top(void) {
         }
 
         showTop();
+        int c = non_blocking_next_char();
+        if (c != -1) {
+            init_view();
+            showTop();
+            return;
+        }
         _Sti();
     }
     return;

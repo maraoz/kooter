@@ -4,6 +4,7 @@
 #include "../include/game.h"
 #include "../include/files.h"
 #include "../include/scheduler.h"
+#include "../include/process.h"
 
 /*
 ** Variables globales:
@@ -14,6 +15,7 @@ extern int interrupted;
 /* variable con la cantidad de timerTicks que llegaron desde el ultimo reinicio */
 extern int tTicks;
 
+extern pid_t current_process;
 
 extern TTY tty[8];
 extern int focusedTTY; 
@@ -363,10 +365,10 @@ llamaFunc(char s[2][LONG_STR_TKN])
     }
     else if(str_cmp(s[0], "tags"))
     {
-        if(s[1][0]==0)
-        {
-            tags();
-            return CODE_CD;
+        if(s[1][0]==0){
+	    create_process(tags,1,1,(char**)0,1,1,FALSE,focusedTTY,current_process);
+	    block_me();
+	    return CODE_CD;
         }
         else{
             arg_extra =1;

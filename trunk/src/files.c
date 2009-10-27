@@ -2,11 +2,13 @@
 #include "../include/files.h"
 #include "../include/stdio.h"
 #include "../include/shell.h"
+#include "../include/kasm.h"
 #include "../include/allocator.h"
 
 files_entry opened_files[MAX_QTY_FILES];
 tag_list_t tag_list[MAX_QTY_TAGS];
 dword cwd = 0;
+extern pid_t current_process;
 
 /**
  * Funcion que inicializa el fs
@@ -230,12 +232,13 @@ get_next_file_entry(){
  */
 
 int
-tags(){
+tags(){    
     int i;
     for(i=0;i<MAX_QTY_TAGS;i++){
         if(tag_list[i].name[0]!=0)
             putln(tag_list[i].name);
     }
+    return 1;
 }
 
 /**

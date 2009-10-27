@@ -98,7 +98,7 @@ void magic_algorithm2(void) {
 }
 
 void run_next_process(void) {
-    magic_algorithm();
+    magic_algorithm2();
 }
 
 void scheduler(void){

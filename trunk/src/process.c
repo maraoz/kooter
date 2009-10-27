@@ -6,6 +6,7 @@
 #include "../include/kasm.h"
 #include "../include/process.h"
 #include "../include/shell.h"
+#include "../include/files.h"
 
 
 queue_t available_pids, used_pids;
@@ -53,12 +54,14 @@ pid_t get_new_pid(void) {
 void
 end_process()
 {
+    
     dequeue_element(used_pids_q, current_process);
     enqueue(available_pids_q, current_process);
+    pfree(bcp[current_process].page, bcp[current_process].page_qty);
     if(bcp[current_process].process.background == FALSE){
         unblock(bcp[current_process].dad_pid);
     }
-    pfree(bcp[current_process].page, bcp[current_process].page_qty);
+    bcp[current_process].process.isAlive = TRUE;
     run_next_process();
 }
 
@@ -75,13 +78,15 @@ int get_current_tty() {
 process_t
 create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty, pid_t dad_pid)
 {
-    int i;
+    int i,a;
+    char * m = (char *) 0xB8000;
     context_t new_proc;
 
 //     _Cli();
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
+    new_proc.process.isAlive = TRUE;
     
     new_proc.tty = tty;
     new_proc.dad_pid = dad_pid;
@@ -95,7 +100,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
     new_proc.SS = 0x10;
    
-    
+
     bcp[new_proc.process.pid] = new_proc;
 
 
@@ -108,8 +113,10 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
 
 
 
-    desalojate(new_proc.process.pid);
+    a = desalojate(new_proc.process.pid);
+
 //     _Sti();
+            
     return new_proc.process;
 }
 

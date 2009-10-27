@@ -124,11 +124,10 @@ kmain()
     _mascaraPIC1(0xF8);
     _mascaraPIC2(0xEF);
 
-    //TODO: volver a poner
-//         k_clear_screen();
-
     init_pids();
     init_scheduler();
+
+    k_clear_screen();
 
 
     init_ttys();

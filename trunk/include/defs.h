@@ -202,7 +202,7 @@ typedef struct {
 } files_entry;
 
 typedef struct {
-    char name[100];
+    char name[50];
     int references;
 } tag_list_t;
 

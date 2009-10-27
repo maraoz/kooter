@@ -225,6 +225,18 @@ get_next_file_entry(){
     }
     return index++;
 }
+/**
+ * Funcion que devuelve los tags
+ */
+
+int
+tags(){
+    int i;
+    for(i=0;i<MAX_QTY_TAGS;i++){
+        if(tag_list[i].name[0]!=0)
+            putln(tag_list[i].name);
+    }
+}
 
 /**
  * Funcion que devuelve un tag numerico a partir de un nombre de directorio

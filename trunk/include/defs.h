@@ -187,7 +187,8 @@ typedef struct
 
 #define MAX_QTY_FILES 1000
 #define MAX_QTY_TAGS 32 /* es la cantidad de bits disponibles */
-#define MAX_FILE_SIZE 100
+#define MAX_FILE_SIZE PAGE_SIZE
+
 
 typedef struct {
     char name[50];

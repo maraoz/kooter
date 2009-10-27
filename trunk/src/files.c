@@ -34,9 +34,13 @@ fs_init(){
 int
 open(char * name){
     int index,i,j;
+    if(exists_file(name) != -1){
+	putln("El nombre de archivo ya existe");
+	return -1;
+    }
     files_t file;
     file.index = 0;
-    strncpy(file.name,name,50);
+    strncpy(file.name,name,20);
     file.tags = cwd;
     file.data = (char*)palloc(1); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
@@ -55,13 +59,37 @@ open(char * name){
 }
 
 /**
- * Funcion que cierra un archivo abierto
+ * Funcion que verifica que no exista el nombre de archivo
  */
 int
-close(int index){
-    if(!is_valid_fd(index) || opened_files[index].references == 0 || opened_files[index].used == FALSE)
+exists_file(char * name){
+    int i;
+    for(i = 0 ; i<MAX_QTY_FILES ; i++){
+	if(opened_files[i].used){
+	    if(str_cmp(name,opened_files[i].file.name)){
+		return i;
+	    }
+	}
+    }
+    return -1;
+}
+
+/**
+ * Funcion que cierra un archivo abierto y lo borra
+ */
+int
+close(char * name){
+    int index;
+    if((index = exists_file(name)) == -1){
+	putln("El nombre de archivo no existe");
+	return -1;
+    }
+    if(!is_valid_fd(index) || opened_files[index].references == 0 || opened_files[index].used == FALSE){
+	putln("No existe el archivo");
         return -1;
+    }
     opened_files[index].references--;
+    opened_files[index].used = FALSE;
     return index;
 }
 
@@ -75,12 +103,15 @@ fread(char * name,char * buffer){
     int i;
     int index;
     index = get_fd(name);
-    if(!is_valid_fd(index) || opened_files[index].used == FALSE)
+    if(!is_valid_fd(index) || opened_files[index].used == FALSE){
+	putln("El archivo no existe");
         return -1;
+    }
     for(i=0;opened_files[index].file.data[i]!=0;i++){
        buffer[i] = opened_files[index].file.data[i];
     }
 }
+
 
 /**
  * Funcion que escribe un archivo un archivo abierto
@@ -90,42 +121,45 @@ int
 fwrite(char * name, char * input){
     int index,i;
     index = get_fd(name);
-    if(!is_valid_fd(index) || opened_files[index].used == FALSE)
+    if(!is_valid_fd(index) || opened_files[index].used == FALSE){
+	putln("El archivo no existe");
         return -1;
-    for(i=0; i<MAX_FILE_SIZE-1 && input[i] !=0;i++){
+    }
+    for(i=0; i<MAX_FILE_SIZE && input[i]!=0;i++){
         opened_files[index].file.data[i] = input[i];
     }
     opened_files[index].file.data[i] = 0;
     return i;
 }
 
-/**
- * Funcion que borra un archivo
- */
-int
-unlink(char * name){
-    int index,i,j;
-    index = get_fd(name);
-    if(index == -1)
-        return -1;
-    opened_files[index].used = FALSE;
-    for(i=opened_files[index].file.tags,j=0;i>=0;i>>=2,j++){
-        if(i%2 != 0){
-           tag_list[j].references--;
-        }
-    }
-}
 
 /**
- * Funcion que devuelve el fd de un archivo
+ * Funcion que devuelve el indice de un nombre de archivo
  */
 
 int
 get_fd(char * name){
-    //TODO: Implementar, hoy me quede sin tiempo
 }
 
-/*
+/**
+ * Funcion que borra un archivo
+ */
+// int
+// unlink(char * name){
+//     int index,i,j;
+//     index = get_fd(name);
+//     if(index == -1)
+//         return -1;
+//     opened_files[index].used = FALSE;
+//     for(i=opened_files[index].file.tags,j=0;i>=0;i>>=2,j++){
+//         if(i%2 != 0){
+//            tag_list[j].references--;
+//         }
+//     }
+// }
+
+
+/**
  * Funcion que chequea que el fd sea valido
  */
 boolean
@@ -139,10 +173,11 @@ is_valid_fd(int index){
  * Funcion que cambia de directorio
  */
 int
-chdir(char * directory){
+chdir(int argc, char * directory[]){
     dword tag;
-    tag = get_numeric_tag(directory);
+    tag = get_numeric_tag(directory[0]);
     if(tag == -1){
+	putln("Tag invalido");
         return -1;
     }
     cwd |= tag;
@@ -188,19 +223,37 @@ mkdir(int argc, char * directory[]){
         return -1;
     }
     i = log2(tag);
-    str_ncpy(tag_list[i].name,directory[0],50);
+    str_ncpy(tag_list[i].name,directory[0],20);
+}
+
+/**
+ * Funcion que cambia el nombre de un directorio
+ */
+ 
+int
+renamedir(int argc, char * directory[]){
+    dword tag;
+    int i;
+    tag = get_numeric_tag(directory[0]);
+    if (tag == -1){
+	putln("No existe el tag");
+	return -1;
+    }
+    str_ncpy(tag_list[log2(tag)].name,directory[1],20);
 }
 
 /**
  * Funcion que elimina directorios
  */
 int
-rmdir(char * directory){
+rmdir(int argc, char * directory[]){
     dword tag;
     int index;
-    tag = get_numeric_tag(directory);
-    if(tag == -1)
+    tag = get_numeric_tag(directory[0]);
+    if(tag == -1){
+	putln("No existe el tag");
         return -1;
+    }
     tag_list[log2(tag)].name[0]=0;
     return tag;
 }

@@ -354,14 +354,16 @@ llamaFunc(char s[2][LONG_STR_TKN])
     else if(str_cmp(s[0], "chdir"))
     {
         if(s[1][0]==0)
+        if(s[1][0]==0)
         {
             puts("Not enough arguments");
             return CODE_CD;
         }
         else
         {
-            chdir(s[1]);
-            return CHDIR_CD;
+            create_process(chdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"chdir");
+            block_me();
+            return MKDIR_CD;
         }
     }
     else if(str_cmp(s[0], "ls"))
@@ -397,7 +399,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            rmdir(s[1]);
+            create_process(rmdir,1,1,str,1,1,FALSE,focusedTTY,current_process,"rmdir");
+            block_me();
             return RMDIR_CD;
         }
     }

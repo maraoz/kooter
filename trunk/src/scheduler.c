@@ -72,6 +72,7 @@ int unblock(int pid) {
     is_blocked_t[pid] = FALSE;
     return enqueue(ready_processes_q, pid);
 }
+
 void magic_algorithm(void) {
     // roundrobin
     pid_t np = dequeue(ready_processes_q);
@@ -83,7 +84,7 @@ void magic_algorithm(void) {
 
 void magic_algorithm2(void) {
     // weighted priorities
-    if (work_cycles < bcp[current_process].process.priority){
+    if (work_cycles < bcp[current_process].process.priority) {
         work_cycles++;
         return;
     }
@@ -94,6 +95,11 @@ void magic_algorithm2(void) {
         current_process = np;
     }
 }
+
+void run_next_process(void) {
+    magic_algorithm();
+}
+
 void scheduler(void){
 
     if (!is_blocked(current_process)) {
@@ -140,7 +146,11 @@ void print_process_use_percentage(pid_t pid) {
     puts (" -------> ");
 
     itoa(perc, number_str);
-    putln(number_str);
+    puts(number_str);
+    puts(" % ");
+    put_char('\n');
+//     if (pid == 2)
+//         while(1);
 
 }
 

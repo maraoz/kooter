@@ -92,7 +92,7 @@ void str_ncpy(byte * dest, byte * src, size_t size) {
 * sin notar el cambio.
 * 
 ****************************************************************/
-// byte screen_buffer[4160] = {};
+
 byte blank_screen_buffer[4000] = {' ', DEFAULT_TXT, ' ', DEFAULT_TXT, ' ', DEFAULT_TXT};
 
 void page_roll(int backwards) {
@@ -130,7 +130,9 @@ void check_screen_scroll(int offset) {
 * Escribe el string str en pantalla.
 * 
 ****************************************************************/
+int time = 0;
 void puts( const char * str ) {
+
     while (*str) {
         put_char(*str++);
     }
@@ -143,6 +145,7 @@ void puts( const char * str ) {
 * 
 ****************************************************************/
 void putln( const char * str ) {
+    put_char('a');
     puts(str);
     put_char('\n');
 }
@@ -176,8 +179,8 @@ void gets( char str[] ) {
 ****************************************************************/
 #define V_BUFFER_LENGTH 160
 
-byte video_buffer[V_BUFFER_LENGTH] = {0};
-byte clean_buffer[V_BUFFER_LENGTH] = {0};
+byte video_buffer[8][V_BUFFER_LENGTH] = {0};
+byte clean_buffer[8][V_BUFFER_LENGTH] = {0};
 int vb_counter[8] = {0};
 
 void put_char( byte c) {
@@ -187,7 +190,7 @@ void put_char( byte c) {
     /* ENTER */
     if (c == '\n') {
         check_offset('1',vb_counter[currentTTY]);
-        write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+        write(PANTALLA_FD, video_buffer[currentTTY], vb_counter[currentTTY]);
         check_screen_scroll(0);
 
         check_offset('2',V_BUFFER_LENGTH-(tty[currentTTY].cursor%80)*2);
@@ -216,19 +219,19 @@ void put_char( byte c) {
             int cursorBkp;
             check_screen_scroll(vb_counter[currentTTY]);
             check_offset('7',vb_counter[currentTTY]);
-            write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+            write(PANTALLA_FD, video_buffer[currentTTY], vb_counter[currentTTY]);
             vb_counter[currentTTY] = 0;
         }
         else {
             check_screen_scroll(0);
             check_offset('3',vb_counter[currentTTY]);
-            write(PANTALLA_FD, video_buffer, vb_counter[currentTTY]);
+            write(PANTALLA_FD, video_buffer[currentTTY], vb_counter[currentTTY]);
             vb_counter[currentTTY] = 0;
         }
     }
 
-    video_buffer[vb_counter[currentTTY]] = c;
-    video_buffer[vb_counter[currentTTY]+1] = DEFAULT_TXT ;
+    video_buffer[currentTTY][vb_counter[currentTTY]] = c;
+    video_buffer[currentTTY][vb_counter[currentTTY]+1] = DEFAULT_TXT ;
     vb_counter[currentTTY] += 2 ;
 }
 
@@ -296,7 +299,7 @@ void borra_buffer() {
 *
 * Escribe count caracteres copiandolos de buffer al dispositivo
 * descripto por el file descriptor fd. Llama a la int80h
-*en B 
+*
 * Recibe como parametros:
 * - File Descriptor
 * - Buffer del source
@@ -314,8 +317,11 @@ size_t write(int fd, const void* buffer, size_t count) {
         offset = i + tty[currentTTY].cursor*2;
         data = *((byte *)buffer+i);
 
-        if (currentTTY == focusedTTY)
+        if (currentTTY == focusedTTY) {
+            _Cli();
             _int_80_caller(WRITE, fd, offset, data);
+            _Sti();
+        }
         tty[currentTTY].view[offset] = data;
 
     }

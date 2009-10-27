@@ -31,6 +31,14 @@ int block(int pid);
 int unblock(int pid);
 
 /**
+ * run_next_process
+ * saca un nuevo proceso de la cola de ready y lo pone a correr
+ * (sin resguardar el viejo, eso queda bajo responsabilidad
+ * de otro)
+ */
+void run_next_process(void);
+
+/**
  * scheduler
  * cambia el proceso actual si es necesario
  * (segun el algoritmo del scheduler implementado)

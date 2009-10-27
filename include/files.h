@@ -19,14 +19,16 @@ int chdir(char * directory);
 
 int ls(char * directory);
 
+int tags(void);
+
 int mkdir(char * directory);
 
 int rmdir(char * directory); 
 
-dword get_next_available_tag();
+dword get_next_available_tag(void);
 
 dword get_numeric_tag(char * name);
 
-int get_next_file_entry();
+int get_next_file_entry(void);
 
 #endif

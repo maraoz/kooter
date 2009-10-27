@@ -142,8 +142,8 @@ process_creator(){
 
     //create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
     create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,0,current_process);
-    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,1,current_process);
-    create_process((int(*)(void))shell,4,1,(char**)0,1,1,FALSE,2,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,1,current_process);
+    create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,2,current_process);
     create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,3,current_process);
     create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,4,current_process);
     create_process((int(*)(void))shell,1,1,(char**)0,1,1,FALSE,5,current_process);

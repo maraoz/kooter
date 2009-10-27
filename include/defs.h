@@ -66,8 +66,6 @@
 #define MARIO_CD 9
 #define CODE_CD 10
 #define OPEN_CD 11
-#define CLOSE_CD 12
-#define UNLINK_CD 15
 #define CHDIR_CD 16
 #define LS_CD 17
 #define MKDIR_CD 18

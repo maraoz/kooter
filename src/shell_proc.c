@@ -88,7 +88,6 @@ garbage(int argc, char* argv[]) {
     int i;
     for (i = 0; i<2000; i++) {
         put_char(c++%50+'a');
-        flush();
     }
 }
 
@@ -102,7 +101,6 @@ infinite(int argc, char* argv[]) {
     int i;
     for (i = 0; ; i++) {
         put_char(c++%50+'a');
-        flush();
     }
 }
 /*
@@ -112,7 +110,6 @@ infinite(int argc, char* argv[]) {
 int
 mario(int argc, char* argv[]) {
     game();
-    
     int currentTTY = get_current_tty();
     tty[currentTTY].cursor = 0;
     check_offset('5',4000);

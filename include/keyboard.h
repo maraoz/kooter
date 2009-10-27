@@ -6,6 +6,7 @@ void leoteclado (int k);
 byte ktoa(int c);
 
 byte next_char ();
+int non_blocking_next_char();
 
 void writeToKeyboard(byte c);
 

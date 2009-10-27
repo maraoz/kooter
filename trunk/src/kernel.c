@@ -48,9 +48,9 @@ LoadESP(){
 
 dword int_08(dword ESP)
 {
-//     down_p(bcp[current_process].page, bcp[current_process].page_qty);
+    down_p(bcp[current_process].page, bcp[current_process].page_qty);
     scheduler();
-//     up_p(bcp[current_process].page, bcp[current_process].page_qty);
+    up_p(bcp[current_process].page, bcp[current_process].page_qty);
     return  bcp[current_process].ESP;
 }
 
@@ -133,6 +133,8 @@ kmain()
     init_ttys();
     fs_init();
     bcp[0].process.isAlive = TRUE;
+    bcp[0].page = palloc(1);
+    bcp[0].page_qty = 1;
     str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
     

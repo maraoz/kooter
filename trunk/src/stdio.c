@@ -342,9 +342,7 @@ size_t read(int fd, void* buffer, size_t count) {
     byte * b = (byte *)buffer;
     for ( i = 0 ; i<count; i++) {
         b[i] = _int_80_caller(READ, fd, i, 0);
-//         if (b[i] == 0xFF) { 
-//             break;
-//         }
+
     }
     return i;
 }

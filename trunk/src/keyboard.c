@@ -37,13 +37,7 @@ void leoteclado (int k){
             y no dejo el ascii en el buffer de teclado */
                 interrupted = 1;
             else if(c != 0x00){
-//                 if(teclator.next_write == TCIRC_SIZE)
-//                 /* Implementación del teclado circular */
-//                 teclator.next_write = 0;
-// 
-//                 teclator.tcircular[teclator.next_write] = c;
-//                 teclator.next_write++;
-//                 teclator.qty_used++;
+
 
                 // agregado para primitivas bloqueantes (manu)
                 if(isFs(c)){
@@ -59,7 +53,8 @@ void leoteclado (int k){
                     int pid;
                     enqueue(tty[focusedTTY].kb_buffer, c);                    
                     for (pid=0;pid<MAX_PROCESSES;pid++) {
-                        if(is_blocked(pid) && bcp[pid].tty==focusedTTY)
+                        if(is_blocked(pid) && bcp[pid].tty==focusedTTY
+                          && !bcp[current_process].process.background )
                             unblock(pid);
                     }
                 }
@@ -127,28 +122,13 @@ isFs(int c){
 byte next_char (){
     byte a;
     int currentTTY = get_current_tty();
+    if (bcp[current_process].process.background == TRUE)
+        block_me();
     while(is_empty(tty[currentTTY].kb_buffer)){
         block_me();
     }
     a = dequeue(tty[currentTTY].kb_buffer);
-//     if(teclator.qty_used > 0) {
-//         a=teclator.tcircular[teclator.next_read];
-//         teclator.next_read++;
-//         teclator.qty_used--;
-// 
-//         //TODO: esto es lo �nico q sirve, lo dem�s est� deprecated
-//         int currentTTY = get_current_tty();
-//         a = dequeue(tty[focusedTTY].kb_buffer);
-//         //TODO: esto es lo �nico q sirve, lo dem�s est� deprecated
-// 
-// 
-//         if(teclator.next_read >= TCIRC_SIZE)
-//             teclator.next_read = 0;
-//     }
-//     else {
-//         a = 0xFF;
-//         block_me();
-//     }
+
     return a;
 }
 
@@ -162,12 +142,5 @@ writeToKeyboard(byte c)
         block_me();
     }
     enqueue(tty[focusedTTY].kb_buffer,c);
-    
-//     if(teclator.next_write == TCIRC_SIZE)
-//                 teclator.next_write = 0;
-//     if(!(teclator.qty_used >= TCIRC_SIZE)){
-// 	teclator.tcircular[teclator.next_write] = c;
-// 	teclator.next_write++;
-// 	teclator.qty_used++;
-//     }
+
 }

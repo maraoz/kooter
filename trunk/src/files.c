@@ -59,6 +59,25 @@ open(char * name){
 }
 
 /**
+ * Funcion que renombra un archivo
+ */
+
+int
+rename(char * name, char * newname){
+    int index,i,j;
+    if((index = exists_file(name)) == -1){
+        putln("El nombre de archivo no existe");
+        return -1;
+    }
+    if(exists_file(newname) != -1){
+        putln("El nombre de archivo ya existe");
+        return -1;
+    }
+    str_ncpy(opened_files[index].file.name,newname,20);
+    return index;
+}
+
+/**
  * Funcion que verifica que no exista el nombre de archivo
  */
 int

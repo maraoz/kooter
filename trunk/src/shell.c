@@ -206,9 +206,19 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
     if( s[i] == 0 )
         return;
 
-    for(j=0; s[i] != 0 && j<LONG_STR_TKN; i++, j++)
+    for(j=0; s[i] != ' ' && s[i] != 0 && j<LONG_STR_TKN; i++, j++)
         out[1][j] = s[i];
     out[1][j]=0;
+    
+    while( s[i] == ' ' )
+        i++;
+
+    if( s[i] == 0 )
+        return;
+
+    for(j=0; s[i] != 0 && j<LONG_STR_TKN; i++, j++)
+        out[2][j] = s[i];
+    out[2][j]=0;
     
     while( s[i] == ' ' )
         i++;
@@ -228,15 +238,17 @@ llamaFunc(char s[2][LONG_STR_TKN])
     int cursorBkp;
     int arg_extra=0;
 
-    char * str[2];
+    char * str[3];
     str[0] = s[1];
-    str[1] = (char*)0;
+    str[1] = s[2];
+    str[2] = (char*)0;
     
     if(s[0][0]==0)
         return NO_CD;
     else if(str_cmp(s[0], "echo"))
     {
         create_process(echo, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"echo");
+	block_me();
         return ECHO_CD;
     }
     else if(str_cmp(s[0], "clear"))

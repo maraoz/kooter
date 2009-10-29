@@ -7,7 +7,7 @@
 
 typedef int T;
 
-#define MAX_ELEM 10
+#define MAX_ELEM 100
 
 typedef struct {
     int head;

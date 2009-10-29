@@ -19,6 +19,8 @@ extern char * screenSaverImg[25];
 int 
 echo(int argc, char* argv[]) {
     puts(argv[0]);
+    puts(" ");
+    puts(argv[1]);
 }
 
 /*

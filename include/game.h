@@ -23,16 +23,25 @@ typedef struct pointT {
     int y;
 } pointT;
 
+typedef struct {
+    char map[25][80];
+    char view[25][80][2];
+    pjT mario;
+    object corazones[HEART_N];
+} game_t;
+
 int game();
 
-void updateView();
+void updateView(game_t * my_game);
 
-void showView();
+void showView(game_t * my_game);
 
-void init_mario();
+void init_mario(game_t * my_game);
 
-void init_map_view();
+void init_map_view(game_t * my_game);
 
-void init_hearts();
+void init_hearts(game_t * my_game);
+
+
 
 #endif

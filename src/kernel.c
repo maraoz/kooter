@@ -142,7 +142,7 @@ kmain()
     init_pids();
     init_scheduler();
 
-//     k_clear_screen();
+    k_clear_screen();
 
 
     init_ttys();

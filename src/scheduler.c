@@ -123,8 +123,8 @@ void magic_algorithm3(void) {
         }
         int priority = bcp[np].process.priority;
         powerBar[np] += 16 - priority * priority;
-        if (powerBar[np] >= 1000 ) {
-            powerBar[np] = powerBar[np] % 1000;
+        if (powerBar[np] >= 20 ) {
+            powerBar[np] = powerBar[np] % 20;
             break;
         }
         enqueue(ready_processes_q, np);
@@ -157,7 +157,7 @@ void magic_algorithm4(void) {
 
 
 void run_next_process(void) {
-    magic_algorithm4();
+    magic_algorithm3();
 }
 
 void scheduler(void){

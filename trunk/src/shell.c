@@ -3,10 +3,14 @@
 #include "../include/shell.h"
 #include "../include/game.h"
 #include "../include/files.h"
-#include "../include/scheduler.h"
+#include "../include/top.h"
 #include "../include/process.h"
 #include "../include/shell_proc.h"
+
+#include "../include/scheduler.h"
+
 #include "../include/kc.h"
+
 
 /*
 ** Variables globales:
@@ -249,6 +253,7 @@ llamaFunc(char s[][LONG_STR_TKN])
         return NO_CD;
     else if(str_cmp(s[0], "echo"))
     {
+
         create_process(echo, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"echo");
         if (!isBackground[currentTTY])
                 wait_children();
@@ -438,14 +443,14 @@ llamaFunc(char s[][LONG_STR_TKN])
     }
     else if(str_cmp(s[0], "top"))
     {
-        create_process((int(*)(void))top,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"top");
+        create_process((int(*)(void))top,1,1,(char**)0,1,0,isBackground[currentTTY],currentTTY,current_process,"topaz");
         if (!isBackground[currentTTY])
                 wait_children();
         return TOP_CD;
     }
     else if(str_cmp(s[0], "infinite"))
     {
-        create_process(infinite,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "infinite");
+        create_process(infinite,1,1,(char**)0,1,4,isBackground[currentTTY],currentTTY,current_process, "infinite");
         if (!isBackground[currentTTY]) wait_children();
         return TOP_CD;
     }

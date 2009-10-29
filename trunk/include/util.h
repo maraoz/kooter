@@ -21,7 +21,13 @@ void deshabilitar_int_mouse (void);
 
 void itoa(int num, char v[]);
 
+void uitoa (unsigned int n, char ret[]);
+
 void check_offset(char label, int count);
 void panic(char label, int n);
+
+unsigned int get_random();
+unsigned int rand_int(unsigned int not_inclusive_max);
+
 
 #endif

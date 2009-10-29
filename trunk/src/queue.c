@@ -71,4 +71,15 @@ T peek(queue_t * q) {
     return q->data[q->head];
 }
 
+T peek_last(queue_t * q) {
+    if (is_empty(q)) {
+        return -1;
+    }
+    int prev_index = ((q->tail - 1)<0)?MAX_ELEM-1:q->tail -1;
+    return q->data[prev_index];
+}
+
+int size(queue_t * q) {
+    return (q->head > q->tail)? MAX_ELEM - (q->tail - q->head) : q->tail - q->head;
+}
 

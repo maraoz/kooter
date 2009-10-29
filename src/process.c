@@ -90,6 +90,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     _Cli();
     int i,a;
     context_t new_proc;
+    
 
     
     new_proc.process.pid = get_new_pid();
@@ -114,6 +115,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
 
 
     a = desalojate(new_proc.process.pid);
+
 
     _Sti();
 

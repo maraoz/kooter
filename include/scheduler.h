@@ -19,16 +19,20 @@ int init_scheduler(void);
  * block
  * pone al proceso en estado de bloqueado (esperando a ser despertado)
  */
-int block(int pid);
+int block(int pid, int channel);
 
-#define block_me() block(current_process)
+#define block_me(channel) block(current_process, channel)
+#define wait_children() block_me(CNL_CHILDREN)
+
 
 /**
  * unblock
  * despierta al proceso y lo pone en la lista de ready
  * devuelve -1 en caso de error
  */
-int unblock(int pid);
+int unblock(int pid, int channel);
+
+#define wake_up_father(pid) unblock(pid, CNL_CHILDREN)
 
 /**
  * run_next_process
@@ -49,7 +53,7 @@ void scheduler(void);
  * is_blocked
  * devuelve true si el proceso est� bloqueado o false en caso contrario
  */
-boolean is_blocked(pid_t pid);
+boolean is_blocked(pid_t pid, int channel);
 
 /**
  * desalojate

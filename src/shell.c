@@ -346,8 +346,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         else
         {
             create_process(mkdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"mkdir");
-            if (isBackground)
-                block_me();
+            if (! isBackground)
+                wait_children();
             return MKDIR_CD;
         }
     }
@@ -375,7 +375,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
         else
         {
             create_process(chdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"chdir");
-            if (isBackground) block_me();
+            if (!isBackground) wait_children();
             return MKDIR_CD;
         }
     }
@@ -396,7 +396,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0){
             create_process(tags,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process, "tags");
-            if (isBackground) block_me();
+            if (!isBackground) wait_children();
             return CODE_CD;
         }
         else{
@@ -413,13 +413,13 @@ llamaFunc(char s[2][LONG_STR_TKN])
         else
         {
             create_process(rmdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"rmdir");
-            if (isBackground) block_me();
+            if (!isBackground) wait_children();
             return RMDIR_CD;
         }
     }
     else if(str_cmp(s[0], "top"))
     {
-        top();
+        create_process((int(*)(void))top,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process,"top");
         return TOP_CD;
     }
     else if(str_cmp(s[0], "infinite"))

@@ -19,7 +19,7 @@ extern int tTicks;
 extern pid_t current_process;
 
 extern TTY tty[8];
-extern int focusedTTY; 
+extern int currentTTY; 
 /*
 ** matriz de dos filas, en las que se van a guardar:
 ** en la primera el comando ingresado
@@ -51,7 +51,7 @@ int ret=AUX;
 ** Imagen para el protector de pantalla
 */
 
-boolean isBackground;
+boolean isBackground[8];
 
 char * screenSaverImg[25] = {
 "       x                                                                        ",
@@ -182,15 +182,15 @@ void
 separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 {
     int i, j;
-
+    int currentTTY = get_current_tty();
     /* out[0]= direccion para guardar comando */
     /* out[1]= direccion para guardar parametro */
 
     int ln = str_len(s);
     if(s[ln-1] == '&') {
-        isBackground = TRUE;
+        isBackground[currentTTY] = TRUE;
     } else {
-        isBackground = FALSE;
+        isBackground[currentTTY] = FALSE;
     }
     
     while( *s == ' ' )
@@ -235,6 +235,7 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 int
 llamaFunc(char s[2][LONG_STR_TKN])
 {
+    int currentTTY = get_current_tty();
     int cursorBkp;
     int arg_extra=0;
 
@@ -247,15 +248,16 @@ llamaFunc(char s[2][LONG_STR_TKN])
         return NO_CD;
     else if(str_cmp(s[0], "echo"))
     {
-        create_process(echo, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"echo");
-	block_me();
+        create_process(echo, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"echo");
+        if (!isBackground[currentTTY])
+                wait_children();
         return ECHO_CD;
     }
     else if(str_cmp(s[0], "clear"))
     {
         if(s[1][0]==0)
         {
-            create_process(k_clear_screen, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"clear_screen");
+            create_process(k_clear_screen, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"clear_screen");
             return CLEAR_CD;
         }
         else
@@ -265,7 +267,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(setTimeSp, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"setTimeSp");
+            create_process(setTimeSp, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"setTimeSp");
             return SETTIME_CD;
         }
         else
@@ -278,7 +280,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(activaSp, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"activaSp");
+            create_process(activaSp, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"activaSp");
             return ACTSP_CD;
         }
         else
@@ -288,7 +290,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(activaSp, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"dispImg");
+            create_process(activaSp, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"dispImg");
             return DSPIMG_CD;
         }
         else
@@ -298,7 +300,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(garbage, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process,"garbage");
+            create_process(garbage, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"garbage");
             return GBG_CD;
         }
         else
@@ -308,7 +310,7 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(mario, 1, 1, str, 1, 1, isBackground, focusedTTY, current_process, "mario");
+            create_process(mario, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process, "mario");
             return MARIO_CD;
         }
         else
@@ -345,8 +347,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            create_process(mkdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"mkdir");
-            if (! isBackground)
+            create_process(mkdir,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"mkdir");
+            if (! isBackground[currentTTY])
                 wait_children();
             return MKDIR_CD;
         }
@@ -374,8 +376,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            create_process(chdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"chdir");
-            if (!isBackground) wait_children();
+            create_process(chdir,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"chdir");
+            if (!isBackground[currentTTY]) wait_children();
             return MKDIR_CD;
         }
     }
@@ -383,20 +385,20 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(ls,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process,"ls");
+            create_process(ls,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
             return CODE_CD;
         }
         else
         {
-            create_process(ls,1,1,str,1,1,isBackground,focusedTTY,current_process,"ls");
+            create_process(ls,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
             return LS_CD;
         }
     }
     else if(str_cmp(s[0], "tags"))
     {
         if(s[1][0]==0){
-            create_process(tags,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process, "tags");
-            if (!isBackground) wait_children();
+            create_process(tags,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "tags");
+            if (!isBackground[currentTTY]) wait_children();
             return CODE_CD;
         }
         else{
@@ -412,19 +414,20 @@ llamaFunc(char s[2][LONG_STR_TKN])
         }
         else
         {
-            create_process(rmdir,1,1,str,1,1,isBackground,focusedTTY,current_process,"rmdir");
-            if (!isBackground) wait_children();
+            create_process(rmdir,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"rmdir");
+            if (!isBackground[currentTTY]) wait_children();
             return RMDIR_CD;
         }
     }
     else if(str_cmp(s[0], "top"))
     {
-        create_process((int(*)(void))top,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process,"top");
+        create_process((int(*)(void))top,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"top");
         return TOP_CD;
     }
     else if(str_cmp(s[0], "infinite"))
     {
-        create_process(infinite,1,1,(char**)0,1,1,isBackground,focusedTTY,current_process, "infinite");
+        create_process(infinite,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "infinite");
+        if (!isBackground[currentTTY]) wait_children();
         return TOP_CD;
     }
     else if(str_cmp(s[0], "help"))

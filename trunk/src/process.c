@@ -8,6 +8,7 @@
 #include "../include/shell.h"
 #include "../include/files.h"
 #include "../include/shell_proc.h"
+#include "../include/scheduler.h"
 #include "../include/stdio.h"
 
 
@@ -64,7 +65,7 @@ end_process()
     enqueue(available_pids_q, current_process);
     pfree(bcp[current_process].page, bcp[current_process].page_qty);
     if(bcp[current_process].process.background == FALSE){
-        unblock(bcp[current_process].dad_pid);
+        wake_up_father((bcp[current_process].dad_pid));
     }
     bcp[current_process].process.isAlive = FALSE;
     context_switch();

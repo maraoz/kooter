@@ -33,10 +33,11 @@ fs_init(){
 
 int
 open(char * name){
+    _Cli();
     int index,i,j;
     if(exists_file(name) != -1){
-	putln("El nombre de archivo ya existe");
-	return -1;
+        putln("El nombre de archivo ya existe");
+        return -1;
     }
     files_t file;
     file.index = 0;
@@ -50,11 +51,12 @@ open(char * name){
     opened_files[index].file = file;
     opened_files[index].used = TRUE;
     opened_files[index].references++;
-    for(i=file.tags,j=0;i>=0;i>>=2,j++){
+    for(i=file.tags,j=0;i>0;i>>=2,j++){
         if(i%2 != 0){
            tag_list[j].references++;
         }
     }
+    _Sti();
     return index;
 }
 

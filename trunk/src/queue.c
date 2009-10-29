@@ -32,7 +32,7 @@ int enqueue(queue_t * q, T elem) {
 
 T dequeue_element(queue_t * q, T elem) {
     T curr, first = dequeue(q);
-    if (first = -1) {
+    if (first == -1) {
         // empty queue
         return -1;
     }

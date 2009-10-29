@@ -209,5 +209,17 @@ typedef struct {
 } tag_list_t;
 
 
+
+/* BLOCK CHANNELS */
+#define CHANNEL_AMMOUNT 3
+
+#define CNL_ANY -1
+
+#define CNL_FOREVER 0
+#define CNL_KEYBOARD 1
+#define CNL_CHILDREN 2
+
+
+
 #endif
 

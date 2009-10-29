@@ -3,7 +3,7 @@ GLOBAL  _int_08_hand
 GLOBAL  _int_80_hand
 GLOBAL	_int_09_hand
 GLOBAL  _int_74_hand
-GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
+GLOBAL  _mascaraPIC1,_mascaraPIC2,_real_Cli,_real_Sti
 GLOBAL  _debug
 GLOBAL  _int_80_caller
 GLOBAL	enable_mouse
@@ -25,14 +25,15 @@ EXTERN	fetch
 
 
 
+
 SECTION .text
 
 
-_Cli:
+_real_Cli:
 	cli			; limpia flag de interrupciones
 	ret
 
-_Sti:
+_real_Sti:
 
 	sti			; habilita interrupciones por flag
 	ret

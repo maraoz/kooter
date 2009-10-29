@@ -103,7 +103,8 @@ infinite(int argc, char* argv[]) {
     char c = 'a';
     int i;
     for (i = 0; ; i++) {
-        put_char(c++%50+'a');
+        c = (c+1)%50;
+        put_char(c+'a');
     }
 }
 /*

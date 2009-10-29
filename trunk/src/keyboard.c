@@ -47,15 +47,15 @@ void leoteclado (int k){
 //                     while(1);
                 }
                 while(is_full(tty[focusedTTY].kb_buffer)){
-                    block_me();
+                    block_me(CNL_KEYBOARD);
                 }
                 if(!isFs(c)){
                     int pid;
                     enqueue(tty[focusedTTY].kb_buffer, c);
                     for (pid=0;pid<MAX_PROCESSES;pid++) {
-                        if(is_blocked(pid) && bcp[pid].tty==focusedTTY
+                        if(is_blocked(pid, CNL_KEYBOARD) && bcp[pid].tty==focusedTTY
                           && !bcp[current_process].process.background )
-                            unblock(pid);
+                            unblock(pid, CNL_KEYBOARD);
                     }
                 }
             }
@@ -123,9 +123,10 @@ byte next_char (){
     byte a;
     int currentTTY = get_current_tty();
     if (bcp[current_process].process.background == TRUE)
-        block_me();
+        //TODO: OJO!!!! bloqueo forever al proceso?
+        block_me(CNL_FOREVER);
     while(is_empty(tty[currentTTY].kb_buffer)){
-        block_me();
+        block_me(CNL_KEYBOARD);
     }
     a = dequeue(tty[currentTTY].kb_buffer);
 
@@ -136,7 +137,7 @@ int non_blocking_next_char (){
     int a;
     int currentTTY = get_current_tty();
     if (bcp[current_process].process.background == TRUE)
-        block_me();
+        block_me(CNL_FOREVER);
 
     a = dequeue(tty[currentTTY].kb_buffer);
     return a;
@@ -148,9 +149,10 @@ int non_blocking_next_char (){
 void 
 writeToKeyboard(byte c)
 {
-    if(is_full(tty[focusedTTY].kb_buffer)){
-        block_me();
-    }
-    enqueue(tty[focusedTTY].kb_buffer,c);
+    //TODO: hacer
+//     if(is_full(tty[focusedTTY].kb_buffer)){
+//         block_me();
+//     }
+//     enqueue(tty[focusedTTY].kb_buffer,c);
 
 }

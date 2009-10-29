@@ -45,6 +45,20 @@ LoadESP(){
     return ESP;
 }
 
+int cli_ammount = 0;
+void _Cli(void){
+    if (cli_ammount == 0) {
+        _real_Cli();
+    }
+    cli_ammount++;
+}
+void _Sti(void) {
+    cli_ammount--;
+    if (cli_ammount == 0) {
+        _real_Sti();
+    }
+}
+
 
 dword int_08(dword ESP)
 {
@@ -140,7 +154,7 @@ kmain()
     
     _Sti();
     while(1){
-        block_me();
+        block_me(CNL_FOREVER);
     }
 }
 

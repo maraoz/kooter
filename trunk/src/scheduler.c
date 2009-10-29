@@ -31,7 +31,7 @@ queue_t ready_processes;
 queue_t * ready_processes_q;
 
 // vector que almacena si el proceso esta bloqueado o no
-boolean is_blocked_t[MAX_PROCESSES]={0};
+boolean is_blocked_t[CHANNEL_AMMOUNT][MAX_PROCESSES]={0};
 
 // vector que almacena tiempo consumido por el proceso
 unsigned long time_consumed[MAX_PROCESSES]={0};
@@ -48,21 +48,23 @@ int init_scheduler(void) {
     ready_processes_q = &ready_processes;
     queue_init(ready_processes_q);
 
-    int i;
-    for (i=0; i<MAX_PROCESSES; i++) {
-        is_blocked_t[i] = FALSE;
+    int i,channel;
+    for (i = 0; i<MAX_PROCESSES; i++) {
+        for (channel = 0; channel<CHANNEL_AMMOUNT; channel++) {
+            is_blocked_t[channel][i] = FALSE;
+        }
         time_consumed[i] = 0;
     }
 
     return 0;
 }
 
-int block(int pid) {
-    if (is_blocked_t[pid]) {
+int block(int pid, int channel) {
+    if (is_blocked_t[channel][pid]) {
         //un proceso bloqueado no puede bloquearse nuevamente
         return -1;
     }
-    is_blocked_t[pid] = TRUE;
+    is_blocked_t[channel][pid] = TRUE;
 
     time_total -= time_consumed[pid];
     time_consumed[pid] = 0L;
@@ -71,12 +73,12 @@ int block(int pid) {
     return 0;
 }
 
-int unblock(int pid) {
-    if (!is_blocked_t[pid]) {
+int unblock(int pid, int channel) {
+    if (!is_blocked_t[channel][pid]) {
         // si no est� bloqueado da error intentar desbloquearlo
         return -1;
     }
-    is_blocked_t[pid] = FALSE;
+    is_blocked_t[channel][pid] = FALSE;
     return enqueue(ready_processes_q, pid);
 }
 
@@ -84,7 +86,7 @@ void magic_algorithm(void) {
     // roundrobin
     pid_t np = dequeue(ready_processes_q);
     if (np == -1) {
-        unblock(0);
+        unblock(0, CNL_FOREVER);
         np = 0;
     }
     if (current_process != np) {
@@ -101,7 +103,7 @@ void magic_algorithm2(void) {
     work_cycles = 1;
     pid_t np = dequeue(ready_processes_q);
     if (np == -1) {
-        unblock(0);
+        unblock(0, CNL_FOREVER);
         np = 0;
     }
     current_process = np;
@@ -114,9 +116,8 @@ void run_next_process(void) {
 void scheduler(void){
 
 
-    if (!bcp[current_process].process.isAlive || is_blocked(current_process)) {
-
-    } else {
+    if (bcp[current_process].process.isAlive &&
+            ! is_blocked(current_process, CNL_ANY)) {
         desalojate(current_process);
     }
 
@@ -135,9 +136,19 @@ void scheduler(void){
 
 
 
+boolean is_blocked_in_any(pid_t pid) {
+    int channel;
+    for (channel = 0; channel<CHANNEL_AMMOUNT; channel++) {
+        if (is_blocked_t[channel][pid])
+            return TRUE;
+    }
+    return FALSE;
+}
 
-boolean is_blocked(pid_t pid) {
-    return is_blocked_t[pid];
+boolean is_blocked(pid_t pid, int channel) {
+    if (channel == CNL_ANY)
+        return is_blocked_in_any(pid);
+    return is_blocked_t[channel][pid];
 }
 
 int desalojate(int pid) {

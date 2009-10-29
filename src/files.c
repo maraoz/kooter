@@ -232,6 +232,7 @@ ls(int argc, char * directory[]){
  */
 int
 mkdir(int argc, char * directory[]){
+    _Cli();
     dword tag;
     int i;
     for(i=0;i<MAX_QTY_TAGS;i++){
@@ -240,14 +241,14 @@ mkdir(int argc, char * directory[]){
             return -1;
         }
     }
-    putln(directory[0]);
     tag = get_next_available_tag();
     if(tag == -1){
         putln("No hay mas tags disponibles");
         return -1;
     }
-    i = log2(tag);
-    str_ncpy(tag_list[i].name,directory[0],20);
+//     i = log2(tag);
+    str_ncpy(tag_list[tag].name,directory[0],20);
+    _Sti();
 }
 
 /**
@@ -256,6 +257,7 @@ mkdir(int argc, char * directory[]){
  
 int
 renamedir(int argc, char * directory[]){
+    _Cli();
     dword tag;
     int i;
     tag = get_numeric_tag(directory[0]);
@@ -271,6 +273,7 @@ renamedir(int argc, char * directory[]){
  */
 int
 rmdir(int argc, char * directory[]){
+    _Cli();
     dword tag;
     int index;
     tag = get_numeric_tag(directory[0]);
@@ -280,6 +283,7 @@ rmdir(int argc, char * directory[]){
     }
     tag_list[log2(tag)].name[0]=0;
     return tag;
+    _Sti();
 }
 
 
@@ -293,7 +297,7 @@ get_next_available_tag(){
     if(i == MAX_QTY_TAGS){
         return -1;
     }
-    return 1<<i /*lo mismo que pow(2,i)*/;
+    return /*1<<*/i /*lo mismo que pow(2,i)*/;
 }
 
 /**
@@ -317,13 +321,15 @@ get_next_file_entry(){
  */
 
 int
-tags(){    
+tags(){
+    _Cli();
     int i;
     for(i=0;i<MAX_QTY_TAGS;i++){
         if(tag_list[i].name[0]!=0)
             putln(tag_list[i].name);
     }
     return 1;
+    _Sti();
 }
 
 /**

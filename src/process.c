@@ -87,11 +87,11 @@ int get_current_tty() {
 process_t
 create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty, pid_t dad_pid, char * name)
 {
+    _Cli();
     int i,a;
-    char * m = (char *) 0xB8000;
     context_t new_proc;
 
-    _Cli();
+    
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
@@ -104,7 +104,6 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     /* inicializar stack */
     new_proc.page_qty = pages_qty;
     new_proc.page = palloc(pages_qty);
-//     new_proc.page = palloc();
     new_proc.ESP = (dword)new_proc.page;
     new_proc.ESP += (pages_qty*PAGE_SIZE)-1;
     new_proc.ESP = create_new_stack(funcion,argc,argv,new_proc.ESP,end_process);
@@ -112,13 +111,6 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
    
 
     bcp[new_proc.process.pid] = new_proc;
-
-
-
-
-//     pfree(new_proc.page, pages_qty);
-
-//     palloc(1);
 
 
     a = desalojate(new_proc.process.pid);

@@ -6,6 +6,7 @@
 #include "../include/scheduler.h"
 #include "../include/process.h"
 #include "../include/shell_proc.h"
+#include "../include/kc.h"
 
 /*
 ** Variables globales:
@@ -514,7 +515,6 @@ shell()
     flush();
     int currentTTY = get_current_tty();
     tty[currentTTY].cursor = 0;
-
     while(1)
     {
         if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD || ret==CODE_CD)

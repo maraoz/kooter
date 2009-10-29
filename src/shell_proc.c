@@ -100,13 +100,12 @@ garbage(int argc, char* argv[]) {
 
 int
 infinite(int argc, char* argv[]) {
-//     char c = 'a';
-//     int i;
-//     for (i = 0; ; i++) {
-//         c = (c+1)%50;
-//         put_char(c+'a');
-//     }
-    while(1);
+    char c = 'a';
+    int i;
+    for (i = 0; ; i++) {
+        c = (c+1)%50;
+        put_char(c+'a');
+    }
 }
 /*
 ** funcion que ejecuta el juego mario.

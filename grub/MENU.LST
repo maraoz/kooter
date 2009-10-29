@@ -11,8 +11,8 @@ timeout 5
 title Kooter v2.0 Mini Kernel Booter
 kernel /boot/kernel.bin
 
-title Ubuntu 9.04 
+title Ubuntu 9.04
 kernel /boot/ubuntu-904.bin
 
-title Windows Vista
+title Windows 7 Home Premium Edition
 kernel /boot/windowsvista.bin

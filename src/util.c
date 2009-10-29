@@ -72,6 +72,26 @@ int digit_count(int n) {
 void itoa (int n, char ret[]){
     int i=0,j;
     char s[17];
+//     if (n < 0) {
+//         s[0] = '-';
+//         i++;
+//     }
+
+    do {
+        s[i++]=(char)( n%10+48 );
+        n-=n%10;
+    }
+    while((n/=10)>0);
+
+    for (j=0;j<i;j++)
+        ret[i-1-j]=s[j];
+
+    ret[j]='\0';
+    return ;
+}
+void uitoa (unsigned int n, char ret[]){
+    int i=0,j;
+    char s[17];
 
     do {
         s[i++]=(char)( n%10+48 );
@@ -145,4 +165,17 @@ int digit(int indice, int numero) {
 
 
 
+unsigned int m_w = 1928;
+unsigned int m_z = 2112;
+
+unsigned int get_random()
+{
+    m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+    m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+    return (m_z << 16) + m_w;
+}
+
+unsigned int rand_int( unsigned int not_inclusive_max) {
+    return get_random() % not_inclusive_max;
+}
 

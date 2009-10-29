@@ -61,4 +61,17 @@ T dequeue(queue_t * q);
  */
 T peek(queue_t * q);
 
+
+/**
+ * peek_last
+ * Devuelve sin eliminar el ultimo elemento de la cola;
+ */
+T peek_last(queue_t * q);
+
+/**
+ * size
+ * devuelve la cantidad de elementos encolados
+ */
+int size(queue_t * q);
+
 #endif

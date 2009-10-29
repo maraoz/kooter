@@ -60,7 +60,8 @@ pid_t get_new_pid(void) {
  */
 void
 end_process()
-{
+{   
+    _Cli();
     dequeue_element(used_pids_q, current_process);
     enqueue(available_pids_q, current_process);
     pfree(bcp[current_process].page, bcp[current_process].page_qty);
@@ -68,6 +69,7 @@ end_process()
         wake_up_father((bcp[current_process].dad_pid));
     }
     bcp[current_process].process.isAlive = FALSE;
+    _Sti();
     context_switch();
     asdkhskladhs007
 }
@@ -89,7 +91,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     char * m = (char *) 0xB8000;
     context_t new_proc;
 
-//     _Cli();
+    _Cli();
     new_proc.process.pid = get_new_pid();
     new_proc.process.gid = gid;
     new_proc.process.background = background;
@@ -121,7 +123,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
 
     a = desalojate(new_proc.process.pid);
 
-//     _Sti();
+    _Sti();
 
     return new_proc.process;
 }

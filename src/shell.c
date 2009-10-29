@@ -261,6 +261,7 @@ llamaFunc(char s[][LONG_STR_TKN])
             create_process(k_clear_screen, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"clear_screen");
             if (!isBackground[currentTTY])
                 wait_children();
+            block_me();
             return CLEAR_CD;
         }
         else

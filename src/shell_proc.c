@@ -2,6 +2,7 @@
 #include "../include/defs.h"
 #include "../include/stdio.h"
 #include "../include/process.h"
+#include "../include/files.h"
 
 extern int entraSp;
 extern TTY tty[8];
@@ -172,3 +173,31 @@ check_screen_saver(int argc, char* argv[]) {
             firstTime = 1;
     }
 }
+
+int
+cat(int argc, char *argv[]){
+    
+}
+
+int
+rm(int argc, char *argv[]){
+    close(argv[0]);
+}
+
+int
+print(int argc, char *argv[]){
+    PAGE * data;
+    data = (PAGE*)palloc(1);
+    int i;
+    fread(argv[0],(char*)data);
+    for(i=0;data[i]!=0;i++){
+        put_char(data[i]);
+    }
+}
+
+int
+put(int argc, char *argv[]){
+    int i;
+    fwrite(argv[0],argv[1]);
+}
+

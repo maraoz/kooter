@@ -25,7 +25,7 @@ extern int focusedTTY;
 ** en la primera el comando ingresado
 ** en la segunda el parametro, en caso de haberlo
 */
-char data[2][LONG_STR_TKN];
+char data[3][LONG_STR_TKN];
 
 /*
 ** vector en el que se guarda lo ingresado por el usuario

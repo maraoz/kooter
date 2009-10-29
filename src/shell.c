@@ -233,7 +233,7 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 */
 
 int
-llamaFunc(char s[2][LONG_STR_TKN])
+llamaFunc(char s[][LONG_STR_TKN])
 {
     int currentTTY = get_current_tty();
     int cursorBkp;
@@ -258,6 +258,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0)
         {
             create_process(k_clear_screen, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"clear_screen");
+            if (!isBackground[currentTTY])
+                wait_children();
             return CLEAR_CD;
         }
         else
@@ -268,6 +270,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0)
         {
             create_process(setTimeSp, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"setTimeSp");
+            if (!isBackground[currentTTY])
+                wait_children();
             return SETTIME_CD;
         }
         else
@@ -282,6 +286,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         {
             create_process(activaSp, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"activaSp");
             return ACTSP_CD;
+            if (!isBackground[currentTTY])
+                wait_children();
         }
         else
             arg_extra=1;
@@ -290,7 +296,9 @@ llamaFunc(char s[2][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(activaSp, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"dispImg");
+            create_process(dispImg, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"dispImg");
+            if (!isBackground[currentTTY])
+                wait_children();
             return DSPIMG_CD;
         }
         else
@@ -301,6 +309,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0)
         {
             create_process(garbage, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process,"garbage");
+            if (!isBackground[currentTTY])
+                wait_children();
             return GBG_CD;
         }
         else
@@ -311,6 +321,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0)
         {
             create_process(mario, 1, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process, "mario");
+            if (!isBackground[currentTTY])
+                wait_children();
             return MARIO_CD;
         }
         else
@@ -386,11 +398,15 @@ llamaFunc(char s[2][LONG_STR_TKN])
         if(s[1][0]==0)
         {
             create_process(ls,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
+            if (!isBackground[currentTTY])
+                wait_children();
             return CODE_CD;
         }
         else
         {
             create_process(ls,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
+            if (!isBackground[currentTTY])
+                wait_children();
             return LS_CD;
         }
     }
@@ -422,6 +438,8 @@ llamaFunc(char s[2][LONG_STR_TKN])
     else if(str_cmp(s[0], "top"))
     {
         create_process((int(*)(void))top,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"top");
+        if (!isBackground[currentTTY])
+                wait_children();
         return TOP_CD;
     }
     else if(str_cmp(s[0], "infinite"))
@@ -470,7 +488,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
         puts(s[0]);
         put_char(':');
         puts(" command not found");
-        flush();
         return CNF_CD;
     }
     else
@@ -478,7 +495,6 @@ llamaFunc(char s[2][LONG_STR_TKN])
         puts(s[0]);
         put_char(':');
         puts(" does not receive arguments");
-        flush();
         return CNF_CD;
     }
 }

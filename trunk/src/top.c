@@ -86,10 +86,12 @@ void init_view(){
 }
 void showTop(void) {
     int currentTTY = get_current_tty();
+    _Cli();
     move_cursor_to(0);
     check_offset('t', 4000);
     write(PANTALLA_FD, view[currentTTY], 4000);
     move_cursor_to(0);
+    _Sti();
 }
 
 

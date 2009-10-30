@@ -19,4 +19,28 @@ int infinite(int argc, char* argv[]);
 
 int check_screen_saver(int argc, char* argv[]);
 
+int cat(int argc, char *argv[]);
+
+int rm(int argc, char *argv[]);
+
+int rmdir(int argc, char *argv[]);
+
+int print(int argc, char *argv[]);
+
+int put(int argc, char *argv[]);
+
+int chnamedir(int argc, char *argv[]);
+
+int chname(int argc, char *argv[]);
+
+int open(int argc, char *argv[]);
+
+int chdir(int argc, char *argv[]);
+
+int ls(int argc, char *argv[]);
+
+int mkdir(int argc, char *argv[]);
+
+int taglist(int argc, char *argv[]);
+
 #endif

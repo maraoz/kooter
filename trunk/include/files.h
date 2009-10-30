@@ -9,9 +9,9 @@ int fs_init(void);
  */
 
 
-int open(char * name);
+int openf(char * name);
 
-int close(char * name);
+int closef(char * name);
  
 int fread(char * name,char * buffer); 
 
@@ -25,7 +25,7 @@ int get_fd(char * name);
 
 int exists_file(char * name);
 
-int ls(int argc, char * directory[]);
+int lsdir(char * param);
 
 /**
  * Para los tags
@@ -33,13 +33,13 @@ int ls(int argc, char * directory[]);
  
 int tags(void);
 
-int mkdir(int argc, char * directory[]);
+int mkdird(char * param);
 
-int rmdir(int argc, char * directory[]); 
+int rmdire(char * param); 
 
-int chdir(int argc, char * directory[]);
+int chdird(char * param);
 
-int renamedir(int argc, char * directory[]);
+int renamedir(char * param1, char * param2);
 
 /**
  * Varios

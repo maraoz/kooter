@@ -392,6 +392,21 @@ llamaFunc(char s[][LONG_STR_TKN])
             return PRINT_CD;
         }
     }
+    else if(str_cmp(s[0], "kill"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(kill,4,1,str,current_process,1,isBackground[currentTTY],currentTTY,current_process,"kill");
+            if (! isBackground[currentTTY])
+                wait_children();
+            return KILL_CD;
+        }
+    }
     else if(str_cmp(s[0], "put"))
     {
         if(s[1][0]==0 || s[2][0]==0)
@@ -573,6 +588,21 @@ llamaFunc(char s[][LONG_STR_TKN])
             return FILETAGS_CD;
         }
     }
+    else if(str_cmp(s[0], "locate"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(locate,4,1,str,current_process,1,isBackground[currentTTY],currentTTY,current_process,"locate");
+            if (! isBackground[currentTTY])
+                wait_children();
+            return LOCATE_CD;
+        }
+    }
     else if(str_cmp(s[0], "top"))
     {
         create_process((int(*)(void))top,4,1,(char**)0,current_process,0,isBackground[currentTTY],currentTTY,current_process,"topaz");
@@ -623,6 +653,8 @@ llamaFunc(char s[][LONG_STR_TKN])
             put_char('\n');
             puts("top");
             put_char('\n');
+            puts("kill [argument]");
+            put_char('\n');
             puts("help");
             put_char('\n');            
             put_char('\n');
@@ -659,6 +691,8 @@ llamaFunc(char s[][LONG_STR_TKN])
             puts("filetags [argument]");
             put_char('\n');
             puts("wheerami");
+            put_char('\n');
+            puts("locate [argument]");
             put_char('\n');
              return CODE_CD;
         }

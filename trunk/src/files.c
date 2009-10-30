@@ -499,7 +499,7 @@ tags(){
  * Funcion que dado un archivo busca todas las ocurrencias entre todos los tags
  */
 int
-locate(char * name){
+located(char * name){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;

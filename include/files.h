@@ -23,7 +23,7 @@ boolean is_valid_fd(int index);
 
 int get_fd(char * name);
 
-int exists_file(char * name);
+int exists_file(char * name, dword tag);
 
 int lsdir(char * param);
 

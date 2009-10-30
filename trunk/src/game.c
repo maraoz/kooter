@@ -176,7 +176,7 @@ void updateView(game_t * my_game) {
     }
 
     my_game->view[my_game->mario.y][my_game->mario.x][0] = my_game->mario.sprite;
-    my_game->view[my_game->mario.y][my_game->mario.x][1] = YELLOW_TXT;
+    my_game->view[my_game->mario.y][my_game->mario.x][1] = GREEN_TXT;
 
 
     yBkp = my_game->mario.y;

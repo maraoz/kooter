@@ -18,6 +18,7 @@ int mario(int argc, char* argv[]);
 int infinite(int argc, char* argv[]);
 int print_a(int argc, char* argv[]);
 int print_b(int argc, char* argv[]);
+int print_char(int argc, char * argv[]);
 
 int check_screen_saver(int argc, char* argv[]);
 

@@ -118,6 +118,25 @@ int get_current_tty() {
     return bcp[current_process].tty;
 }
 
+char * getProcessName(pid) {
+    return bcp[pid].process.name;
+}
+#define getMyName() getProcessName(current_process)
+
+char * getProcessState( pid_t pid) {
+    if (bcp[pid].process.isBlocked) {
+        return "BLOCKED";
+    } else {
+        if (pid == current_process) {
+            return "RUNNING";
+        } else {
+            return "WAITING";
+        }
+    }
+}
+
+#define getMyState() getProcessState(current_process)
+
 /**
  * Funcion que crea un nuevo proceso
  */

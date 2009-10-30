@@ -63,11 +63,12 @@ int desalojate(int pid);
 
 
 /**
- * top
- * display on terminal processes use of processor
+ * use_percentage
+ * devuelve un int con el porcentage de tiempo de procesador que 
+ * usa el proceso
  */
+int use_percentage(pid_t pid);
 
-void top(void);
 
 #endif
 

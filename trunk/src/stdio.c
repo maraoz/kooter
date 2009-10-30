@@ -40,6 +40,30 @@ switch_tty(int new_tty){
     update_screen();
 }
 
+void move_cursor_to(int pos) {
+    if (0 <= pos && pos < 2000) {
+        int currentTTY = get_current_tty();
+        tty[currentTTY].cursor = pos;
+    }
+}
+
+void go_to_line_start(){
+    int currentTTY = get_current_tty();
+    int offset = tty[currentTTY].cursor % 80;
+    tty[currentTTY].cursor -= offset;
+}
+
+void move_cursor_inline(int offset) {
+    if (0 <= offset && offset < 80) {
+        int currentTTY = get_current_tty();
+        go_to_line_start();
+        tty[currentTTY].cursor += offset;
+    }
+}
+
+
+
+
 /****************************************************************
 * update_screen
 *
@@ -53,6 +77,9 @@ void update_screen() {
     tty[focusedTTY].cursor = bkp_cursor;
 
 }
+
+
+
 
 size_t write2(int fd, const void* buffer, size_t count) {
     int i;

@@ -79,7 +79,7 @@ showSelection(point start, point end) {
 	for( j = 0; j<abs(start.x - end.x)+1 ; j++) {
 		auxi = ((min(start.x,end.x))+(min(start.y,end.y))*80+i*80+j);
 		/* Si el atributo es 0 entonces le asigno DEFAULT_TXT*/
-		backupSelection[auxi] = bufferVideo[auxi*2+1]?bufferVideo[auxi*2+1]:BLUE_TXT;
+		backupSelection[auxi] = bufferVideo[auxi*2+1]?bufferVideo[auxi*2+1]:DEFAULT_TXT;
 		screenShow(MOUSE_CURSOR,auxi*2+1);
 	}
     }	 

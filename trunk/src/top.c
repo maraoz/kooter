@@ -5,16 +5,11 @@
 #include "../include/util.h"
 #include "../include/kc.h"
 #include "../include/keyboard.h"
+#include "../include/process.h"
 
-
-extern unsigned long time_consumed[MAX_PROCESSES];
-extern unsigned long time_total;
-extern pid_t current_process;
-extern context_t bcp[MAX_PROCESSES];
 
 // ttys
 extern TTY tty[8];
-extern int focusedTTY;
 
 //cola de pids de procesos en uso
 extern queue_t * used_pids_q;
@@ -22,11 +17,6 @@ extern queue_t * used_pids_q;
 
 char number_str[13];
 char view[8][25][80][2];
-
-int use_percentage(pid_t pid) {
-    return (100*time_consumed[pid]) / time_total;
-}
-
 void print_process_use_percentage(pid_t pid, int line) {
     int currentTTY = get_current_tty();
 
@@ -35,13 +25,14 @@ void print_process_use_percentage(pid_t pid, int line) {
     itoa(pid, number_str);
     int j;
     for (j = 0; j<20; j++) {
-        view[currentTTY][line][j+3][0] = number_str[j];
+        view[currentTTY][line][j+5][0] = number_str[j];
         if (!number_str[j+1]) break;
     }
-    char * flechita = " ----------> ";
+    char * name = getProcessName(pid);
     for (j = 0; j<20; j++) {
-        view[currentTTY][line][j+20][0] = flechita[j];
-        if (!flechita[j+1]) break;
+        view[currentTTY][line][j+10][0] = name[j];
+        view[currentTTY][line][j+10][1] = DARK_BLUE_TXT;
+        if (!name[j+1]) break;
     }
 
 
@@ -61,9 +52,24 @@ void print_process_use_percentage(pid_t pid, int line) {
         if (!porce[j+1]) break;
     }
 
+    char * state = getProcessState( pid);
+
+
     for (j = 0; j<20; j++) {
-        view[currentTTY][line][j+60][0] = bcp[pid].process.name[j];
-        if (!bcp[pid].process.name[j+1]) break;
+        view[currentTTY][line][j+60][0] = state[j];
+        switch(state[0]) {
+        case 'W':
+            view[currentTTY][line][j+60][1] = YELLOW_TXT;
+            break;
+        case 'B':
+            view[currentTTY][line][j+60][1] = RED_TXT;
+            break;
+        default:
+            view[currentTTY][line][j+60][1] = GREEN_TXT;
+        }
+
+        view[currentTTY][line][j+61][0] = ' ';
+        if (!state[j+1]) break;
     }
 
 }
@@ -74,18 +80,16 @@ void init_view(){
     for (i=0; i<25;i++) {
         for (j=0; j<80;j++) {
             view[currentTTY][i][j][0] = ' ';
-            view[currentTTY][i][j][1] = WHITE_TXT;
+            view[currentTTY][i][j][1] = GRAY_TXT;
         }
     }
 }
 void showTop(void) {
-    if (runningInBackground())
-        return;
     int currentTTY = get_current_tty();
-    tty[currentTTY].cursor = 0;
+    move_cursor_to(0);
     check_offset('t', 4000);
     write(PANTALLA_FD, view[currentTTY], 4000);
-    tty[currentTTY].cursor = 0;
+    move_cursor_to(0);
 }
 
 
@@ -96,7 +100,7 @@ void top(void) {
         init_view();
 
         char * header = "------------------------------------/ TOPAZ /-----------------------------------";
-        char * heade2 = "|    Proces ID                    Use Percentage    name                        |";
+        char * heade2 = "|    PID      Name                Use Percentage               State            |";
         char * footer = "--------------------------------------------------------------------------------";
         char * column = "|||||||||||||||||||||||||";
         int j;
@@ -107,6 +111,7 @@ void top(void) {
         for (j = 0; j<80; j++) {
             view[currentTTY][0][j][0] = header[j];
             view[currentTTY][1][j][0] = heade2[j];
+            view[currentTTY][1][j][1] = (j!=0 && j!= 79)?WHITE_TXT:GRAY_TXT;
             view[currentTTY][2][j][0] = footer[j];
             view[currentTTY][24][j][0] = footer[j];
         }

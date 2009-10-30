@@ -154,6 +154,10 @@ kmain()
     bcp[0].page = palloc(4);
     bcp[0].page_qty = 4;
 
+    int i;
+    for(i = 0; i < 100; i++)
+        palloc(4);
+
     str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
 

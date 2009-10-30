@@ -130,6 +130,20 @@ exists_file2(char * name, dword tag){
     }
     return -1;
 }
+/**
+ * Funcion que verifica que exista el nombre de archivo entre todos los archivos abiertos
+ */
+int
+exists_file3(char * name, int i){
+    for(; i<MAX_QTY_FILES ; i++){
+        if(opened_files[i].used){
+            if(str_cmp(name,opened_files[i].file.name)){
+                    return i;
+            }
+        }
+    }
+    return -1;
+}
 
 
 /**
@@ -481,6 +495,38 @@ tags(){
 //     _Sti();
 //     return 1;
 // }
+/**
+ * Funcion que dado un archivo busca todas las ocurrencias entre todos los tags
+ */
+int
+locate(char * name){
+    _Cli();
+    int currentTTY = get_current_tty();
+    int index,i,j;
+    if((index=exists_file3(name,0)) == -1){
+        putln("El archivo no existe.");
+        _Sti();
+        return -1;
+    }
+    do{
+        puts("Archivo: ");
+        putln(opened_files[index].file.name);
+        puts("Tags: ");
+        dword aux_tag = 1;
+        dword tag = opened_files[index].file.tags;
+        if(tag == 0){
+            putln("No tiene tags.");
+        } else {
+            for(;aux_tag>0;aux_tag<<=1){
+                if(tag_list[log2(aux_tag)].name[0]!=0 && (tag&aux_tag) == aux_tag){
+                    putln(tag_list[log2(aux_tag)].name);
+                }
+            }
+        }
+    } while(( index =exists_file3(name,index+1)) != -1);
+    _Sti();
+    return 1;
+}
 
 /**
  * Funcion que dado un archivo devuelve sus tags
@@ -511,6 +557,10 @@ filetagss(char * name){
     return index;
 }
 
+
+/**
+ * Funcion que dice en que tags estas
+ */
 int
 whereamii(){
     _Cli();

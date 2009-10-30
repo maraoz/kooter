@@ -81,6 +81,33 @@ end_process()
 }
 
 /**
+ * kill
+ * Funcion que mata procesos
+ */
+void
+kill(pid_t pid)
+{   
+    _Cli();
+    int i,apid;
+    for(i=0;i<MAX_PROCESSES;i++){
+        if(bcp[i].process.gid == pid){
+            apid = bcp[i].process.pid;
+            if(dequeue_element(used_pids_q, apid)==-1){
+            }
+            enqueue(available_pids_q, apid);
+            pfree(bcp[apid].page, bcp[apid].page_qty);
+            if(bcp[apid].process.background == FALSE){
+                wake_up_father((bcp[apid].dad_pid));
+            } 
+            bcp[apid].process.isAlive = FALSE;
+        }
+    }
+    _Sti();
+    context_switch();
+    asdkhskladhs007
+}
+
+/**
  * get_current_tty()
  */
 int get_current_tty() {
@@ -101,7 +128,8 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
 
     new_proc.process.pid = get_new_pid();
 
-    new_proc.process.gid = gid;
+    if(gid == -1)
+    new_proc.process.gid = new_proc.process.pid;
     new_proc.process.background = background;
     new_proc.process.isAlive = TRUE;
     str_ncpy(new_proc.process.name, name, 20);
@@ -148,14 +176,14 @@ void
 process_creator(){
 
     //create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty)
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,0,current_process,"shell 1");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,1,current_process,"shell 2");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,2,current_process,"shell 3");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,3,current_process,"shell 4");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,4,current_process,"shell 5");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,5,current_process,"shell 6");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,6,current_process,"shell 7");
-    create_process((int(*)(void))shell,4,1,(char**)0,1,0,FALSE,7,current_process,"shell 8");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,0,current_process,"shell 1");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,1,current_process,"shell 2");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,2,current_process,"shell 3");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,3,current_process,"shell 4");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,4,current_process,"shell 5");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,5,current_process,"shell 6");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,6,current_process,"shell 7");
+    create_process((int(*)(void))shell,4,1,(char**)0,-1,0,FALSE,7,current_process,"shell 8");
 
 }
 

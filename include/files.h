@@ -41,7 +41,7 @@ int chdird(char * param);
 
 int renamedir(char * param1, char * param2);
 
-
+int located(char * name);
 
 int addtags(char * fname, char * tname);
 

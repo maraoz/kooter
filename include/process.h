@@ -7,5 +7,7 @@ int init_pids(void);
 
 int get_current_tty(void);
 
+void kill(pid_t pid);
+
 void create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background, int tty, pid_t dad_pid, char * name);
 #endif

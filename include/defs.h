@@ -83,6 +83,8 @@
 #define TAGSLONG_CD 26
 #define FILETAGS_CD 27
 #define WHEREAMI_CD 28
+#define LOCATE_CD 29
+#define KILL_CD 30
 
 /* defines para las funciones de allocator */
 #define FOURTH_MB_MARK 0x00400000

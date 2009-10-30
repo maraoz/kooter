@@ -295,3 +295,8 @@ int
 whereami(int argc, char *argv[]){
     whereamii();
 }
+
+int
+locate(int argc, char *argv[]){
+    located(argv[0]);
+}

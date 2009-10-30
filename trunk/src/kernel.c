@@ -151,15 +151,12 @@ kmain()
     init_ttys();
     fs_init();
     bcp[0].process.isAlive = TRUE;
-    int i;
-    for(i=0;i<100;i++){
-        palloc(1);
-    }
-    bcp[0].page = palloc(1);
-    bcp[0].page_qty = 1;
+    bcp[0].page = palloc(4);
+    bcp[0].page_qty = 4;
+
     str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
-    
+
     _Sti();
     while(1){
         block_me(CNL_FOREVER);

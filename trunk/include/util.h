@@ -24,10 +24,15 @@ void itoa(int num, char v[]);
 void uitoa (unsigned int n, char ret[]);
 
 void check_offset(char label, int count);
+
 void panic(char label, int n);
 
 unsigned int get_random();
+
 unsigned int rand_int(unsigned int not_inclusive_max);
 
+void *memcpy(void *dest, const void *src, size_t count);
+
+void* memset(void* s, int c, size_t n); 
 
 #endif

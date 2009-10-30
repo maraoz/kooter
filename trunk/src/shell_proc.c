@@ -320,3 +320,8 @@ wrapkill(int argc, char *argv[]){
     pid_t pid = atoi(argv[0]);
     kill(pid);
 }
+
+int
+lsall(int argc, char *argv[]){
+    lslongall();
+}

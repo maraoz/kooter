@@ -60,4 +60,6 @@ int locate(int argc, char *argv[]);
 
 int wrapkill(int argc, char *argv[]);
 
+int lsall(int argc, char *argv[]);
+
 #endif

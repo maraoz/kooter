@@ -265,16 +265,8 @@ int n_read[8] = {K_BUFFER_LENGTH};
 
 byte get_char() {
     int currentTTY = get_current_tty();
-    if ( kb_counter[currentTTY] == n_read[currentTTY] ) {
-        // si no quedan caracteres sin leer del buffer
-        n_read[currentTTY] = 0;
-        while (n_read[currentTTY] == 0) {
-            n_read[currentTTY] = read(TECLADO_FD, keyboard_buffer[currentTTY], K_BUFFER_LENGTH);
-        }
-
-        kb_counter[currentTTY] = 0;
-    }
-    return keyboard_buffer[currentTTY][kb_counter[currentTTY]++];
+    while (read(TECLADO_FD, keyboard_buffer[currentTTY], 1) == 0);
+    return keyboard_buffer[currentTTY][0];
 
 }
 
@@ -367,9 +359,11 @@ size_t read(int fd, void* buffer, size_t count) {
     int i;
     byte * b = (byte *)buffer;
     int currentTTY = get_current_tty();
-        for ( i = 0 ; i<count; i++) {
-            b[i] = _int_80_caller(READ, fd, i, 0);
-        }
+    _Cli();
+    for ( i = 0 ; i<count; i++) {
+        b[i] = _int_80_caller(READ, fd, i, 0);
+    }
+    _Sti();
     return i;
 }
 

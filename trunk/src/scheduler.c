@@ -187,12 +187,6 @@ void scheduler(void){
 
 
 boolean is_blocked_in_any(pid_t pid) {
-//     int channel;
-//     for (channel = 0; channel<CHANNEL_AMMOUNT; channel++) {
-//         if (is_blocked_t[channel][pid])
-//             return TRUE;
-//     }
-//     return FALSE;
     return bcp[pid].process.isBlocked;
 }
 

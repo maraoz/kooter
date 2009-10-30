@@ -3,7 +3,9 @@
 #include "../include/stdio.h"
 #include "../include/process.h"
 #include "../include/files.h"
+#include "../include/scheduler.h"
 
+extern int current_process;
 extern int entraSp;
 extern TTY tty[8];
 extern byte blank_screen_buffer[4000];
@@ -61,6 +63,7 @@ k_clear_screen(int argc, char* argv[]) {
 
 int
 activaSp(int argc, char* argv[]) {
+    putln("Esta versión de Kooter no soporta SalvaPantallas");
     return;
 }
 
@@ -132,6 +135,7 @@ int print_char(int argc, char * argv[]) {
     char c;
     puts("Ingrese un caracter por favor: ");
     while((c = get_char()) == -1 || c == '\x08');
+//     block_me(10);
     put_char(c);
     put_char('\n');
 

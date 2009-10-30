@@ -509,17 +509,17 @@ llamaFunc(char s[][LONG_STR_TKN])
             arg_extra =1;
         }
     }
-    else if(str_cmp(s[0], "tagslong"))
-    {
-        if(s[1][0]==0){
-            create_process(tagslong,4,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "tagslong");
-            if (!isBackground[currentTTY]) wait_children();
-            return TAGSLONG_CD;
-        }
-        else{
-            arg_extra =1;
-        }
-    }
+//     else if(str_cmp(s[0], "tagslong"))
+//     {
+//         if(s[1][0]==0){
+//             create_process(tagslong,4,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "tagslong");
+//             if (!isBackground[currentTTY]) wait_children();
+//             return TAGSLONG_CD;
+//         }
+//         else{
+//             arg_extra =1;
+//         }
+//     }
     else if(str_cmp(s[0], "whereami"))
     {
         if(s[1][0]==0){

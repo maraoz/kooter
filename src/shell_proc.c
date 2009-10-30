@@ -281,10 +281,10 @@ rmtag(int argc, char *argv[]){
     rmtags(argv[0],argv[1]);
 }
 
-int
-tagslong(int argc, char *argv[]){
-    tagslongs();
-}
+// int
+// tagslong(int argc, char *argv[]){
+//     tagslongs();
+// }
 
 int
 filetags(int argc, char *argv[]){

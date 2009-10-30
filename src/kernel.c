@@ -88,7 +88,7 @@ kmain()
     init_pagination();
 
 /* Habilito el mouse */
-    enable_mouse();
+//     enable_mouse();
 
 
     

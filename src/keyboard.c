@@ -114,6 +114,10 @@ isFs(int c){
         || c == 0xf4 || c == 0xf5 || c == 0xf6
         || c == 0xf7 || c ==0xf8 );
 }
+int isFlechita(int c) {
+    return c == K_LEFT || c == K_RIGHT
+        || c == K_UP || c == K_DOWN;
+}
 
 /* 
  * Función que devuelve el siguiente caracter del buffer de teclado.
@@ -123,7 +127,6 @@ byte next_char (){
     byte a;
     int currentTTY = get_current_tty();
     if (bcp[current_process].process.background == TRUE)
-        //TODO: OJO!!!! bloqueo forever al proceso?
         block_me(CNL_FOREVER);
     while(is_empty(tty[currentTTY].kb_buffer)){
         block_me(CNL_KEYBOARD);

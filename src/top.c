@@ -96,7 +96,7 @@ void top(void) {
         init_view();
 
         char * header = "------------------------------------/ TOPAZ /-----------------------------------";
-        char * heade2 = "|                         id     Use Percentage    name                        |";
+        char * heade2 = "|    Proces ID                    Use Percentage    name                        |";
         char * footer = "--------------------------------------------------------------------------------";
         char * column = "|||||||||||||||||||||||||";
         int j;

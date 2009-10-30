@@ -247,3 +247,28 @@ int
 taglist(int argc, char *argv[]){
     tags();
 }
+
+int
+addtag(int argc, char *argv[]){
+    addtags(argv[0],argv[1]);
+}
+
+int
+rmtag(int argc, char *argv[]){
+    rmtags(argv[0],argv[1]);
+}
+
+int
+tagslong(int argc, char *argv[]){
+    tagslongs();
+}
+
+int
+filetags(int argc, char *argv[]){
+    filetagss(argv[0]);
+}
+
+int
+whereami(int argc, char *argv[]){
+    whereamii();
+}

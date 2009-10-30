@@ -41,6 +41,18 @@ int chdird(char * param);
 
 int renamedir(char * param1, char * param2);
 
+
+
+int addtags(char * fname, char * tname);
+
+int rmtags(char * fname, char * tname);
+
+int tagslongs();
+
+int filetagss(char * name);
+
+int whereamii();
+
 /**
  * Varios
  */ 

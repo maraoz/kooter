@@ -191,7 +191,7 @@ fwrite(char * name, char * input){
  * Funcion que agrega tags a un archivo
  */
 int
-addtag(char * fname, char * tname){
+addtags(char * fname, char * tname){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;
@@ -223,7 +223,7 @@ addtag(char * fname, char * tname){
  * Funcion que saca tags a un archivo
  */
 int
-rmtag(char * fname, char * tname){
+rmtags(char * fname, char * tname){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;
@@ -426,7 +426,7 @@ tags(){
  */
 
 int
-tagslong(){
+tagslongs(){
     _Cli();
     int i;
     for(i=0;i<MAX_QTY_TAGS;i++){
@@ -445,7 +445,7 @@ tagslong(){
  * Funcion que dado un archivo devuelve sus tags
  */
 int
-filetags(char * name){
+filetagss(char * name){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;
@@ -471,7 +471,7 @@ filetags(char * name){
 }
 
 int
-whereami(){
+whereamii(){
     _Cli();
     int currentTTY = get_current_tty();
     dword aux_tag = 1;

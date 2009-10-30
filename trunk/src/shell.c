@@ -396,7 +396,7 @@ llamaFunc(char s[][LONG_STR_TKN])
             return PUT_CD;
         }
     }
-    else if(str_cmp(s[0], "chdir"))
+    else if(str_cmp(s[0], "cd"))
     {
         if(s[1][0]==0)
         {
@@ -405,7 +405,7 @@ llamaFunc(char s[][LONG_STR_TKN])
         }
         else
         {
-            create_process(chdir,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"chdir");
+            create_process(chdir,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"cd");
             if (!isBackground[currentTTY]) wait_children();
             return CHDIR_CD;
         }
@@ -452,6 +452,34 @@ llamaFunc(char s[][LONG_STR_TKN])
             return CHNAMEDIR_CD;
         }
     }
+    else if(str_cmp(s[0], "addtag"))
+    {
+        if(s[1][0]==0 || s[2][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(addtag,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"addtag");
+            if (!isBackground[currentTTY]) wait_children();
+            return ADDTAG_CD;
+        }
+    }
+    else if(str_cmp(s[0], "rmtag"))
+    {
+        if(s[1][0]==0 || s[2][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(rmtag,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"rmtag");
+            if (!isBackground[currentTTY]) wait_children();
+            return RMTAG_CD;
+        }
+    }
     else if(str_cmp(s[0], "ls"))
     {
         create_process(ls,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
@@ -465,6 +493,28 @@ llamaFunc(char s[][LONG_STR_TKN])
             create_process(taglist,4,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "taglist");
             if (!isBackground[currentTTY]) wait_children();
             return TAGLIST_CD;
+        }
+        else{
+            arg_extra =1;
+        }
+    }
+    else if(str_cmp(s[0], "tagslong"))
+    {
+        if(s[1][0]==0){
+            create_process(tagslong,4,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "tagslong");
+            if (!isBackground[currentTTY]) wait_children();
+            return TAGSLONG_CD;
+        }
+        else{
+            arg_extra =1;
+        }
+    }
+    else if(str_cmp(s[0], "whereami"))
+    {
+        if(s[1][0]==0){
+            create_process(whereami,4,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "whereami");
+            if (!isBackground[currentTTY]) wait_children();
+            return WHEREAMI_CD;
         }
         else{
             arg_extra =1;
@@ -496,6 +546,20 @@ llamaFunc(char s[][LONG_STR_TKN])
             create_process(open,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"open");
             if (!isBackground[currentTTY]) wait_children();
             return OPEN_CD;
+        }
+    }
+    else if(str_cmp(s[0], "filetags"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(filetags,4,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"filetags");
+            if (!isBackground[currentTTY]) wait_children();
+            return FILETAGS_CD;
         }
     }
     else if(str_cmp(s[0], "top"))
@@ -555,13 +619,23 @@ llamaFunc(char s[][LONG_STR_TKN])
             put_char('\n');
             puts("open [argument]");
             put_char('\n');
-            puts("chdir [argument]");
+            puts("cd [argument]");
             put_char('\n');
             puts("ls [argument(optional)]");
             put_char('\n');
             puts("mkdir [argument]");
             put_char('\n');
             puts("taglist");
+            put_char('\n');
+            puts("addtag [argument1][argument2]");
+            put_char('\n');
+            puts("rmtag [argument1][argument2]");
+            put_char('\n');
+            puts("tagslong");
+            put_char('\n');
+            puts("filetags [argument]");
+            put_char('\n');
+            puts("wheerami");
             put_char('\n');
              return CODE_CD;
         }

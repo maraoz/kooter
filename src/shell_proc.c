@@ -130,15 +130,11 @@ print_b(int argc, char* argv[]) {
 int print_char(int argc, char * argv[]) {
     int n=0;
     char c;
-    puts("Ingrese un caracter para ser floodeado: ");
-    while((c = get_char()) == -1);
+    puts("Ingrese un caracter por favor: ");
+    while((c = get_char()) == -1 || c == '\x08');
     put_char(c);
     put_char('\n');
 
-    while(1) {
-        n++;
-        if(!n%CYCLE == 0) put_char(c);
-    }
 }
 
 

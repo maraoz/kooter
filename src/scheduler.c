@@ -212,6 +212,7 @@ int desalojate(int pid) {
         return 0;
     } else {
         // desaparece el proceso muerto
+//         wake_up_father((bcp[pid].dad_pid));
         return 0;
     }
     

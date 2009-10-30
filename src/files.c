@@ -252,6 +252,11 @@ addtags(char * fname, char * tname){
         _Sti();
         return -1;
     }
+    if((exists_file(fname,opened_files[index].file.tags|=tag)) != -1){
+        putln("Ya existe un archivo con los mismos tags.");
+        _Sti();
+        return -1;
+    }
     opened_files[index].file.tags|=tag;
     i = log2(tag);
     tag_list[i].references++;
@@ -281,6 +286,11 @@ rmtags(char * fname, char * tname){
     }
     if((opened_files[index].file.tags&tag) != tag){
         putln("El archivo no posee el tag.");
+        _Sti();
+        return -1;
+    }
+    if((exists_file(fname,opened_files[index].file.tags&=~tag)) != -1){
+        putln("Ya existe un archivo con los mismos tags.");
         _Sti();
         return -1;
     }
@@ -524,6 +534,38 @@ located(char * name){
             }
         }
     } while(( index =exists_file3(name,index+1)) != -1);
+    _Sti();
+    return 1;
+}
+
+
+/**
+ * Funcion que lista todos los archivos y sus tags
+ */
+int
+lslongall(char * name){
+    _Cli();
+    int currentTTY = get_current_tty();
+    int index,i,j;
+    for(index = 0; index < MAX_QTY_FILES ; index++){
+        if(opened_files[index].used == TRUE){
+            putln("");
+            puts("Archivo: ");
+            putln(opened_files[index].file.name);
+            puts("   Tags: ");
+            dword aux_tag = 1;
+            dword tag = opened_files[index].file.tags;
+            if(tag == 0){
+                putln("No tiene tags.");
+            } else {
+                for(;aux_tag>0;aux_tag<<=1){
+                    if(tag_list[log2(aux_tag)].name[0]!=0 && (tag&aux_tag) == aux_tag){
+                        putln(tag_list[log2(aux_tag)].name);
+                    }
+                }
+            }
+        }
+    }
     _Sti();
     return 1;
 }

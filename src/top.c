@@ -79,6 +79,8 @@ void init_view(){
     }
 }
 void showTop(void) {
+    if (runningInBackground())
+        return;
     int currentTTY = get_current_tty();
     tty[currentTTY].cursor = 0;
     check_offset('t', 4000);

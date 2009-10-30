@@ -179,3 +179,23 @@ unsigned int rand_int( unsigned int not_inclusive_max) {
     return get_random() % not_inclusive_max;
 }
 
+
+void *memcpy(void *dest, const void *src, size_t count) {
+    char *dst8 = (char *)dest;
+    char *src8 = (char *)src;
+
+    while (count--) {
+        *dst8++ = *src8++;
+    }
+    return dest;
+}
+
+void* memset(void* s, int c, size_t n) {
+    char *dest = (char *)s;
+
+    while(n--) {
+        *dest++ = c;
+    }
+
+    return s;
+}

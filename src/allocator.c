@@ -91,64 +91,66 @@ init_pagination(void) {
 PAGE *
 palloc(int cant)
 {
-    static int * p = (int*)MemStart;
-    p+=4096;
-    up_p(p,1);
-    return p;
-// 	static unsigned int i;
-//     static unsigned int j;
-//     static unsigned int k;
-//     int correct = 1;
-//     
-//     if(i + cant > 1023) {
-//         i = 0;
-//     }
-// 
-// 	for( ; i < (MemSize/MEM_BLOCK); )
-// 	{
-//         for( k = i; k < cant; k++) {
-//             correct *= (!getbits8(MemMap[k/8],k%8,1))? 1 : 0;
-//         }
-// 		if( correct )
-// 		{
-//             for( j = i; j < cant; j++) {
-//                 setbits8(&(MemMap[j/8]),j%8,1,1);
-//             }
-//             up_p((PAGE*)(MemStart+i*MEM_BLOCK), cant);
-//             i = i + cant;
-// 			return (void*)(MemStart+i*MEM_BLOCK);
-// 		}
-//         i++;
-// 	}
-// 
-// 	return NULL;
+    cant = cant / 4;
+    static unsigned int i;
+
+//     setbits8(&(MemMap[i/8]),i%8,1,1);
+//     up_p((PAGE*)(MemStart+i*MEM_BLOCK), 4);
+//     i++;
+//     return (void*)(MemStart+i*MEM_BLOCK);
+
+    static unsigned int j;
+    static unsigned int k;
+    int correct = 1;
+
+    i = (i + cant > 1023)? 0 : i;
+
+    for( ; i < (MemSize/MEM_BLOCK); )
+    {
+        for( k = i; k < i + cant; k++) {
+            correct *= (!getbits8(MemMap[k/8],k%8,1))? 1 : 0;
+        }
+        if( correct ) {
+            for( j = i; j < i + cant; j++) {
+                setbits8(&(MemMap[j/8]),j%8,1,1);
+            }
+            up_p((PAGE*)(MemStart+i*MEM_BLOCK), cant);
+            i = i + cant;
+            return (void*)(MemStart+i*MEM_BLOCK);
+        }
+        i++;
+    }
+
+    return NULL;
+
 }
 
 void
 pfree(PAGE * p, int cant)
 {
-	static int mempos;
-	static unsigned int i;
+    cant = cant / 4;
+    static int mempos;
+    static unsigned int i;
     static unsigned int j;
-    
-	mempos = (int) p;
 
-	mempos -= MemStart;
-	i = mempos/MEM_BLOCK;
+    mempos = (int) p;
 
-	if(mempos % MEM_BLOCK != 0)
-	{
-		/** ACA SE ROMPE TODO!!! */
-		/** Se esta liberando una direccion no valida. */
-	}
+    mempos -= MemStart;
+    i = mempos/MEM_BLOCK;
 
-	if( !getbits8(MemMap[i/8], i % 8, 1) )
-	{
-		/** DOUBLE FREE EXCEPTION. **/
-	}
+    if(mempos % MEM_BLOCK != 0)
+    {
+            /** ACA SE ROMPE TODO!!! */
+            /** Se esta liberando una direccion no valida. */
+    }
 
-	/** Todo ok, dejo libre la zona de memoria. */
-    for( j = i; j < cant; j++) {
+    if( !getbits8(MemMap[i/8], i % 8, 1) )
+    {
+            /** DOUBLE FREE EXCEPTION. **/
+    }
+
+    /** Todo ok, dejo libre la zona de memoria. */
+    for( j = i; j < i + cant; j++) {
         setbits8(&(MemMap[j/8]), j % 8, 1, 0);
     }
 }
@@ -157,12 +159,12 @@ pfree(PAGE * p, int cant)
 void
 up_p(PAGE * p, int cant)
 {
-	unsigned int phys = (unsigned int)p;
-	unsigned int dirIndex = (phys >> 22) & 0x3FF;
-	unsigned int tabIndex = (phys >> 12) & 0x3FF;
-	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
+    unsigned int phys = (unsigned int)p;
+    unsigned int dirIndex = (phys >> 22) & 0x3FF;
+    unsigned int tabIndex = (phys >> 12) & 0x3FF;
+    unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
 
-	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
+    dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
     int i;
     for(i = 0; i < cant; i++) {
         table[tabIndex + i] = (phys & 0xFFFFF000 + i * PAGE_SIZE) | 3;
@@ -172,12 +174,12 @@ up_p(PAGE * p, int cant)
 void
 down_p(PAGE *p, int cant)
 {
-	unsigned int phys = (unsigned int)p;
-	unsigned int dirIndex = (phys >> 22) & 0x3FF;
-	unsigned int tabIndex = (phys >> 12) & 0x3FF;
-	unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
+    unsigned int phys = (unsigned int)p;
+    unsigned int dirIndex = (phys >> 22) & 0x3FF;
+    unsigned int tabIndex = (phys >> 12) & 0x3FF;
+    unsigned int * table = (unsigned int*)(dirT[dirIndex] & 0xFFFFF000);
 
-	dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
+    dirT[dirIndex] = dirT[dirIndex] | 3;	//Set the directory as present
     int i;
     for(i = 0; i < cant; i++) {
         table[tabIndex + i] = (phys & 0xFFFFF000 + i * PAGE_SIZE) & 0xFFFFFFFE;

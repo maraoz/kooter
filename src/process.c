@@ -16,7 +16,7 @@
 queue_t available_pids, used_pids;
 queue_t * available_pids_q, * used_pids_q;
 
-#define asdkhskladhs007 while(1);
+#define asdkhskladhs007xD while(1);
 
 extern pid_t current_process; /* proceso actual que esta corriendo */
 extern context_t bcp[MAX_PROCESSES];
@@ -77,7 +77,7 @@ end_process()
     bcp[current_process].process.isAlive = FALSE;
     _Sti();
     context_switch();
-    asdkhskladhs007
+    asdkhskladhs007xD
 }
 
 /**
@@ -87,12 +87,12 @@ end_process()
 void
 kill(pid_t pid)
 {   
-    _Cli();
+    
     int i,apid;
     if( pid > MAX_PROCESSES || pid <= 0){
-        _Sti();
         return;
     }
+    _Cli();
     for(i=0;i<MAX_PROCESSES;i++){
         if(bcp[i].process.isAlive == TRUE && (bcp[i].process.pid == pid || bcp[i].process.gid == pid)){
             apid = bcp[i].process.pid;
@@ -107,8 +107,7 @@ kill(pid_t pid)
         }
     }
     _Sti();
-    context_switch();
-//     asdkhskladhs007
+
 }
 
 /**

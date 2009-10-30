@@ -2,10 +2,7 @@
 #ifndef _game_h_
 #define _game_h_
 
-#define K_UP 1
-#define K_RIGHT 2
-#define K_DOWN 3
-#define K_LEFT 4
+
 
 #define HEART_N 15
 

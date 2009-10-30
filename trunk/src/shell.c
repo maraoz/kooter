@@ -6,10 +6,9 @@
 #include "../include/top.h"
 #include "../include/process.h"
 #include "../include/shell_proc.h"
-
 #include "../include/scheduler.h"
-
 #include "../include/kc.h"
+#include "../include/keyboard.h"
 
 
 /*
@@ -50,7 +49,12 @@ int entraSp=30;
 /*
 ** guarda el retorno de la ultima funcion ejecutada
 */
-int ret=AUX;
+int ret[8]={AUX,AUX,AUX,AUX,AUX,AUX,AUX,AUX};
+
+/*
+** mutex para el juego mario
+*/
+int mario_is_playing = FALSE;
 
 /*
 ** Imagen para el protector de pantalla
@@ -239,6 +243,8 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
 ** en funcion del comando ingresado
 */
 
+
+
 int
 llamaFunc(char s[][LONG_STR_TKN])
 {
@@ -328,9 +334,14 @@ llamaFunc(char s[][LONG_STR_TKN])
     {
         if(s[1][0]==0)
         {
-            create_process(mario, 4, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process, "mario");
-            if (!isBackground[currentTTY])
-                wait_children();
+            if (! mario_is_playing) {
+                mario_is_playing = TRUE;
+                create_process(mario, 4, 1, str, 1, 1, isBackground[currentTTY], currentTTY, current_process, "mario");
+                if (!isBackground[currentTTY])
+                    wait_children();
+            } else {
+                putln("El juego Mario ya esta abierto. No se puede abrir dos veces.");
+            }
             return MARIO_CD;
         }
         else
@@ -675,6 +686,7 @@ llamaFunc(char s[][LONG_STR_TKN])
 ** ciclo principal del interprete de comandos
 */
 
+
 void
 shell()
 {
@@ -686,9 +698,13 @@ shell()
     flush();
     int currentTTY = get_current_tty();
     tty[currentTTY].cursor = 0;
+//     for (i=0; i<COMMAND_BUFFER_LENGTH; i++) {
+//         command_buff[currentTTY][i][0] = '\0';
+//     }
+
     while(1)
     {
-        if(ret==ECHO_CD || ret==CNF_CD || ret==SETTIME_CD || ret==GBG_CD || ret==CODE_CD)
+        if(ret[currentTTY]==ECHO_CD || ret[currentTTY]==CNF_CD || ret[currentTTY]==SETTIME_CD || ret[currentTTY]==GBG_CD || ret[currentTTY]==CODE_CD)
             put_char('\n');
 
         print_nline();
@@ -696,10 +712,41 @@ shell()
         i=0;
         while((c=get_char())!='\n')
         {
-            if(isFs(c)){
-//                 flush();
-//                 switch_tty(c&0x0F); /*le paso como parametro la terminal a la que quiero switchear */
-//                 while(1);
+            if(isFlechita(c)){
+                switch(c) {
+                    case K_UP:
+//                         if (command_pointer[currentTTY] == 0) {
+//                             str_ncpy(command_buff[currentTTY][0], in,MAX_COMMAND_LENGTH);
+//                             while (i != 0) {
+//                                 put_char('\x08');
+//                                 i--;
+//                             }
+//                             while(in[i]!= '\0') {
+//                                 put_char(in[i]);
+//                                 i++;
+//                             }
+//                         }
+//                         command_pointer[currentTTY]++;
+//                         str_ncpy(in,command_buff[currentTTY][command_pointer[currentTTY]],MAX_COMMAND_LENGTH);
+//                         putln("es arriba");
+                        break;
+                    case K_DOWN:
+//                         if (command_pointer[currentTTY] == 0) break;
+//                         command_pointer[currentTTY]--;
+//                         str_ncpy(in,command_buff[currentTTY][command_pointer[currentTTY]],MAX_COMMAND_LENGTH);
+//                         while (i != 0) {
+//                             put_char('\x08');
+//                             i--;
+//                         }
+//                         while(in[i]!= '\0') {
+//                             put_char(in[i]);
+//                             i++;
+//                         }
+// //                         putln("es abajo");
+                        break;
+                    case K_LEFT:
+                    case K_RIGHT: break;
+                }
             } else {
                 if(c<0x05)
                     ;
@@ -723,10 +770,14 @@ shell()
         if(i>=LONG_STR_CMD)
             i=LONG_STR_CMD-1;
         in[i]=0;
+        
+//         for (i=COMMAND_BUFFER_LENGTH-1; i>0; i--) {
+//             str_ncpy(command_buff[currentTTY][i],command_buff[currentTTY][i-1],MAX_COMMAND_LENGTH);
+//         }
 
         separaPorEspacios(in, data);
 
-        ret=llamaFunc(data);
+        ret[currentTTY]=llamaFunc(data);
 
         data[0][0]=data[1][0]=0;
     }

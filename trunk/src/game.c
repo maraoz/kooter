@@ -3,12 +3,13 @@
 #include "../include/game.h"
 #include "../include/util.h"
 #include "../include/mouse.h"
+#include "../include/keyboard.h"
 #include "../include/video.h"
 
 
 
 extern TTY tty[8];
-
+extern int mario_is_playing;
 
 
 
@@ -149,6 +150,8 @@ int game() {
         }
 
     }
+
+    mario_is_playing = FALSE;
 
     return 0;
 }

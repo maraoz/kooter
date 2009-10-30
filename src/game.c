@@ -202,7 +202,7 @@ void init_map_view(game_t * my_game){
     for (i=0; i<25;i++) {
         for (j=0; j<80;j++) {
             my_game->view[i][j][0] = my_game->map[i][j];
-            my_game->view[i][j][1] = WHITE_TXT;
+            my_game->view[i][j][1] = GRAY_TXT;
         }
     }
 }

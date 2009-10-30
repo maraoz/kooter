@@ -54,7 +54,7 @@ void leoteclado (int k){
                     enqueue(tty[focusedTTY].kb_buffer, c);
                     for (pid=0;pid<MAX_PROCESSES;pid++) {
                         if(is_blocked(pid, CNL_KEYBOARD) && bcp[pid].tty==focusedTTY
-                          /*&& !bcp[current_process].process.background*/ )
+                          && bcp[pid].process.background == FALSE)
                             unblock(pid, CNL_KEYBOARD);
                     }
                 }
@@ -128,7 +128,7 @@ byte next_char (){
     int currentTTY = get_current_tty();
     if (bcp[current_process].process.background == TRUE)
         block_me(CNL_FOREVER);
-    while(is_empty(tty[currentTTY].kb_buffer)){
+    if (is_empty(tty[currentTTY].kb_buffer)){
         block_me(CNL_KEYBOARD);
     }
     a = dequeue(tty[currentTTY].kb_buffer);

@@ -15,6 +15,7 @@
 #define MAX_PROCESSES 42
 queue_t available_pids, used_pids;
 queue_t * available_pids_q, * used_pids_q;
+queue_t * ready_processes_q;
 
 #define asdkhskladhs007xD while(1);
 
@@ -99,8 +100,8 @@ kill(pid_t pid)
     for(i=0;i<MAX_PROCESSES;i++){
         if(bcp[i].process.isAlive == TRUE && (bcp[i].process.pid == pid || bcp[i].process.gid == pid || bcp[i].dad_pid == pid)){
             apid = bcp[i].process.pid;
-            if(dequeue_element(used_pids_q, apid)==-1){
-            }
+            dequeue_element(ready_processes_q, apid);
+            dequeue_element(used_pids_q, apid);
             enqueue(available_pids_q, apid);
             pfree(bcp[apid].page, bcp[apid].page_qty);
             if(bcp[apid].process.background == FALSE){

@@ -86,6 +86,8 @@ int unblock(int pid, int channel) {
     }
     bcp[pid].process.isBlocked = FALSE;
     is_blocked_t[channel][pid] = FALSE;
+    if (bcp[pid].process.isAlive == FALSE)
+        return -1;
     return enqueue(ready_processes_q, pid);
 }
 

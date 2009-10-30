@@ -77,6 +77,9 @@ Punto de entrada de código C.
 *************************************************/
 kmain() 
 {
+    _Cli();
+//     int pause = 1;
+//     while(pause);
 
     init_pagination();
 
@@ -130,7 +133,7 @@ kmain()
     
     _lidt (&idtr);    
 
-    _Cli();
+    
 
 // seteo las interrupciones en 1
     interrupted=1;

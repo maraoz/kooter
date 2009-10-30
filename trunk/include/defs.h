@@ -142,7 +142,6 @@ typedef struct {
 
 int tTicks;
 
-#pragma pack (1)
 typedef struct {
     int pid;
     int gid;
@@ -153,7 +152,6 @@ typedef struct {
     char name[20];
 } process_t;
 
-#pragma pack (1)
 typedef struct {
     process_t process;
     dword ESP;
@@ -164,7 +162,6 @@ typedef struct {
     pid_t dad_pid;
 } context_t;
 
-#pragma pack (1)
 typedef struct {
     dword EDI, ESI, EBP, ESP, EBX, EDX, ECX, EAX, EIP, CS, EFLAGS;
     void * retaddr;
@@ -172,7 +169,6 @@ typedef struct {
     char ** argv;
 } STACK_FRAME;
 
-#pragma pack (1)
 typedef struct
 {
     char view[4160];

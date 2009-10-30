@@ -12,6 +12,7 @@
 #include "../include/stdio.h"
 
 
+#define MAX_PROCESSES 42
 queue_t available_pids, used_pids;
 queue_t * available_pids_q, * used_pids_q;
 
@@ -62,11 +63,11 @@ void
 end_process()
 {   
     _Cli();
-        char * m = (char*)0xB8000;
+// //         char * m = (char*)0xB8000;
         
     if(dequeue_element(used_pids_q, current_process)==-1){
-        m[current_process*2]='0';
-        m[current_process*2+1]='0';
+//         m[current_process*2]='0';
+//         m[current_process*2+1]='0';
     }
     enqueue(available_pids_q, current_process);
     pfree(bcp[current_process].page, bcp[current_process].page_qty);
@@ -89,7 +90,7 @@ int get_current_tty() {
 /**
  * Funcion que crea un nuevo proceso
  */
-process_t
+void
 create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, int priority, int background,int tty, pid_t dad_pid, char * name)
 {
     _Cli();
@@ -103,7 +104,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     new_proc.process.gid = gid;
     new_proc.process.background = background;
     new_proc.process.isAlive = TRUE;
-    str_ncpy(new_proc.process.name,name, 20);
+    str_ncpy(new_proc.process.name, name, 20);
 
     new_proc.tty = tty;
     new_proc.dad_pid = dad_pid;
@@ -124,7 +125,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
 
     _Sti();
 
-    return new_proc.process;
+    return;
 }
 
 dword
@@ -158,42 +159,42 @@ process_creator(){
 
 }
 
-int pepe() {
-    while (1) {
-    }
-}
-
-int pepe2() {
-    while (1) {
-    put_char('2');
-    flush();
-    }
-}
-
-int pepe3() {
-
-    while (1) {put_char('3');
-    flush();
-    }
-
-}
-int pepe4() {
-
-    while (1) {
-    put_char('4');
-    flush();
-    }
-
-}
-
-int bnm() {
-    int a=0;
-    while(1){
-        a++;
-        if(a%50000){
-            put_char('d'); 
-            a=a%50000;
-        }
-    }
-}
+// int pepe() {
+//     while (1) {
+//     }
+// }
+// 
+// int pepe2() {
+//     while (1) {
+//     put_char('2');
+//     flush();
+//     }
+// }
+// 
+// int pepe3() {
+// 
+//     while (1) {put_char('3');
+//     flush();
+//     }
+// 
+// }
+// int pepe4() {
+// 
+//     while (1) {
+//     put_char('4');
+//     flush();
+//     }
+// 
+// }
+// 
+// int bnm() {
+//     int a=0;
+//     while(1){
+//         a++;
+//         if(a%50000){
+//             put_char('d'); 
+//             a=a%50000;
+//         }
+//     }
+// }
 

@@ -151,8 +151,8 @@ kmain()
     init_ttys();
     fs_init();
     bcp[0].process.isAlive = TRUE;
-    bcp[0].page = palloc(1);
-    bcp[0].page_qty = 1;
+    bcp[0].page = palloc(7);
+    bcp[0].page_qty = 7;
     str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
     

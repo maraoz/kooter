@@ -302,21 +302,20 @@ size_t write(int fd, const void* buffer, size_t count) {
     byte data;
 
     int currentTTY = get_current_tty();
+    if (bcp[current_process].process.background == FALSE) {
+        for ( i = 0 ; i<count; i++) {
+            offset = i + tty[currentTTY].cursor*2;
+            data = *((byte *)buffer+i);
 
-    for ( i = 0 ; i<count; i++) {
-        offset = i + tty[currentTTY].cursor*2;
-        data = *((byte *)buffer+i);
-
-        if (bcp[current_process].process.background == FALSE) {
+        
             if (currentTTY == focusedTTY) {
                 _int_80_caller(WRITE, fd, offset, data);
             }
             tty[currentTTY].view[offset] = data;
         }
-
+        tty[currentTTY].cursor+=count/2;
     }
-    tty[currentTTY].cursor+=count/2;
-
+    
     return 0;
 }
 
@@ -340,10 +339,10 @@ size_t write(int fd, const void* buffer, size_t count) {
 size_t read(int fd, void* buffer, size_t count) {
     int i;
     byte * b = (byte *)buffer;
-    for ( i = 0 ; i<count; i++) {
-        b[i] = _int_80_caller(READ, fd, i, 0);
-
-    }
+    int currentTTY = get_current_tty();
+        for ( i = 0 ; i<count; i++) {
+            b[i] = _int_80_caller(READ, fd, i, 0);
+        }
     return i;
 }
 

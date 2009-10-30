@@ -54,7 +54,7 @@ void leoteclado (int k){
                     enqueue(tty[focusedTTY].kb_buffer, c);
                     for (pid=0;pid<MAX_PROCESSES;pid++) {
                         if(is_blocked(pid, CNL_KEYBOARD) && bcp[pid].tty==focusedTTY
-                          && !bcp[current_process].process.background )
+                          /*&& !bcp[current_process].process.background*/ )
                             unblock(pid, CNL_KEYBOARD);
                     }
                 }

@@ -60,6 +60,10 @@ void _Sti(void) {
 }
 
 
+boolean runningInBackground() {
+    return bcp[current_process].process.background;
+}
+
 dword int_08(dword ESP)
 {
     down_p(bcp[current_process].page, bcp[current_process].page_qty);

@@ -25,8 +25,9 @@ gcc -g -c ../src/scheduler.c -o scheduler.o -fno-builtin
 gcc -g -c ../src/exceptions.c -o exceptions.o -fno-builtin
 gcc -g -c ../src/files.c -o files.o -fno-builtin -fno-stack-protector
 gcc -g -c ../src/shell_proc.c -o shell_proc.o -fno-builtin
-gcc -c ../src/top.c -o top.o -fno-builtin
+gcc -g -c ../src/top.c -o top.o -fno-builtin
+gcc -g -c ../src/stack.c -o stack.o -fno-builtin
 
 echo -e "\tLinkeditando y creando el ejecutable..." 
-ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o stdio.o util.o keyboard.o mouse.o shell.o video.o game.o command.o process.o allocator.o queue.o scheduler.o exceptions.o files.o shell_proc.o top.o
+ld -T ../src/link.ld -o kernel.bin kernel.o kstart.o libc.o libasm.o stdio.o util.o keyboard.o mouse.o shell.o video.o game.o command.o process.o allocator.o queue.o scheduler.o exceptions.o files.o shell_proc.o top.o stack.o
 

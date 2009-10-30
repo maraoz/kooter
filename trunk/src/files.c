@@ -270,7 +270,7 @@ rmtags(char * fname, char * tname){
         _Sti();
         return -1;
     }
-    opened_files[index].file.tags|=tag;
+    opened_files[index].file.tags&=~tag;
     i = log2(tag);
     tag_list[i].references--;
 
@@ -403,7 +403,12 @@ rmdire(char * param){
         _Sti();
         return -1;
     }
+    for(index = 0; index < MAX_QTY_FILES; index++){
+        if(opened_files[index].used == TRUE)
+            opened_files[index].file.tags&=~tag;
+    }
     tag_list[log2(tag)].name[0]=0;
+    tag_list[log2(tag)].references=0;
     _Sti();
     return tag;
 }

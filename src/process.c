@@ -89,8 +89,12 @@ kill(pid_t pid)
 {   
     _Cli();
     int i,apid;
+    if( pid > MAX_PROCESSES || pid <= 0){
+        _Sti();
+        return;
+    }
     for(i=0;i<MAX_PROCESSES;i++){
-        if(bcp[i].process.gid == pid){
+        if(bcp[i].process.isAlive == TRUE && (bcp[i].process.pid == pid || bcp[i].process.gid == pid)){
             apid = bcp[i].process.pid;
             if(dequeue_element(used_pids_q, apid)==-1){
             }
@@ -104,7 +108,7 @@ kill(pid_t pid)
     }
     _Sti();
     context_switch();
-    asdkhskladhs007
+//     asdkhskladhs007
 }
 
 /**

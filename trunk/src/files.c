@@ -7,7 +7,7 @@
 
 files_entry opened_files[MAX_QTY_FILES];
 tag_list_t tag_list[MAX_QTY_TAGS];
-dword cwd = 0;
+dword cwd[8] = {0};
 extern pid_t current_process;
 
 /**
@@ -34,6 +34,7 @@ fs_init(){
 int
 openf(char * name){
     _Cli();
+    int currentTTY = get_current_tty();
     int index,i,j;
     if(exists_file(name) != -1){
         putln("El nombre de archivo ya existe");
@@ -42,7 +43,7 @@ openf(char * name){
     files_t file;
     file.index = 0;
     strncpy(file.name,name,20);
-    file.tags = cwd;
+    file.tags = cwd[currentTTY];
     file.data = (char*)palloc(1); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
     if(index == -1){
@@ -66,7 +67,9 @@ openf(char * name){
 
 int
 rename(char * name, char * newname){
+    _Cli();
     int index,i,j;
+    int currentTTY = get_current_tty();
     if((index = exists_file(name)) == -1){
         putln("El nombre de archivo no existe");
         return -1;
@@ -76,6 +79,7 @@ rename(char * name, char * newname){
         return -1;
     }
     str_ncpy(opened_files[index].file.name,newname,20);
+    _Sti();
     return index;
 }
 
@@ -111,6 +115,7 @@ closef(char * name){
     }
     opened_files[index].references--;
     opened_files[index].used = FALSE;
+    pfree(opened_files[index].data);
     return index;
 }
 
@@ -204,7 +209,7 @@ chdird(char * param){
 	putln("Tag invalido");
         return -1;
     }
-    cwd |= tag;
+    cwd[currentTTY] |= tag;
 }
 
 /**
@@ -212,19 +217,21 @@ chdird(char * param){
  */
 int
 lsdir(char * param){
+    _Cli();
     dword tag;
     int i;
-    if(* param == 0){
-        tag = cwd;
+    if(param[0] == 0){
+        tag = cwd[currentTTY];
     } else {
-        tag = get_numeric_tag(param)|cwd;
+        tag = get_numeric_tag(param)|cwd[currentTTY];
     }
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
         if(opened_files[i].used == TRUE && opened_files[i].file.tags&tag == tag){
             putln(opened_files[i].file.name);
         }  
     }
-     return 1;
+    _Sti();
+    return 1;
 }
 
 /**

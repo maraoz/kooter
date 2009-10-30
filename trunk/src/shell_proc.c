@@ -198,9 +198,9 @@ print(int argc, char *argv[]){
     data = (PAGE*)palloc(1);
     int i;
     fread(argv[0],(char*)data);
-    for(i=0;data[i]!=0;i++){
-        put_char(data[i]);
-    }
+    puts((char*)data);
+    putln("");
+    pfree(data,1);
 }
 
 int

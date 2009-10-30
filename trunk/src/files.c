@@ -72,10 +72,12 @@ rename(char * name, char * newname){
     int currentTTY = get_current_tty();
     if((index = exists_file(name)) == -1){
         putln("El nombre de archivo no existe");
+        _Sti();
         return -1;
     }
     if(exists_file(newname) != -1){
         putln("El nombre de archivo ya existe");
+        _Sti();
         return -1;
     }
     str_ncpy(opened_files[index].file.name,newname,20);
@@ -90,11 +92,11 @@ int
 exists_file(char * name){
     int i;
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
-	if(opened_files[i].used){
-	    if(str_cmp(name,opened_files[i].file.name)){
-		return i;
-	    }
-	}
+        if(opened_files[i].used){
+            if(str_cmp(name,opened_files[i].file.name)){
+                return i;
+            }
+        }
     }
     return -1;
 }
@@ -104,18 +106,22 @@ exists_file(char * name){
  */
 int
 closef(char * name){
+    _Cli();
     int index;
     if((index = exists_file(name)) == -1){
-	putln("El nombre de archivo no existe");
-	return -1;
+        putln("El nombre de archivo no existe");
+        _Sti();
+        return -1;
     }
     if(!is_valid_fd(index) || opened_files[index].references == 0 || opened_files[index].used == FALSE){
-	putln("No existe el archivo");
+        putln("No existe el archivo");
+        _Sti();
         return -1;
     }
     opened_files[index].references--;
     opened_files[index].used = FALSE;
-    pfree(opened_files[index].data);
+    pfree((PAGE*)opened_files[index].file.data,1);
+    _Sti();
     return index;
 }
 
@@ -126,20 +132,24 @@ closef(char * name){
  */
 int
 fread(char * name,char * buffer){
+    _Cli();
     int i;
     int index;
     index = exists_file(name);
     if(index == -1){
-	putln("Archivo inexistente");
-	return -1;
+        putln("Archivo inexistente");
+        _Sti();
+        return -1;
     }
     if(!is_valid_fd(index) || opened_files[index].used == FALSE){
-	putln("El archivo no existe");
+        putln("El archivo no existe");
+        _Sti();
         return -1;
     }
     for(i=0;opened_files[index].file.data[i]!=0;i++){
        buffer[i] = opened_files[index].file.data[i];
     }
+    _Sti();
 }
 
 
@@ -149,20 +159,24 @@ fread(char * name,char * buffer){
 
 int
 fwrite(char * name, char * input){
+    _Cli();
     int index,i;
     index = exists_file(name);
     if(index == -1){
-	putln("Archivo inexistente");
-	return -1;
+        putln("Archivo inexistente");
+        _Sti();
+        return -1;
     }
     if(!is_valid_fd(index) || opened_files[index].used == FALSE){
-	putln("El archivo no existe");
+        putln("El archivo no existe");
+        _Sti();
         return -1;
     }
     for(i=0; i<MAX_FILE_SIZE && input[i]!=0;i++){
         opened_files[index].file.data[i] = input[i];
     }
     opened_files[index].file.data[i] = 0;
+    _Sti();
     return i;
 }
 
@@ -203,13 +217,17 @@ is_valid_fd(int index){
  */
 int
 chdird(char * param){
+    _Cli();
+    int currentTTY = get_current_tty();
     dword tag;
     tag = get_numeric_tag(param);
     if(tag == -1){
-	putln("Tag invalido");
+        putln("Tag invalido");
+        _Sti();
         return -1;
     }
     cwd[currentTTY] |= tag;
+    _Sti();
 }
 
 /**
@@ -218,6 +236,7 @@ chdird(char * param){
 int
 lsdir(char * param){
     _Cli();
+    int currentTTY = get_current_tty();
     dword tag;
     int i;
     if(param[0] == 0){
@@ -245,6 +264,7 @@ mkdird(char * param){
     for(i=0;i<MAX_QTY_TAGS;i++){
         if(str_cmp(param,tag_list[i].name)){
             putln("No se puede crear dos directorios con el mismo nombre");
+            _Sti();
             return -1;
         }
     }
@@ -252,6 +272,7 @@ mkdird(char * param){
     tag = get_next_available_tag();
     if(tag == -1){
         putln("No hay mas tags disponibles");
+        _Sti();
         return -1;
     }
     i = log2(tag);
@@ -270,10 +291,12 @@ renamedir(char * param1, char * param2){
     int i;
     tag = get_numeric_tag(param1);
     if (tag == -1){
-	putln("No existe el tag");
-	return -1;
+        putln("No existe el tag");
+        _Sti();
+        return -1;
     }
     str_ncpy(tag_list[log2(tag)].name,param2,20);
+    _Sti();
 }
 
 /**
@@ -286,12 +309,13 @@ rmdire(char * param){
     int index;
     tag = get_numeric_tag(param);
     if(tag == -1){
-	putln("No existe el tag");
+        putln("No existe el tag");
+        _Sti();
         return -1;
     }
     tag_list[log2(tag)].name[0]=0;
-    return tag;
     _Sti();
+    return tag;
 }
 
 
@@ -336,8 +360,8 @@ tags(){
         if(tag_list[i].name[0]!=0)
             putln(tag_list[i].name);
     }
-    return 1;
     _Sti();
+    return 1;
 }
 
 /**

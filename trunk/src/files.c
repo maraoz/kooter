@@ -36,8 +36,9 @@ openf(char * name){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;
-    if(exists_file(name) != -1){
+    if(exists_file(name,cwd[currentTTY]) != -1){
         putln("El nombre de archivo ya existe");
+        _Sti();
         return -1;
     }
     files_t file;
@@ -47,6 +48,7 @@ openf(char * name){
     file.data = (char*)palloc(1); /* numero magico, poner una valor mejor */
     index = get_next_file_entry();
     if(index == -1){
+        _Sti();
         return -1;
     }
     opened_files[index].file = file;
@@ -70,12 +72,12 @@ rename(char * name, char * newname){
     _Cli();
     int index,i,j;
     int currentTTY = get_current_tty();
-    if((index = exists_file(name)) == -1){
+    if((index = exists_file(name,cwd[currentTTY])) == -1){
         putln("El nombre de archivo no existe");
         _Sti();
         return -1;
     }
-    if(exists_file(newname) != -1){
+    if(exists_file(newname,cwd[currentTTY]) != -1){
         putln("El nombre de archivo ya existe");
         _Sti();
         return -1;
@@ -89,12 +91,14 @@ rename(char * name, char * newname){
  * Funcion que verifica que no exista el nombre de archivo
  */
 int
-exists_file(char * name){
+exists_file(char * name, dword tag){
     int i;
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
         if(opened_files[i].used){
             if(str_cmp(name,opened_files[i].file.name)){
-                return i;
+                if(opened_files[i].file.tags == tag){
+                    return i;
+                }
             }
         }
     }
@@ -107,8 +111,9 @@ exists_file(char * name){
 int
 closef(char * name){
     _Cli();
+    int currentTTY = get_current_tty();
     int index;
-    if((index = exists_file(name)) == -1){
+    if((index = exists_file(name,cwd[currentTTY])) == -1){
         putln("El nombre de archivo no existe");
         _Sti();
         return -1;
@@ -135,7 +140,8 @@ fread(char * name,char * buffer){
     _Cli();
     int i;
     int index;
-    index = exists_file(name);
+    int currentTTY = get_current_tty();
+    index = exists_file(name,cwd[currentTTY]);
     if(index == -1){
         putln("Archivo inexistente");
         _Sti();
@@ -161,7 +167,8 @@ int
 fwrite(char * name, char * input){
     _Cli();
     int index,i;
-    index = exists_file(name);
+    int currentTTY = get_current_tty();
+    index = exists_file(name,cwd[currentTTY]);
     if(index == -1){
         putln("Archivo inexistente");
         _Sti();
@@ -180,26 +187,69 @@ fwrite(char * name, char * input){
     return i;
 }
 
+/**
+ * Funcion que agrega tags a un archivo
+ */
+int
+addtag(char * fname, char * tname){
+    _Cli();
+    int currentTTY = get_current_tty();
+    int index,i,j;
+    dword tag = get_numeric_tag(tname);
+    if((index=exists_file(fname,cwd[currentTTY])) == -1){
+        putln("El nombre de archivo no existe.");
+        _Sti();
+        return -1;
+    }
+    if(tag == -1){
+        putln("El tag no existe.");
+        _Sti();
+        return -1;
+    }
+    if((opened_files[index].file.tags&tag) == tag){
+        putln("El archivo ya posee el tag.");
+        _Sti();
+        return -1;
+    }
+    opened_files[index].file.tags|=tag;
+    i = log2(tag);
+    tag_list[i].references++;
+
+    _Sti();
+    return index;
+}
 
 /**
- * Funcion que devuelve el indice de un nombre de archivo
+ * Funcion que saca tags a un archivo
  */
-/**
- * Funcion que borra un archivo
- */
-// int
-// unlink(char * name){
-//     int index,i,j;
-//     index = get_fd(name);
-//     if(index == -1)
-//         return -1;
-//     opened_files[index].used = FALSE;
-//     for(i=opened_files[index].file.tags,j=0;i>=0;i>>=2,j++){
-//         if(i%2 != 0){
-//            tag_list[j].references--;
-//         }
-//     }
-// }
+int
+rmtag(char * fname, char * tname){
+    _Cli();
+    int currentTTY = get_current_tty();
+    int index,i,j;
+    dword tag = get_numeric_tag(tname);
+    if((index=exists_file(fname,cwd[currentTTY])) == -1){
+        putln("El nombre de archivo no existe.");
+        _Sti();
+        return -1;
+    }
+    if(tag == -1){
+        putln("El tag no existe.");
+        _Sti();
+        return -1;
+    }
+    if((opened_files[index].file.tags&tag) != tag){
+        putln("El archivo no posee el tag.");
+        _Sti();
+        return -1;
+    }
+    opened_files[index].file.tags|=tag;
+    i = log2(tag);
+    tag_list[i].references--;
+
+    _Sti();
+    return index;
+}
 
 
 /**
@@ -245,7 +295,7 @@ lsdir(char * param){
         tag = get_numeric_tag(param)|cwd[currentTTY];
     }
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
-        if(opened_files[i].used == TRUE && opened_files[i].file.tags&tag == tag){
+        if(opened_files[i].used == TRUE && (opened_files[i].file.tags&tag) == tag){
             putln(opened_files[i].file.name);
         }  
     }
@@ -363,6 +413,77 @@ tags(){
     _Sti();
     return 1;
 }
+
+
+/**
+ * Funcion que devuelve la lista de tags con la cantidad de archivos que tiene
+ */
+
+int
+tagslong(){
+    _Cli();
+    int i;
+    for(i=0;i<MAX_QTY_TAGS;i++){
+        putln("Tags ----> #Archivos");
+        if(tag_list[i].name[0]!=0){
+            puts(tag_list[i].name);
+            puts(" ----> ");
+            put_char(tag_list[i].references+'0');
+        }
+    }
+    _Sti();
+    return 1;
+}
+
+/**
+ * Funcion que dado un archivo devuelve sus tags
+ */
+int
+filetags(char * name){
+    _Cli();
+    int currentTTY = get_current_tty();
+    int index,i,j;
+    if((index=exists_file(name,cwd[currentTTY])) == -1){
+        putln("El archivo no existe.");
+        _Sti();
+        return -1;
+    }
+    dword aux_tag = 1;
+    dword tag = opened_files[index].file.tags;
+    if(tag == 0){
+        putln("No tiene tags.");
+        _Sti();
+        return index;
+    }
+    for(;aux_tag!=0;aux_tag<<=1){
+        if(tag_list[log2(aux_tag)].name[0]!=0 && (tag&aux_tag) == aux_tag){
+            putln(tag_list[log2(aux_tag)].name);
+        }
+    }
+    _Sti();
+    return index;
+}
+
+int
+whereami(){
+    _Cli();
+    int currentTTY = get_current_tty();
+    dword aux_tag = 1;
+    dword tag = cwd[currentTTY];
+    if(tag == 0){
+        putln("En ningun tag.");
+        _Sti();
+        return 1;
+    }
+    for(;aux_tag!=0;aux_tag<<=1){
+        if(tag_list[log2(aux_tag)].name[0]!=0 && (tag&aux_tag) == aux_tag){
+            putln(tag_list[log2(aux_tag)].name);
+        }
+    }
+    _Sti();
+    return 1;
+}
+
 
 /**
  * Funcion que devuelve un tag numerico a partir de un nombre de directorio

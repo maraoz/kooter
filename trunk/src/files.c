@@ -31,6 +31,7 @@ fs_init(){
     }
     for(i = 0; i<MAX_QTY_TAGS ; i++){
         tag_list[i].references = 0;
+        tag_list[i].name[0] = 0;
     }
 }
 
@@ -111,6 +112,25 @@ exists_file(char * name, dword tag){
     }
     return -1;
 }
+
+/**
+ * Funcion que verifica que exista el nombre de archivo en alguno de los tags del parametro tag
+ */
+int
+exists_file2(char * name, dword tag){
+    int i;
+    for(i = 0 ; i<MAX_QTY_FILES ; i++){
+        if(opened_files[i].used){
+            if(str_cmp(name,opened_files[i].file.name)){
+                if(opened_files[i].file.tags&tag!=0){
+                    return i;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
 
 /**
  * Funcion que cierra un archivo abierto y lo borra
@@ -307,10 +327,18 @@ lsdir(char * param){
     } else {
         tag = get_numeric_tag(param)|cwd[currentTTY];
     }
-    for(i = 0 ; i<MAX_QTY_FILES ; i++){
-        if(opened_files[i].used == TRUE && (opened_files[i].file.tags&tag) == tag){
-            putln(opened_files[i].file.name);
-        }  
+    if(tag == 0){
+        for(i = 0 ; i<MAX_QTY_FILES ; i++){
+            if(opened_files[i].used == TRUE && (opened_files[i].file.tags == tag)){
+                putln(opened_files[i].file.name);
+            }  
+        }
+    } else {
+        for(i = 0 ; i<MAX_QTY_FILES ; i++){
+            if(opened_files[i].used == TRUE && (opened_files[i].file.tags&tag) == tag){
+                putln(opened_files[i].file.name);
+            }  
+        }
     }
     _Sti();
     return 1;
@@ -331,7 +359,6 @@ mkdird(char * param){
             return -1;
         }
     }
-    putln(param);
     tag = get_next_available_tag();
     if(tag == -1){
         putln("No hay mas tags disponibles");
@@ -392,7 +419,7 @@ get_next_available_tag(){
     if(i == MAX_QTY_TAGS){
         return -1;
     }
-    return /*1<<*/i /*lo mismo que pow(2,i)*/;
+    return 1<<i /*lo mismo que pow(2,i)*/;
 }
 
 /**
@@ -420,8 +447,9 @@ tags(){
     _Cli();
     int i;
     for(i=0;i<MAX_QTY_TAGS;i++){
-        if(tag_list[i].name[0]!=0)
+        if(tag_list[i].name[0]!=0){
             putln(tag_list[i].name);
+        }
     }
     _Sti();
     return 1;
@@ -432,21 +460,22 @@ tags(){
  * Funcion que devuelve la lista de tags con la cantidad de archivos que tiene
  */
 
-int
-tagslongs(){
-    _Cli();
-    int i;
-    for(i=0;i<MAX_QTY_TAGS;i++){
-        putln("Tags ----> #Archivos");
-        if(tag_list[i].name[0]!=0){
-            puts(tag_list[i].name);
-            puts(" ----> ");
-            put_char(tag_list[i].references+'0');
-        }
-    }
-    _Sti();
-    return 1;
-}
+// int
+// tagslongs(){
+//     _Cli();
+//     int i;
+//     putln("Tags ----> #Archivos");
+//     for(i=0;i<MAX_QTY_TAGS;i++){
+//         if(tag_list[i].name[0]!=0){
+//             puts(tag_list[i].name);
+//             puts(" ----> ");
+//             put_char(tag_list[i].references+'0');
+//             putln("");
+//         }
+//     }
+//     _Sti();
+//     return 1;
+// }
 
 /**
  * Funcion que dado un archivo devuelve sus tags
@@ -456,7 +485,7 @@ filetagss(char * name){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;
-    if((index=exists_file(name,cwd[currentTTY])) == -1){
+    if((index=exists_file2(name,cwd[currentTTY])) == -1){
         putln("El archivo no existe.");
         _Sti();
         return -1;
@@ -468,7 +497,7 @@ filetagss(char * name){
         _Sti();
         return index;
     }
-    for(;aux_tag!=0;aux_tag<<=1){
+    for(;aux_tag>0;aux_tag<<=1){
         if(tag_list[log2(aux_tag)].name[0]!=0 && (tag&aux_tag) == aux_tag){
             putln(tag_list[log2(aux_tag)].name);
         }
@@ -488,7 +517,7 @@ whereamii(){
         _Sti();
         return 1;
     }
-    for(;aux_tag!=0;aux_tag<<=1){
+    for(;aux_tag>0;aux_tag<<=1){
         if(tag_list[log2(aux_tag)].name[0]!=0 && (tag&aux_tag) == aux_tag){
             putln(tag_list[log2(aux_tag)].name);
         }
@@ -518,10 +547,11 @@ get_numeric_tag(char * name){
 
 int
 log2(dword num){
-    int i;
-    while(num & 0x01 == 0){
-        i++;
+    int i=0;
+    while(num != 0){
         num=num>>1;
+        i++;
     }
-    return i;
+    
+    return i-1;
 }

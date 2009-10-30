@@ -401,7 +401,7 @@ llamaFunc(char s[][LONG_STR_TKN])
         }
         else
         {
-            create_process(kill,4,1,str,current_process,1,isBackground[currentTTY],currentTTY,current_process,"kill");
+            create_process((int(*)(void))kill,4,1,str,current_process,1,isBackground[currentTTY],currentTTY,current_process,"kill");
             if (! isBackground[currentTTY])
                 wait_children();
             return KILL_CD;

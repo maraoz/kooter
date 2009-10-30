@@ -21,4 +21,7 @@ void        _Sti(void); /* habilita interrupciones anidablemente */
 void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
         byte cero);
 
+
+boolean runningInBackground();
+
 #endif

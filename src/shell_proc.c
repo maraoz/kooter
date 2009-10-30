@@ -177,6 +177,11 @@ check_screen_saver(int argc, char* argv[]) {
     }
 }
 
+/* 
+** Funciones de Files..
+*/
+
+
 int
 cat(int argc, char *argv[]){
     
@@ -184,7 +189,7 @@ cat(int argc, char *argv[]){
 
 int
 rm(int argc, char *argv[]){
-    close(argv[0]);
+    closef(argv[0]);
 }
 
 int
@@ -200,7 +205,45 @@ print(int argc, char *argv[]){
 
 int
 put(int argc, char *argv[]){
-    int i;
     fwrite(argv[0],argv[1]);
 }
 
+int
+rmdir(int argc, char *argv[]){
+    rmdire(argv[0]);
+}
+
+int
+chnamedir(int argc, char *argv[]){
+    renamedir(argv[0],argv[1]);
+}
+
+int
+chname(int argc, char *argv[]){
+    rename(argv[0],argv[1]);
+}
+
+int
+open(int argc, char *argv[]){
+    openf(argv[0]);
+}
+
+int
+chdir(int argc, char *argv[]){
+    chdird(argv[0]);
+}
+
+int
+ls(int argc, char *argv[]){
+    lsdir(argv[0]);
+}
+
+int
+mkdir(int argc, char *argv[]){
+    mkdird(argv[0]);
+}
+
+int
+taglist(int argc, char *argv[]){
+    tags();
+}

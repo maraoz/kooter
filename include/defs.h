@@ -64,13 +64,20 @@
 #define NO_CD 7
 #define GBG_CD 8
 #define MARIO_CD 9
-#define CODE_CD 10
-#define OPEN_CD 11
-#define CHDIR_CD 16
-#define LS_CD 17
-#define MKDIR_CD 18
-#define RMDIR_CD 19
-#define TOP_CD 12
+#define MKDIR_CD 10
+#define RM_CD 11
+#define PRINT_CD 12
+#define PUT_CD 13
+#define CHDIR_CD 14
+#define CHNAMEDIR_CD 15
+#define LS_CD 16
+#define TAGLIST_CD 17
+#define RMDIR_CD 18
+#define TOP_CD 19
+#define INFINITE_CD 20
+#define CHNAME_CD 21
+#define OPEN_CD 22
+#define CODE_CD 23
 
 /* defines para las funciones de allocator */
 #define FOURTH_MB_MARK 0x00400000

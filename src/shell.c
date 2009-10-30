@@ -198,6 +198,8 @@ separaPorEspacios(char *s, char out[][LONG_STR_TKN])
         isBackground[currentTTY] = FALSE;
     }
     
+    out[0][0] = out[1][0] = out[2][0] = 0;
+    
     while( *s == ' ' )
         s++;
 
@@ -334,28 +336,6 @@ llamaFunc(char s[][LONG_STR_TKN])
         else
             arg_extra=1;
     }
-//     else if(str_cmp(s[0], "uname"))
-//     {
-//         if(s[1][0]==0)
-//         {
-//             puts("Kooter v 1.0");
-//             flush();
-//             return CODE_CD;
-//         }
-//         else
-//             arg_extra=1;
-//     }
-//     else if(str_cmp(s[0], "pwd"))
-//     {
-//         if(s[1][0]==0)
-//         {
-//             puts("/");
-//             flush();
-//             return CODE_CD;
-//         }
-//         else
-//             arg_extra=1;
-//     }
     else if(str_cmp(s[0], "mkdir"))
     {
         if(s[1][0]==0)
@@ -371,7 +351,7 @@ llamaFunc(char s[][LONG_STR_TKN])
             return MKDIR_CD;
         }
     }
-    else if(str_cmp(s[0], "open"))
+    else if(str_cmp(s[0], "rm"))
     {
         if(s[1][0]==0)
         {
@@ -380,13 +360,44 @@ llamaFunc(char s[][LONG_STR_TKN])
         }
         else
         {
-            open(s[1]);
-            return OPEN_CD;
+            create_process(rm,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"rm");
+            if (! isBackground[currentTTY])
+                wait_children();
+            return RM_CD;
+        }
+    }
+    else if(str_cmp(s[0], "print"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(print,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"print");
+            if (! isBackground[currentTTY])
+                wait_children();
+            return PRINT_CD;
+        }
+    }
+    else if(str_cmp(s[0], "put"))
+    {
+        if(s[1][0]==0 || s[2][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(put,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"put");
+            if (! isBackground[currentTTY])
+                wait_children();
+            return PUT_CD;
         }
     }
     else if(str_cmp(s[0], "chdir"))
     {
-        if(s[1][0]==0)
         if(s[1][0]==0)
         {
             puts("Not enough arguments");
@@ -396,7 +407,49 @@ llamaFunc(char s[][LONG_STR_TKN])
         {
             create_process(chdir,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"chdir");
             if (!isBackground[currentTTY]) wait_children();
-            return MKDIR_CD;
+            return CHDIR_CD;
+        }
+    }
+    else if(str_cmp(s[0], "chname"))
+    {
+        if(s[1][0]==0 || s[2][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(chname,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"chname");
+            if (!isBackground[currentTTY]) wait_children();
+            return CHNAME_CD;
+        }
+    }
+    else if(str_cmp(s[0], "rmdir"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(rmdir,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"rmdir");
+            if (!isBackground[currentTTY]) wait_children();
+            return RMDIR_CD;
+        }
+    }
+    else if(str_cmp(s[0], "chnamedir"))
+    {
+        if(s[1][0]==0 || s[2][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(chnamedir,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"chnamedir");
+            if (!isBackground[currentTTY]) wait_children();
+            return CHNAMEDIR_CD;
         }
     }
     else if(str_cmp(s[0], "ls"))
@@ -406,7 +459,7 @@ llamaFunc(char s[][LONG_STR_TKN])
             create_process(ls,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
             if (!isBackground[currentTTY])
                 wait_children();
-            return CODE_CD;
+            return LS_CD;
         }
         else
         {
@@ -416,12 +469,12 @@ llamaFunc(char s[][LONG_STR_TKN])
             return LS_CD;
         }
     }
-    else if(str_cmp(s[0], "tags"))
+    else if(str_cmp(s[0], "taglist"))
     {
         if(s[1][0]==0){
-            create_process(tags,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "tags");
+            create_process(taglist,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process, "taglist");
             if (!isBackground[currentTTY]) wait_children();
-            return CODE_CD;
+            return TAGLIST_CD;
         }
         else{
             arg_extra =1;
@@ -441,6 +494,20 @@ llamaFunc(char s[][LONG_STR_TKN])
             return RMDIR_CD;
         }
     }
+    else if(str_cmp(s[0], "open"))
+    {
+        if(s[1][0]==0)
+        {
+            puts("Not enough arguments");
+            return CODE_CD;
+        }
+        else
+        {
+            create_process(open,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"open");
+            if (!isBackground[currentTTY]) wait_children();
+            return OPEN_CD;
+        }
+    }
     else if(str_cmp(s[0], "top"))
     {
         create_process((int(*)(void))top,1,1,(char**)0,1,0,isBackground[currentTTY],currentTTY,current_process,"topaz");
@@ -452,7 +519,7 @@ llamaFunc(char s[][LONG_STR_TKN])
     {
         create_process(infinite,1,1,(char**)0,1,4,isBackground[currentTTY],currentTTY,current_process, "infinite");
         if (!isBackground[currentTTY]) wait_children();
-        return TOP_CD;
+        return INFINITE_CD;
     }
     else if(str_cmp(s[0], "help"))
     {
@@ -475,15 +542,38 @@ llamaFunc(char s[][LONG_STR_TKN])
             put_char('\n');
             puts("mario");
             put_char('\n');
-            puts("uname");
+            puts("infinite");
             put_char('\n');
-            puts("pwd");
-            put_char('\n');
-            puts("ls");
+            puts("top");
             put_char('\n');
             puts("help");
+            put_char('\n');            
             put_char('\n');
-            return CODE_CD;
+            puts("Files functions:");
+            put_char('\n');
+            puts("rm [argument]");
+            put_char('\n');
+            puts("rmdir [argument]");
+            put_char('\n');
+            puts("print [argument]");
+            put_char('\n');
+            puts("put [argument1][argument2]");
+            put_char('\n');
+            puts("chname [argument1][argument2]");
+            put_char('\n');
+            puts("chnamedir [argument1][argument2]");
+            put_char('\n');
+            puts("open [argument]");
+            put_char('\n');
+            puts("chdir [argument]");
+            put_char('\n');
+            puts("ls [argument(optional)]");
+            put_char('\n');
+            puts("mkdir [argument]");
+            put_char('\n');
+            puts("taglist");
+            put_char('\n');
+             return CODE_CD;
         }
         else
             arg_extra=1;

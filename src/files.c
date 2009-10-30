@@ -32,7 +32,7 @@ fs_init(){
  */
 
 int
-open(char * name){
+openf(char * name){
     _Cli();
     int index,i,j;
     if(exists_file(name) != -1){
@@ -99,7 +99,7 @@ exists_file(char * name){
  * Funcion que cierra un archivo abierto y lo borra
  */
 int
-close(char * name){
+closef(char * name){
     int index;
     if((index = exists_file(name)) == -1){
 	putln("El nombre de archivo no existe");
@@ -197,9 +197,9 @@ is_valid_fd(int index){
  * Funcion que cambia de directorio
  */
 int
-chdir(int argc, char * directory[]){
+chdird(char * param){
     dword tag;
-    tag = get_numeric_tag(directory[0]);
+    tag = get_numeric_tag(param);
     if(tag == -1){
 	putln("Tag invalido");
         return -1;
@@ -211,13 +211,13 @@ chdir(int argc, char * directory[]){
  * Funcion que lista el contenido de un directorio
  */
 int
-ls(int argc, char * directory[]){
+lsdir(char * param){
     dword tag;
     int i;
-    if(directory[0][0] == 0){
+    if(* param == 0){
         tag = cwd;
     } else {
-        tag = get_numeric_tag(directory[0])|cwd;
+        tag = get_numeric_tag(param)|cwd;
     }
     for(i = 0 ; i<MAX_QTY_FILES ; i++){
         if(opened_files[i].used == TRUE && opened_files[i].file.tags&tag == tag){
@@ -231,23 +231,24 @@ ls(int argc, char * directory[]){
  * Funcion que crea directorios
  */
 int
-mkdir(int argc, char * directory[]){
+mkdird(char * param){
     _Cli();
     dword tag;
     int i;
     for(i=0;i<MAX_QTY_TAGS;i++){
-        if(str_cmp(directory[0],tag_list[i].name)){
+        if(str_cmp(param,tag_list[i].name)){
             putln("No se puede crear dos directorios con el mismo nombre");
             return -1;
         }
     }
+    putln(param);
     tag = get_next_available_tag();
     if(tag == -1){
         putln("No hay mas tags disponibles");
         return -1;
     }
-//     i = log2(tag);
-    str_ncpy(tag_list[tag].name,directory[0],20);
+    i = log2(tag);
+    str_ncpy(tag_list[i].name,param,20);
     _Sti();
 }
 
@@ -256,27 +257,27 @@ mkdir(int argc, char * directory[]){
  */
  
 int
-renamedir(int argc, char * directory[]){
+renamedir(char * param1, char * param2){
     _Cli();
     dword tag;
     int i;
-    tag = get_numeric_tag(directory[0]);
+    tag = get_numeric_tag(param1);
     if (tag == -1){
 	putln("No existe el tag");
 	return -1;
     }
-    str_ncpy(tag_list[log2(tag)].name,directory[1],20);
+    str_ncpy(tag_list[log2(tag)].name,param2,20);
 }
 
 /**
  * Funcion que elimina directorios
  */
 int
-rmdir(int argc, char * directory[]){
+rmdire(char * param){
     _Cli();
     dword tag;
     int index;
-    tag = get_numeric_tag(directory[0]);
+    tag = get_numeric_tag(param);
     if(tag == -1){
 	putln("No existe el tag");
         return -1;

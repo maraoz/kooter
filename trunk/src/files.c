@@ -1,6 +1,7 @@
 #include "../include/defs.h"
 #include "../include/files.h"
 #include "../include/stdio.h"
+#include "../include/stack.h"
 #include "../include/shell.h"
 #include "../include/kasm.h"
 #include "../include/allocator.h"
@@ -15,9 +16,15 @@ extern pid_t current_process;
  *
  */
 
+stack_t stacks[8];
+stack_t * tag_stack[8];
+
 int
 fs_init(){
     int i;
+    for(i=0; i<8; i++) {
+        tag_stack[i] = &stacks[i];
+    }
     for(i = 0; i<MAX_QTY_FILES ; i++){
         opened_files[i].used = FALSE;
         opened_files[i].references = 0;

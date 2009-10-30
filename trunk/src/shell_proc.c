@@ -107,6 +107,29 @@ infinite(int argc, char* argv[]) {
         put_char(c+'a');
     }
 }
+
+#define CYCLE 10000
+
+int
+print_a(int argc, char* argv[]) {
+    int n=0;
+    while(1) {
+        n++;
+        if(n%CYCLE == 0) put_char('a');
+    }
+}
+int
+print_b(int argc, char* argv[]) {
+    int n=0;
+    while(1) {
+        n++;
+        if(!n%CYCLE == 0) put_char('b');
+    }
+}
+
+
+
+
 /*
 ** funcion que ejecuta el juego mario.
 */

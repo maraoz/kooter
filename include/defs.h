@@ -163,6 +163,7 @@ typedef struct {
     int f_pointer;
     int background;
     boolean isAlive;
+    boolean isBlocked;
     char name[20];
 } process_t;
 

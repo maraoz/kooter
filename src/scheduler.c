@@ -69,6 +69,7 @@ int block(int pid, int channel) {
         //un proceso bloqueado no puede bloquearse nuevamente
         return -1;
     }
+    bcp[pid].process.isBlocked = TRUE;
     is_blocked_t[channel][pid] = TRUE;
 
     time_total -= time_consumed[pid];
@@ -83,6 +84,7 @@ int unblock(int pid, int channel) {
         // si no est� bloqueado da error intentar desbloquearlo
         return -1;
     }
+    bcp[pid].process.isBlocked = FALSE;
     is_blocked_t[channel][pid] = FALSE;
     return enqueue(ready_processes_q, pid);
 }
@@ -183,12 +185,13 @@ void scheduler(void){
 
 
 boolean is_blocked_in_any(pid_t pid) {
-    int channel;
-    for (channel = 0; channel<CHANNEL_AMMOUNT; channel++) {
-        if (is_blocked_t[channel][pid])
-            return TRUE;
-    }
-    return FALSE;
+//     int channel;
+//     for (channel = 0; channel<CHANNEL_AMMOUNT; channel++) {
+//         if (is_blocked_t[channel][pid])
+//             return TRUE;
+//     }
+//     return FALSE;
+    return bcp[pid].process.isBlocked;
 }
 
 boolean is_blocked(pid_t pid, int channel) {
@@ -198,14 +201,25 @@ boolean is_blocked(pid_t pid, int channel) {
 }
 
 int desalojate(int pid) {
-    if (enqueue(ready_processes_q, pid) == -1) {
-        // no hay lugar en la cola
-        return -1;
+    if (bcp[pid].process.isAlive) {
+        if (enqueue(ready_processes_q, pid) == -1) {
+            // no hay lugar en la cola
+            return -1;
+        }
+        // el proceso va a la cola de readies
+        return 0;
+    } else {
+        // desaparece el proceso muerto
+        return 0;
     }
-    return 0;
+    
 }
 
 
+
+int use_percentage(pid_t pid) {
+    return (100*time_consumed[pid]) / time_total;
+}
 
 
 

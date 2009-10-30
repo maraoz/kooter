@@ -300,3 +300,9 @@ int
 locate(int argc, char *argv[]){
     located(argv[0]);
 }
+
+int
+wrapkill(int argc, char *argv[]){
+    pid_t pid = atoi(argv[0]);
+    kill(pid);
+}

@@ -55,4 +55,6 @@ int filetags(int argc, char *argv[]);
 
 int whereami(int argc, char *argv[]);
 
+int locate(int argc, char *argv[]);
+
 #endif

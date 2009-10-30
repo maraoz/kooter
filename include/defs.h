@@ -78,6 +78,11 @@
 #define CHNAME_CD 21
 #define OPEN_CD 22
 #define CODE_CD 23
+#define ADDTAG_CD 24
+#define RMTAG_CD 25
+#define TAGSLONG_CD 26
+#define FILETAGS_CD 27
+#define WHEREAMI_CD 28
 
 /* defines para las funciones de allocator */
 #define FOURTH_MB_MARK 0x00400000

@@ -43,4 +43,14 @@ int mkdir(int argc, char *argv[]);
 
 int taglist(int argc, char *argv[]);
 
+int addtag(int argc, char *argv[]);
+
+int rmtag(int argc, char *argv[]);
+
+int tagslong(int argc, char *argv[]);
+
+int filetags(int argc, char *argv[]);
+
+int whereami(int argc, char *argv[]);
+
 #endif

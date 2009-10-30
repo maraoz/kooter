@@ -19,7 +19,7 @@ int stack_full(stack_t * s) {
     return s->tail == MAX_ELEM;
 }
 
-int push(stack_t * s, T elem) {
+int push(stack_t * s, S elem) {
     if (stack_full(s)) {
         return -1;
     }
@@ -28,7 +28,7 @@ int push(stack_t * s, T elem) {
     return 0;
 }
 
-T pop(stack_t * s) {
+S pop(stack_t * s) {
     if (stack_empty(s)) {
         return -1;
     }

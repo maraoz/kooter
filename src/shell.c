@@ -575,6 +575,18 @@ llamaFunc(char s[][LONG_STR_TKN])
         if (!isBackground[currentTTY]) wait_children();
         return INFINITE_CD;
     }
+    else if(str_cmp(s[0], "print_a"))
+    {
+        create_process(print_a,4,1,(char**)0,1,4,isBackground[currentTTY],currentTTY,current_process, "print_a");
+        if (!isBackground[currentTTY]) wait_children();
+        return INFINITE_CD;
+    }
+    else if(str_cmp(s[0], "print_b"))
+    {
+        create_process(print_b,4,1,(char**)0,1,4,isBackground[currentTTY],currentTTY,current_process, "print_b");
+        if (!isBackground[currentTTY]) wait_children();
+        return INFINITE_CD;
+    }
     else if(str_cmp(s[0], "help"))
     {
         if(s[1][0]==0)

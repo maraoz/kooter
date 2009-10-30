@@ -131,13 +131,16 @@ print_b(int argc, char* argv[]) {
 }
 
 int print_char(int argc, char * argv[]) {
-    int n=0;
+
     char c;
     puts("Ingrese un caracter por favor: ");
     while((c = get_char()) == -1 || c == '\x08');
-//     block_me(10);
-    put_char(c);
-    put_char('\n');
+    int n=0;
+    while(1) {
+        n++;
+        if(!n%CYCLE == 0) put_char('b');
+    }
+
 
 }
 

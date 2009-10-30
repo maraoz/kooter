@@ -97,7 +97,7 @@ kill(pid_t pid)
     }
     _Cli();
     for(i=0;i<MAX_PROCESSES;i++){
-        if(bcp[i].process.isAlive == TRUE && (bcp[i].process.pid == pid || bcp[i].process.gid == pid)){
+        if(bcp[i].process.isAlive == TRUE && (bcp[i].process.pid == pid || bcp[i].process.gid == pid || bcp[i].dad_pid == pid)){
             apid = bcp[i].process.pid;
             if(dequeue_element(used_pids_q, apid)==-1){
             }
@@ -154,7 +154,7 @@ create_process(int (*funcion)(), int pages_qty, int argc, char **argv, int gid, 
     new_proc.process.pid = get_new_pid();
 
     if(gid == -1)
-    new_proc.process.gid = new_proc.process.pid;
+        new_proc.process.gid = new_proc.process.pid;
     new_proc.process.background = background;
     new_proc.process.isAlive = TRUE;
     str_ncpy(new_proc.process.name, name, 20);

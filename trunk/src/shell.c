@@ -685,7 +685,7 @@ llamaFunc(char s[][LONG_STR_TKN])
             put_char('\n');
             put_char('\n');
             puts("Files functions:");
-            move_cursor_inline(40);
+            put_char('\n');
             puts("rm [filename]");
             put_char('\n');
             puts("rmdir [directory]");
@@ -712,11 +712,11 @@ llamaFunc(char s[][LONG_STR_TKN])
             move_cursor_inline(40);
             puts("rmtag [filename][tagname]");
             put_char('\n');
-            puts("tagslong");
-            move_cursor_inline(40);
+//             puts("tagslong");
+//             move_cursor_inline(40);
             puts("filetags [filename]");
             put_char('\n');
-            puts("wheerami");
+            puts("cwd");
             move_cursor_inline(40);
             puts("locate [filename]");
             put_char('\n');

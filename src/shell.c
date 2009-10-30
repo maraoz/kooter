@@ -454,20 +454,10 @@ llamaFunc(char s[][LONG_STR_TKN])
     }
     else if(str_cmp(s[0], "ls"))
     {
-        if(s[1][0]==0)
-        {
-            create_process(ls,1,1,(char**)0,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
-            if (!isBackground[currentTTY])
-                wait_children();
-            return LS_CD;
-        }
-        else
-        {
-            create_process(ls,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
-            if (!isBackground[currentTTY])
-                wait_children();
-            return LS_CD;
-        }
+        create_process(ls,1,1,str,1,1,isBackground[currentTTY],currentTTY,current_process,"ls");
+        if (!isBackground[currentTTY])
+            wait_children();
+        return LS_CD;
     }
     else if(str_cmp(s[0], "taglist"))
     {

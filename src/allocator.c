@@ -86,36 +86,42 @@ init_pagination(void) {
 ** si no las hay retorna NULL.
 */
 
+
+
 PAGE *
 palloc(int cant)
 {
-	static unsigned int i;
-    static unsigned int j;
-    static unsigned int k;
-    int correct = 1;
-    
-    if(i + cant > 1023) {
-        i = 0;
-    }
-
-	for( ; i < (MemSize/MEM_BLOCK); )
-	{
-        for( k = i; k < cant; k++) {
-            correct *= (!getbits8(MemMap[k/8],k%8,1))? 1 : 0;
-        }
-		if( correct )
-		{
-            for( j = i; j < cant; j++) {
-                setbits8(&(MemMap[j/8]),j%8,1,1);
-            }
-            up_p((PAGE*)(MemStart+i*MEM_BLOCK), cant);
-            i = i + cant;
-			return (void*)(MemStart+i*MEM_BLOCK);
-		}
-        i++;
-	}
-
-	return NULL;
+    static int * p = (int*)MemStart;
+    p+=4096;
+    up_p(p,1);
+    return p;
+// 	static unsigned int i;
+//     static unsigned int j;
+//     static unsigned int k;
+//     int correct = 1;
+//     
+//     if(i + cant > 1023) {
+//         i = 0;
+//     }
+// 
+// 	for( ; i < (MemSize/MEM_BLOCK); )
+// 	{
+//         for( k = i; k < cant; k++) {
+//             correct *= (!getbits8(MemMap[k/8],k%8,1))? 1 : 0;
+//         }
+// 		if( correct )
+// 		{
+//             for( j = i; j < cant; j++) {
+//                 setbits8(&(MemMap[j/8]),j%8,1,1);
+//             }
+//             up_p((PAGE*)(MemStart+i*MEM_BLOCK), cant);
+//             i = i + cant;
+// 			return (void*)(MemStart+i*MEM_BLOCK);
+// 		}
+//         i++;
+// 	}
+// 
+// 	return NULL;
 }
 
 void

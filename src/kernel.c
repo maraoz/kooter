@@ -145,14 +145,18 @@ kmain()
     init_pids();
     init_scheduler();
 
-    k_clear_screen();
+//     k_clear_screen();
 
 
     init_ttys();
     fs_init();
     bcp[0].process.isAlive = TRUE;
-    bcp[0].page = palloc(7);
-    bcp[0].page_qty = 7;
+    int i;
+    for(i=0;i<100;i++){
+        palloc(1);
+    }
+    bcp[0].page = palloc(1);
+    bcp[0].page_qty = 1;
     str_ncpy(bcp[0].process.name,"init", 20);
     process_creator();
     

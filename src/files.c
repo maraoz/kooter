@@ -270,13 +270,19 @@ chdird(char * param){
     _Cli();
     int currentTTY = get_current_tty();
     dword tag;
-    tag = get_numeric_tag(param);
-    if(tag == -1){
+    if(str_cmp(param,"..")){
+        tag = 1;//aca tendria qu venir el pop;
+        cwd[currentTTY]=cwd[currentTTY]&~tag;
+    }else{
+        tag = get_numeric_tag(param);
+        if(tag == -1){
         putln("Tag invalido");
-        _Sti();
-        return -1;
+            _Sti();
+            return -1;
+        }
+        cwd[currentTTY] |= tag;
+        //aca tendria que ir el push del tag
     }
-    cwd[currentTTY] |= tag;
     _Sti();
 }
 

@@ -85,6 +85,7 @@
 #define WHEREAMI_CD 28
 #define LOCATE_CD 29
 #define KILL_CD 30
+#define LSALL_CD 31
 
 /* defines para las funciones de allocator */
 #define FOURTH_MB_MARK 0x00400000

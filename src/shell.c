@@ -603,6 +603,18 @@ llamaFunc(char s[][LONG_STR_TKN])
             return LOCATE_CD;
         }
     }
+    else if(str_cmp(s[0], "lsall"))
+    {
+        if(s[1][0]==0)
+        {
+            create_process(lsall,4,1, str, current_process, 1, isBackground[currentTTY], currentTTY, current_process,"lsall");
+            if (!isBackground[currentTTY])
+                wait_children();
+            return LSALL_CD;
+        }
+        else
+            arg_extra=1;
+    }
     else if(str_cmp(s[0], "top"))
     {
         create_process((int(*)(void))top,4,1,(char**)0,current_process,0,isBackground[currentTTY],currentTTY,current_process,"topaz");
@@ -705,6 +717,8 @@ llamaFunc(char s[][LONG_STR_TKN])
             puts("wheerami");
             move_cursor_inline(40);
             puts("locate [filename]");
+            put_char('\n');
+            puts("lsall");
             put_char('\n');
              return CODE_CD;
         }

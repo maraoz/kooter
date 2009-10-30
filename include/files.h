@@ -53,6 +53,8 @@ int filetagss(char * name);
 
 int whereamii();
 
+int lslongall();
+
 /**
  * Varios
  */ 

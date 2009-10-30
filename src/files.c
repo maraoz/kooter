@@ -543,7 +543,7 @@ located(char * name){
  * Funcion que lista todos los archivos y sus tags
  */
 int
-lslongall(char * name){
+lslongall(void){
     _Cli();
     int currentTTY = get_current_tty();
     int index,i,j;

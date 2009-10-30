@@ -90,6 +90,9 @@ kill(pid_t pid)
     
     int i,apid;
     if( pid > MAX_PROCESSES || pid <= 0){
+        if(pid == -1){
+            putln("No se puede matar a ese proceso.");
+        }
         return;
     }
     _Cli();

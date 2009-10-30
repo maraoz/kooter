@@ -99,7 +99,6 @@ void
 print_nline()
 {
     puts("kooter > ");
-    flush();
 }
 
 
@@ -619,6 +618,9 @@ llamaFunc(char s[][LONG_STR_TKN])
     {
         create_process((int(*)(void))top,4,1,(char**)0,current_process,0,isBackground[currentTTY],currentTTY,current_process,"topaz");
         if (!isBackground[currentTTY])
+                wait_children();
+        create_process(k_clear_screen, 4, 1, str, current_process, 1, isBackground[currentTTY], currentTTY, current_process,"clear_screen");
+            if (!isBackground[currentTTY])
                 wait_children();
         return TOP_CD;
     }

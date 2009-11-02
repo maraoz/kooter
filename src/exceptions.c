@@ -55,9 +55,7 @@ void            _int_0C_hand(){
     while(1);
 }
 void            _int_0D_hand(){
-    char * m = (char *) 0x0B8000;
-    m[0]='1';m[1]='0';
-    m[2]='1';m[3]='0';
+    putln("Page Fault");
     while(1);
 }
 void            _int_0E_hand(){

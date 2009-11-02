@@ -8,7 +8,7 @@
 
 #include "../include/kasm.h"
 
-#define MAX_PROCESSES 42
+#define MAX_PROCESSES 100
 
 
 /* Tiempo de espera */

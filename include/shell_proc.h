@@ -20,6 +20,9 @@ int print_a(int argc, char* argv[]);
 int print_b(int argc, char* argv[]);
 int print_char(int argc, char * argv[]);
 
+int help(int argc, char * argv[]);
+
+
 int check_screen_saver(int argc, char* argv[]);
 
 int cat(int argc, char *argv[]);

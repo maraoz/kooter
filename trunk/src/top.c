@@ -102,7 +102,7 @@ void top(void) {
         init_view();
 
         char * header = "------------------------------------/ TOPAZ /-----------------------------------";
-        char * heade2 = "|    PID      Name                Use Percentage               State            |";
+        char * heade2 = "|    PID      Name                Use Percentage               State           |";
         char * footer = "--------------------------------------------------------------------------------";
         char * column = "|||||||||||||||||||||||||";
         int j;

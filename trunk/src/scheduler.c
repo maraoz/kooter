@@ -102,17 +102,23 @@ void magic_algorithm1(void) {
 }
 
 void magic_algorithm2(void) {
-    // weighted priorities
-    if (work_cycles < (4-bcp[current_process].process.priority)) {
-        work_cycles++;
-        return;
-    }
-    work_cycles = 1;
-    pid_t np = dequeue(ready_processes_q);
-    if (np == -1) {
-        unblock(0, CNL_FOREVER);
-        np = 0;
-    }
+    // bingo
+    int np;
+    do {
+        np = dequeue(ready_processes_q);
+        if (np == -1) {
+            unblock(0, CNL_FOREVER);
+            np = 0;
+        }
+        int priority = bcp[np].process.priority;
+        int tickets = 18 - priority * priority;
+        unsigned int r = rand_int(20);
+
+        if (r < tickets) {
+            break;
+        }
+        enqueue(ready_processes_q, np);
+    } while (1);
     current_process = np;
 }
 
@@ -137,31 +143,12 @@ void magic_algorithm3(void) {
 
 }
 
-void magic_algorithm4(void) {
-    // bingo
-    int np;
-    do {
-        np = dequeue(ready_processes_q);
-        if (np == -1) {
-            unblock(0, CNL_FOREVER);
-            np = 0;
-        }
-        int priority = bcp[np].process.priority + 1;
-        int tickets = 25 - priority * priority;
-        unsigned int r = rand_int(30);
-
-        if (r < tickets) {
-            break;
-        }
-        enqueue(ready_processes_q, np);
-    } while (1);
-    current_process = np;
-}
-
 
 
 void run_next_process(void) {
-    magic_algorithm4();
+    // Cambiar acá si se quiere cambiar
+    // el algoritmo de scheduling
+    magic_algorithm2();
 }
 
 void scheduler(void){

@@ -138,7 +138,7 @@ int print_char(int argc, char * argv[]) {
     int n=0;
     while(1) {
         n++;
-        if(!n%CYCLE == 0) put_char('b');
+        if(!n%CYCLE == 0) put_char(c);
     }
 
 
@@ -216,6 +216,87 @@ check_screen_saver(int argc, char* argv[]) {
             firstTime = 1;
     }
 }
+
+
+
+
+int help(int argc, char * argv[]) {
+    puts("Kooter kernel version 1.0");
+    put_char('\n');
+    put_char('\n');
+    puts("echo [string arguments]");
+    move_cursor_inline(40);
+    puts("clear");
+    put_char('\n');
+    puts("setTimeSp [numeric argument]");
+    move_cursor_inline(40);
+    puts("activaSp");
+    put_char('\n');
+    puts("dispImg");
+    move_cursor_inline(40);
+    puts("garbage");
+    put_char('\n');
+    puts("mario");
+    move_cursor_inline(40);
+    puts("infinite");
+    put_char('\n');
+    puts("print_a");
+    move_cursor_inline(40);
+    puts("print_b");
+    put_char('\n');
+    puts("print_char");
+    move_cursor_inline(40);
+    puts("top");
+    put_char('\n');
+    puts("kill [pid]");
+    move_cursor_inline(40);
+    puts("help");
+    put_char('\n');
+    put_char('\n');
+    puts("Files functions:");
+    put_char('\n');
+    puts("rm [filename]");
+    put_char('\n');
+    puts("rmdir [directory]");
+    move_cursor_inline(40);
+    puts("print [filename]");
+    put_char('\n');
+    puts("put [filename][string]");
+    move_cursor_inline(40);
+    puts("chname [old_filename][new_filename]");
+    put_char('\n');
+    puts("chnamedir [old_name][new_name]");
+    move_cursor_inline(40);
+    puts("open [filename]");
+    put_char('\n');
+    puts("cd [tag_name]");
+    move_cursor_inline(40);
+    puts("ls [tag(optional)]");
+    put_char('\n');
+    puts("mkdir [tag_name]");
+    move_cursor_inline(40);
+    puts("taglist");
+    put_char('\n');
+    puts("addtag [filename][tagname]");
+    move_cursor_inline(40);
+    puts("rmtag [filename][tagname]");
+    put_char('\n');
+    //             puts("tagslong");
+    //             move_cursor_inline(40);
+    puts("filetags [filename]");
+    put_char('\n');
+    puts("cwd");
+    move_cursor_inline(40);
+    puts("locate [filename]");
+    put_char('\n');
+    puts("lsall");
+    put_char('\n');
+}
+
+
+
+
+
 
 /* 
 ** Funciones de Files..

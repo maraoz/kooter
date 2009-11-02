@@ -24,6 +24,7 @@ fs_init(){
     int i;
     for(i=0; i<8; i++) {
         tag_stack[i] = &stacks[i];
+        stack_init(tag_stack[i]);
     }
     for(i = 0; i<MAX_QTY_FILES ; i++){
         opened_files[i].used = FALSE;
@@ -252,7 +253,7 @@ addtags(char * fname, char * tname){
         _Sti();
         return -1;
     }
-    if((exists_file(fname,opened_files[index].file.tags|=tag)) != -1){
+    if((exists_file(fname,opened_files[index].file.tags | tag)) != -1){
         putln("Ya existe un archivo con los mismos tags.");
         _Sti();
         return -1;
@@ -322,8 +323,10 @@ chdird(char * param){
     int currentTTY = get_current_tty();
     dword tag;
     if(str_cmp(param,"..")){
-        tag = 1;//aca tendria qu venir el pop;
-        cwd[currentTTY]=cwd[currentTTY]&~tag;
+        if (cwd[currentTTY] != 0) {
+            tag = pop(tag_stack[currentTTY]);
+            cwd[currentTTY]=cwd[currentTTY]&~tag;
+        }
     }else{
         tag = get_numeric_tag(param);
         if(tag == -1){
@@ -332,7 +335,7 @@ chdird(char * param){
             return -1;
         }
         cwd[currentTTY] |= tag;
-        //aca tendria que ir el push del tag
+        push(tag_stack[currentTTY], tag);
     }
     _Sti();
 }

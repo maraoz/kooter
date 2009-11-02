@@ -12,7 +12,7 @@
 #include "../include/stdio.h"
 
 
-#define MAX_PROCESSES 42
+
 queue_t available_pids, used_pids;
 queue_t * available_pids_q, * used_pids_q;
 queue_t * ready_processes_q;

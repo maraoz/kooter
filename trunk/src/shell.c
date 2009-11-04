@@ -421,6 +421,13 @@ llamaFunc(char s[][LONG_STR_TKN])
             return PUT_CD;
         }
     }
+    else if(str_cmp(s[0], "crash"))
+    {
+        create_process(crash,4,1,str,current_process,1,isBackground[currentTTY],currentTTY,current_process,"crash");
+        if (! isBackground[currentTTY])
+            wait_children();
+        return CRASH_CD;
+    }
     else if(str_cmp(s[0], "cd"))
     {
         if(s[1][0]==0)

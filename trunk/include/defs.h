@@ -26,9 +26,10 @@
 #define ACS_WRITE       0x02            /* segmento de escritura */
 #define ACS_IDT         ACS_DSEG
 #define ACS_INT_386 	0x0E		/* Interrupt GATE 32 bits */
+#define ACS_EXC_386     0x0F        /* Interrupt GATE 32 bits */
 #define ACS_INT         ( ACS_PRESENT | ACS_INT_386 )
 
-
+#define ACS_EXCEPTION        (ACS_PRESENT | ACS_EXC_386 )
 #define ACS_CODE        (ACS_PRESENT | ACS_CSEG | ACS_READ)
 #define ACS_DATA        (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 #define ACS_STACK       (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
@@ -86,6 +87,7 @@
 #define LOCATE_CD 29
 #define KILL_CD 30
 #define LSALL_CD 31
+#define CRASH_CD 32
 
 /* defines para las funciones de allocator */
 #define FOURTH_MB_MARK 0x00400000

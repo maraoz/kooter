@@ -65,4 +65,6 @@ int wrapkill(int argc, char *argv[]);
 
 int lsall(int argc, char *argv[]);
 
+int crash(int argc, char * argv[]);
+
 #endif

@@ -409,3 +409,9 @@ int
 lsall(int argc, char *argv[]){
     lslongall();
 }
+
+int
+crash(int argc, char * argv[]) {
+    char * p = (char*) 0xA0000000;
+    *p = 'a';
+}
